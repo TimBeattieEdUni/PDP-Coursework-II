@@ -1,15 +1,15 @@
 #ifndef _HELPER_FUNCTIONS_H
 #define _HELPER_FUNCTIONS_H
 
-void initialiseRNG(long *);
+void initialiseRNG(long*);
 
-void squirrelStep(float, float, float *, float *, long *);
+void squirrelStep(float, float, float*, float*, long*);
 
-int willGiveBirth(float, long *);
+int willGiveBirth(float, long*);
 
-int willCatchDisease(float, long *);
+int willCatchDisease(float, long*);
 
-int willDie(long *);
+int willDie(long*);
 
 int getCellFromPosition(float, float);
 
