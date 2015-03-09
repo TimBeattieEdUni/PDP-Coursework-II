@@ -1,2 +1,4 @@
-# PDP-Coursework-II
-Parallel Design Patterns - Coursework Part II
+MSc High Performance Computing
+Parallel Design Patterns
+Coursework Part II
+March 2015
