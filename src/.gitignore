@@ -1,2 +1,5 @@
 # OSX bits
 .DS_Store
+
+# Object files
+*.o
