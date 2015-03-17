@@ -1,10 +1,18 @@
-# OSX bits
+# MSc HPC
+# Parallel Design Patterns
+# Coursework
+# Exam no. B063622
+#
+# Git ignore list for top-level directory.
+#
+
+# OSX housekeeping
 .DS_Store
 
 # Object files
 *.o
 
-# Dependency snippets
+# Dependency lists
 *.d
 
 # The application

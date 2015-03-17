@@ -1,4 +1,8 @@
-MSc High Performance Computing
+MSc HPC
 Parallel Design Patterns
 Coursework Part II
-March 2015
+Exam no. B063622
+
+@todo Describe how to build the code.
+
+@todo Describe batch scripts and submission.
