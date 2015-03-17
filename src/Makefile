@@ -13,7 +13,7 @@ CLEANFILES =
 
 ##############################################################################
 #  Build products.
-APP     := squirrels
+APP := simsq
 
 CLEANFILES += $(APP)
 
@@ -31,17 +31,25 @@ MF    := Makefile
 
 ##############################################################################
 #  C++ compiler and flags.
-CXX      := mpicxx
-CXXFLAGS := -fastsse
+CC     := mpicc
+CXX    := mpicxx
+
+# "-MD" generates dependencies; this varies between compilers.
+FLAGS  := -fastsse -MD
 
 
 ##############################################################################
-#  C source code and generated files.
-SRC  := $(wildcard *.cpp)
-HDR  := $(wildcard *.hpp)
+#  Source code, objects, and compiler-generated dependencies
+CSRC    := $(wildcard *.c)
+COBJ    := $(CSRC:.c=.o)
+CDEP    := $(CSRC:.c=.d)
 
-OBJ  := $(SRC:.cpp=.o)
-DEP  := $(SRC:.cpp=.d)
+CXXSRC  := $(wildcard *.cpp)
+CXXOBJ  := $(CXXSRC:.cpp=.o)
+CXXDEP  := $(CXXSRC:.cpp=.d)
+
+OBJ     := $(COBJ) $(CXXOBJ)
+DEP     := $(CDEP) $(CXXDEP)
 
 CLEANFILES += $(OBJ) $(DEP)
 
@@ -57,7 +65,7 @@ CLEANFILES += $(OUTPUT)
 #  Primary target rules.
 default: $(APP)
 
-.PHONY: app clean
+.PHONY: clean
 
 clean:
 	rm -f $(CLEANFILES)
@@ -74,9 +82,15 @@ LIB = -lm
 
 
 ##############################################################################
+#  Build object from C source.
+%.o : %.c $(MF)
+	$(CC) -c $(FLAGS) -o $@ $<
+
+
+##############################################################################
 #  Build object from C++ source.
 %.o : %.cpp $(MF)
-	$(CXX) -c $(CXXFLAGS) -o $@ $<
+	$(CXX) -c $(FLAGS) -o $@ $<
 
 
 ##############################################################################

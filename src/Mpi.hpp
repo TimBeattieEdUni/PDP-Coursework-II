@@ -23,7 +23,7 @@ class Mpi
 {
     public:
         Mpi(int argc, char** argv);
-        ~Mpi() { MPI_Finalize(); }
+        ~Mpi();
 		std::string GetProcName();
 };
 

@@ -22,6 +22,11 @@ Mpi::Mpi(int argc, char** argv)
 	}
 }
 
+Mpi::~Mpi()
+{
+	 MPI_Finalize();
+}
+
 
 std::string Mpi::GetProcName()
 {

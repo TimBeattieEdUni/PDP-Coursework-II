@@ -3,3 +3,9 @@
 
 # Object files
 *.o
+
+# Dependency snippets
+*.d
+
+# The application
+simsq
