@@ -38,11 +38,34 @@ int main(int argc, char* argv[])
 	{
 		Mpi mpi(argc, argv);
 		MpiCommunicator mpi_comm(MPI_COMM_WORLD);
-
-		double prog_start_time = MPI_Wtime();
+		
+		double start_time = MPI_Wtime();
 
 		//  printf works better than std::cout when using MPI
 		printf("rank %d of %d\n", mpi_comm.GetRank(), mpi_comm.GetSize());
+
+		int init_val = processPoolInit();
+		printf("rank %d: processPoolInit() returned %d\n", mpi_comm.GetRank(), init_val);
+
+		switch(init_val)
+		{
+			case 1:
+			{
+				break;
+			}
+			case 2:
+			{
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
+		
+		processPoolFinalise();
+
+		printf("rank %d exiting\n", mpi_comm.GetRank());
 
 		if (0 == mpi_comm.GetRank())
 		{
@@ -60,8 +83,7 @@ int main(int argc, char* argv[])
 
 		if (0 == mpi_comm.GetRank())
 		{
-			double total_prog_time = MPI_Wtime() - prog_start_time;
-			printf("total program time:\t%f\n", total_prog_time);
+			printf("total program time:\t%f\n", MPI_Wtime() - start_time);
 		}
 
 		return 0;
