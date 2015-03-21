@@ -13,20 +13,37 @@
 //  Local headers.
 #include "Mpi.hpp"
 #include "MpiCommunicator.hpp"
-
-
-//////////////////////////////////////////////////////////////////////////////
-//  Headers provided as part of the coursework.
-extern "C"
-{
-	#include "pool.h"
-}
+#include "ProcessPool.hpp"
 
 
 //////////////////////////////////////////////////////////////////////////////
 //  Standard headers.
 #include <iostream>
 #include <sstream>
+
+
+using namespace Mpi;
+
+
+//////////////////////////////////////////////////////////////////////////////
+/// @brief      Prints command line.
+///
+/// @param      argc Standard argument count.
+/// @param      argv Standard argument list.
+///
+PrintCmdLine(int argc, char* argv[])
+{
+	//  print command line
+	std::stringstream ss;
+	int i;
+	ss << argv[0];
+	for (i = 1; i < argc; ++i)
+	{
+		ss << " " << argv[i];
+	}
+	
+	printf("%s\n", ss.str().c_str());	
+}
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -37,48 +54,40 @@ int main(int argc, char* argv[])
 	try
 	{
 		Mpi mpi(argc, argv);
-		MpiCommunicator mpi_comm(MPI_COMM_WORLD);
-		
 		double start_time = MPI_Wtime();
+
+		MpiCommunicator mpi_comm(MPI_COMM_WORLD);
+		ProcessPool process_pool;
 
 		//  printf works better than std::cout when using MPI
 		printf("rank %d of %d\n", mpi_comm.GetRank(), mpi_comm.GetSize());
 
-		int init_val = processPoolInit();
-		printf("rank %d: processPoolInit() returned %d\n", mpi_comm.GetRank(), init_val);
+		printf("rank %d: processPoolInit() returned %d\n", mpi_comm.GetRank(), process_pool.GetType());
 
-		switch(init_val)
+		switch(process_pool.GetType())
 		{
-			case 1:
+			case ProcessPool::eMaster:
 			{
+				printf("rank %d: master\n", mpi_comm.GetRank());
 				break;
 			}
-			case 2:
+			case ProcessPool::eWorker:
 			{
+				printf("rank %d: worker\n", mpi_comm.GetRank());
 				break;
 			}
-			default:
+			case ProcessPool::eQuit:
 			{
+				printf("rank %d: quit\n", mpi_comm.GetRank());
 				break;
 			}
 		}
 		
-		processPoolFinalise();
-
 		printf("rank %d exiting\n", mpi_comm.GetRank());
 
 		if (0 == mpi_comm.GetRank())
 		{
-			//  print command line
-			std::stringstream ss;
-			int i;
-			ss << argv[0];
-			for (i = 1; i < argc; ++i)
-			{
-				ss << " " << argv[i];
-			}
-
-			printf("%s\n", ss.str().c_str());
+			PrintCmdLine(argc, argv);
 		}
 
 		if (0 == mpi_comm.GetRank())

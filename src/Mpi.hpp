@@ -19,13 +19,23 @@
 #include "mpi.h"
 
 
-class Mpi
+
+//////////////////////////////////////////////////////////////////////////////
+/// @brief      Message Passing Interface classes.
+///
+/// @details    
+///
+namespace Mpi
 {
-    public:
-        Mpi(int argc, char** argv);
-        ~Mpi();
-		std::string GetProcName();
-};
+	class Mpi
+	{
+		public:
+			Mpi(int argc, char** argv);
+			~Mpi();
+			std::string GetProcName();
+	};
+
+}   //  namespace Mpi
 
 
 #endif //  #defined SQUIRRELS_MPI_H
