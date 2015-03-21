@@ -22,16 +22,13 @@
 #include <sstream>
 
 
-using namespace Mpi;
-
-
 //////////////////////////////////////////////////////////////////////////////
 /// @brief      Prints command line.
 ///
 /// @param      argc Standard argument count.
 /// @param      argv Standard argument list.
 ///
-PrintCmdLine(int argc, char* argv[])
+void PrintCmdLine(int argc, char* argv[])
 {
 	//  print command line
 	std::stringstream ss;
@@ -53,11 +50,11 @@ int main(int argc, char* argv[])
 {
 	try
 	{
-		Mpi mpi(argc, argv);
+		Mpi::Mpi mpi(argc, argv);
 		double start_time = MPI_Wtime();
 
-		MpiCommunicator mpi_comm(MPI_COMM_WORLD);
-		ProcessPool process_pool;
+		Mpi::MpiCommunicator mpi_comm(MPI_COMM_WORLD);
+		Mpi::ProcessPool process_pool;
 
 		//  printf works better than std::cout when using MPI
 		printf("rank %d of %d\n", mpi_comm.GetRank(), mpi_comm.GetSize());
@@ -66,17 +63,17 @@ int main(int argc, char* argv[])
 
 		switch(process_pool.GetType())
 		{
-			case ProcessPool::eMaster:
+			case Mpi::ProcessPool::eMaster:
 			{
 				printf("rank %d: master\n", mpi_comm.GetRank());
 				break;
 			}
-			case ProcessPool::eWorker:
+			case Mpi::ProcessPool::eWorker:
 			{
 				printf("rank %d: worker\n", mpi_comm.GetRank());
 				break;
 			}
-			case ProcessPool::eQuit:
+			case Mpi::ProcessPool::eQuit:
 			{
 				printf("rank %d: quit\n", mpi_comm.GetRank());
 				break;

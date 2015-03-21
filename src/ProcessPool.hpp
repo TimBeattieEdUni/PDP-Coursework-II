@@ -36,7 +36,7 @@ namespace Mpi
 			ProcessPool(ProcessPool const& rhs);              ///< Copy constructor.
 			ProcessPool& operator=(ProcessPool const& rhs);   ///< Assignment operator.
 		
-			int m_type;       ///< Master/worker/abort indicator.
+			Type m_type;       ///< Master/worker/abort indicator.
 	};
 
 }   //  namespace Mpi
