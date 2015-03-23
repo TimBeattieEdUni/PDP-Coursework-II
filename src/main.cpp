@@ -44,6 +44,44 @@ void PrintCmdLine(int argc, char* argv[])
 
 
 //////////////////////////////////////////////////////////////////////////////
+/// @brief        Runs the process pool master.
+///
+/// @details      
+///
+/// @param        
+/// @return       
+///
+/// @pre          
+/// @post         
+///
+/// @exception    
+///
+void RunPoolMaster()
+{
+	printf("rank %d: running master\n", mpi_comm.GetRank());	
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+/// @brief        Runs a pool worker.
+///
+/// @details      
+///
+/// @param        
+/// @return       
+///
+/// @pre          
+/// @post         
+///
+/// @exception    
+///
+void RunPoolWorker()
+{
+	printf("rank %d: running worker\n", mpi_comm.GetRank());	
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
 /// @brief      Program entry point.
 ///
 int main(int argc, char* argv[])
@@ -59,34 +97,30 @@ int main(int argc, char* argv[])
 		//  printf works better than std::cout when using MPI
 		printf("rank %d of %d\n", mpi_comm.GetRank(), mpi_comm.GetSize());
 
-		printf("rank %d: processPoolInit() returned %d\n", mpi_comm.GetRank(), process_pool.GetType());
-
-		switch(process_pool.GetType())
-		{
-			case Mpi::ProcessPool::eMaster:
-			{
-				printf("rank %d: master\n", mpi_comm.GetRank());
-				break;
-			}
-			case Mpi::ProcessPool::eWorker:
-			{
-				printf("rank %d: worker\n", mpi_comm.GetRank());
-				break;
-			}
-			case Mpi::ProcessPool::eQuit:
-			{
-				printf("rank %d: quit\n", mpi_comm.GetRank());
-				break;
-			}
-		}
-		
-		printf("rank %d exiting\n", mpi_comm.GetRank());
-
 		if (0 == mpi_comm.GetRank())
 		{
 			PrintCmdLine(argc, argv);
 		}
-
+		
+		switch(process_pool.GetType())
+		{
+			case Mpi::ProcessPool::eMaster:
+			{
+				RunPoolMaster();
+				break;
+			}
+			case Mpi::ProcessPool::eWorker:
+			{
+				RunPoolWorker();
+				break;
+			}
+			case Mpi::ProcessPool::eQuit:
+			{
+				printf("rank %d: exiting\n", mpi_comm.GetRank());
+				break;
+			}
+		}
+		
 		if (0 == mpi_comm.GetRank())
 		{
 			printf("total program time:\t%f\n", MPI_Wtime() - start_time);
