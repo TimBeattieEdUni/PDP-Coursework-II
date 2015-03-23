@@ -18,24 +18,28 @@
 typedef int mpi_comm_t;
 
 
-//////////////////////////////////////////////////////////////////////////////
-/// @brief      MPI communicator.
-///
-/// @details    Stores details about an MPI communicator.
-///
-class MpiCommunicator
+namespace Mpi
 {
-    public:
-        MpiCommunicator(mpi_comm_t comm_id);
-        int GetRank() { return m_rank; }
-		int GetSize() { return m_size; }
+	//////////////////////////////////////////////////////////////////////////////
+	/// @brief      MPI communicator.
+	///
+	/// @details    Stores details about an MPI communicator.
+	///
+	class MpiCommunicator
+	{
+		public:
+			MpiCommunicator(mpi_comm_t comm_id);
+			int GetRank() { return m_rank; }
+			int GetSize() { return m_size; }
 
-    private:
-		mpi_comm_t  m_comm_id;
+		private:
+			mpi_comm_t  m_comm_id;
 
-        int m_rank;
-        int m_size;
-};
+			int m_rank;
+			int m_size;
+	};
+
+}   //  namespace Mpi
 
 
 #endif  /// #defined MPI_COMMUNICATOR_HPP

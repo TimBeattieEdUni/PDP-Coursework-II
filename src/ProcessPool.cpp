@@ -34,7 +34,7 @@ namespace Mpi
 	/// @exception  std::logic_error The pool code returned an undocumented value.
 	///
 	ProcessPool::ProcessPool()
-		: m_type(processPoolInit())
+		: m_type(static_cast<Type>(processPoolInit()))
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 		
