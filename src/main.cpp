@@ -116,12 +116,12 @@ int main(int argc, char* argv[])
 			}
 			case Mpi::ProcessPool::eQuit:
 			{
-				printf("rank %d: exiting\n", mpi_comm.GetRank());
+				printf("rank %d: exiting\n", comm.GetRank());
 				break;
 			}
 		}
 		
-		if (0 == mpi_comm.GetRank())
+		if (0 == comm.GetRank())
 		{
 			printf("total program time:\t%f\n", MPI_Wtime() - start_time);
 		}
