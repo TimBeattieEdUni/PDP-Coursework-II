@@ -16,7 +16,7 @@
 
 namespace Mpi
 {
-	MpiCommunicator::MpiCommunicator(mpi_comm_t comm_id)
+	Communicator::Communicator(mpi_comm_t comm_id)
 		: m_comm_id(comm_id)
 		, m_rank(0)
 		, m_size(0)

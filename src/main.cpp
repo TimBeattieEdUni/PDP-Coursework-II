@@ -56,9 +56,9 @@ void PrintCmdLine(int argc, char* argv[])
 ///
 /// @exception    
 ///
-void RunPoolMaster()
+void RunPoolMaster(Mpi::Communicator const& comm)
 {
-	printf("rank %d: running master\n", mpi_comm.GetRank());	
+	printf("rank %d: running master\n", comm.GetRank());	
 }
 
 
@@ -75,9 +75,9 @@ void RunPoolMaster()
 ///
 /// @exception    
 ///
-void RunPoolWorker()
+void RunPoolWorker(Mpi::Communicator const& comm)
 {
-	printf("rank %d: running worker\n", mpi_comm.GetRank());	
+	printf("rank %d: running worker\n", comm.GetRank());	
 }
 
 
@@ -91,13 +91,13 @@ int main(int argc, char* argv[])
 		Mpi::Mpi mpi(argc, argv);
 		double start_time = MPI_Wtime();
 
-		Mpi::MpiCommunicator mpi_comm(MPI_COMM_WORLD);
+		Mpi::Communicator comm(MPI_COMM_WORLD);
 		Mpi::ProcessPool process_pool;
 
 		//  printf works better than std::cout when using MPI
-		printf("rank %d of %d\n", mpi_comm.GetRank(), mpi_comm.GetSize());
+		printf("rank %d of %d\n", comm.GetRank(), comm.GetSize());
 
-		if (0 == mpi_comm.GetRank())
+		if (0 == comm.GetRank())
 		{
 			PrintCmdLine(argc, argv);
 		}
@@ -106,12 +106,12 @@ int main(int argc, char* argv[])
 		{
 			case Mpi::ProcessPool::eMaster:
 			{
-				RunPoolMaster();
+				RunPoolMaster(comm);
 				break;
 			}
 			case Mpi::ProcessPool::eWorker:
 			{
-				RunPoolWorker();
+				RunPoolWorker(comm);
 				break;
 			}
 			case Mpi::ProcessPool::eQuit:

@@ -25,12 +25,12 @@ namespace Mpi
 	///
 	/// @details    Stores details about an MPI communicator.
 	///
-	class MpiCommunicator
+	class Communicator
 	{
 		public:
-			MpiCommunicator(mpi_comm_t comm_id);
-			int GetRank() { return m_rank; }
-			int GetSize() { return m_size; }
+			Communicator(mpi_comm_t comm_id);
+			int GetRank() const { return m_rank; }
+			int GetSize() const { return m_size; }
 
 		private:
 			mpi_comm_t  m_comm_id;
