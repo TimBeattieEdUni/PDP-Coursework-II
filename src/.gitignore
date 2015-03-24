@@ -17,3 +17,6 @@
 
 # The application
 squirrels
+
+# Batch output
+morar.sh.*
