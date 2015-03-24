@@ -5,8 +5,8 @@
 ///
 
 
-#ifndef PDP_PROCESSPOOL_HPP
-#define PDP_PROCESSPOOL_HPP
+#ifndef MPI_PROCESSPOOL_HPP
+#define MPI_PROCESSPOOL_HPP
 
 
 namespace Mpi
@@ -22,24 +22,24 @@ namespace Mpi
 		public:
 			ProcessPool();    ///< Constructor.
 			~ProcessPool();   ///< Destructor.
-			
+
 		enum Type
 		{
 			eQuit    = 0,
 			eWorker  = 1,
 			eMaster  = 2
 		};
-		
+
 		Type GetType() { return m_type; };   ///< Getter.
 
 		private:
 			ProcessPool(ProcessPool const& rhs);              ///< Copy constructor.
 			ProcessPool& operator=(ProcessPool const& rhs);   ///< Assignment operator.
-		
+
 			Type m_type;       ///< Master/worker/abort indicator.
 	};
 
 }   //  namespace Mpi
 
 
-#endif  //  #ndef PDP_PROCESSPOOL_HPP
+#endif  //  #ndef MPI_PROCESSPOOL_HPP

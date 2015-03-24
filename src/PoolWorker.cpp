@@ -11,82 +11,124 @@
 
 
 //////////////////////////////////////////////////////////////////////////////
+//  Local headers.
+extern "C"
+{
+	#include "pool.h"
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
 //  Standard headers.
 #include <iostream>
 
 
-namespace repo
+namespace Mpi
 {
-	namespace src
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details    Describe object initialisation here.
+	///
+	/// @param      Describe parameters here, one line each.
+	///
+	/// @post       List what is guaranteed to be true after this function returns.
+	///
+	/// @exception  List exceptions this function may throw here.
+	///
+	PoolWorker::PoolWorker(Communicator const& comm)
+		: m_comm(comm)
 	{
-		//////////////////////////////////////////////////////////////////////////////
-		/// @details    Describe object initialisation here.
-		///
-		/// @param      Describe parameters here, one line each.
-		///
-		/// @post       List what is guaranteed to be true after this function returns.
-		///
-		/// @exception  List exceptions this function may throw here.
-		///
-		PoolWorker::PoolWorker()
+		std::cout << __PRETTY_FUNCTION__ << std::endl;
+	}
+
+
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details    Describe object destruction here.
+	///
+	/// @param      Describe parameters here, one line each.
+	///
+	/// @pre        List what must be true before this function is called.
+	/// @post       List what is guaranteed to be true after this function returns.
+	///
+	/// @exception  None; this is a destructor.
+	///
+	PoolWorker::~PoolWorker()
+	{
+		std::cout << __PRETTY_FUNCTION__ << std::endl;
+	}
+
+
+	void PoolWorker::Run()
+	{
+		printf("rank %d: running worker\n", m_comm.GetRank());
+
+		int workerStatus = 1;
+		while (workerStatus)
 		{
-			std::cout << __PRETTY_FUNCTION__ << std::endl;
+			int myRank, parentId;
+			MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
+			parentId = getCommandData();    // We encode the parent ID in the wake up command data
+			if (parentId == 0)
+			{
+				// If my parent is the master (one of the 10 that the master started) then spawn two further children
+				int childOnePid = startWorkerProcess();
+				int childTwoPid = startWorkerProcess();
+
+				printf("Worker on process %d, started two child processes (%d and %d)\n", myRank, childOnePid, childTwoPid);
+				// Wait for these children to send me a message
+				MPI_Request childRequests[2];
+				MPI_Irecv(NULL, 0, MPI_INT, childOnePid, 0, MPI_COMM_WORLD, &childRequests[0]);
+				MPI_Irecv(NULL, 0, MPI_INT, childTwoPid, 0, MPI_COMM_WORLD, &childRequests[1]);
+				MPI_Waitall(2, childRequests, MPI_STATUS_IGNORE);
+				// Now tell the master that I am finished
+				MPI_Send(NULL, 0, MPI_INT, 0, 0, MPI_COMM_WORLD);
+			}
+			else
+			{
+				printf("Child worker on process %d started with parent %d\n", myRank, parentId);
+				// Tell my parent that I have been alive and am about to die
+				MPI_Send(NULL, 0, MPI_INT, parentId, 0, MPI_COMM_WORLD);
+			}
+
+			workerStatus = workerSleep(); // This MPI process will sleep, further workers may be run on this process now
 		}
+	}
 
 
-		//////////////////////////////////////////////////////////////////////////////
-		/// @details    Describe object destruction here.
-		///
-		/// @param      Describe parameters here, one line each.
-		///
-		/// @pre        List what must be true before this function is called.
-		/// @post       List what is guaranteed to be true after this function returns.
-		///
-		/// @exception  None; this is a destructor.
-		///
-		PoolWorker::~PoolWorker()
-		{
-			std::cout << __PRETTY_FUNCTION__ << std::endl;
-		}
+//		//////////////////////////////////////////////////////////////////////////////
+//		/// @details    Describe copy construction here.
+//		///
+//		/// @param      rhs  Object to copy.
+//		///
+//		/// @pre        List what must be true before this function is called.
+//		/// @post       List what is guaranteed to be true after this function returns.
+//		///
+//		/// @exception  List exceptions this function may throw here.
+//		///
+//		PoolWorker::PoolWorker(PoolWorker const& rhs)
+//		{
+//			std::cout << __PRETTY_FUNCTION__ << std::endl;
+//
+//			(void) rhs;
+//		}
+//
+//
+//		//////////////////////////////////////////////////////////////////////////////
+//		/// @details    Describe object assignment here.
+//		///
+//		/// @param      rhs  Object on the right-hand side of the assignment statement.
+//		/// @return     Object which has been assigned.
+//		///
+//		/// @pre        List what must be true before this function is called.
+//		/// @post       List what is guaranteed to be true after this function returns.
+//		///
+//		/// @exception  List exceptions this function may throw here.
+//		///
+//		PoolWorker& PoolWorker::operator=(PoolWorker const& rhs)
+//		{
+//			std::cout << __PRETTY_FUNCTION__ << std::endl;
+//
+//			(void) rhs;
+//			return *this;
+//		}
 
-
-		//////////////////////////////////////////////////////////////////////////////
-		/// @details    Describe copy construction here.
-		///
-		/// @param      rhs  Object to copy.
-		///
-		/// @pre        List what must be true before this function is called.
-		/// @post       List what is guaranteed to be true after this function returns.
-		///
-		/// @exception  List exceptions this function may throw here.
-		///
-		PoolWorker::PoolWorker(PoolWorker const& rhs)
-		{
-			std::cout << __PRETTY_FUNCTION__ << std::endl;
-
-			(void) rhs;
-		}
-
-
-		//////////////////////////////////////////////////////////////////////////////
-		/// @details    Describe object assignment here.
-		///
-		/// @param      rhs  Object on the right-hand side of the assignment statement.
-		/// @return     Object which has been assigned.
-		///
-		/// @pre        List what must be true before this function is called.
-		/// @post       List what is guaranteed to be true after this function returns.
-		///
-		/// @exception  List exceptions this function may throw here.
-		///
-		PoolWorker& PoolWorker::operator=(PoolWorker const& rhs)
-		{
-			std::cout << __PRETTY_FUNCTION__ << std::endl;
-
-			(void) rhs;
-			return *this;
-		}
-
-	}   //  namespace src
-
-}   //  namespace repo
+}   //  namespace Mpi

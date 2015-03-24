@@ -5,35 +5,39 @@
 ///
 
 
-#ifndef REPO_SRC_POOLWORKER_HPP
-#define REPO_SRC_POOLWORKER_HPP
+#ifndef MPI_POOLWORKER_HPP
+#define MPI_POOLWORKER_HPP
 
 
-namespace repo
+//////////////////////////////////////////////////////////////////////////////
+//  Local headers.
+#include "MpiCommunicator.hpp"
+
+
+namespace Mpi
 {
-	namespace src
+	//////////////////////////////////////////////////////////////////////////////
+	/// @brief      Runs a process pool worker.
+	///
+	/// @details
+	///
+	class PoolWorker
 	{
-		//////////////////////////////////////////////////////////////////////////////
-		/// @brief
-		///
-		/// @details
-		///
-		/// @invariant
-		///
-		class PoolWorker
-		{
-			public:
-				PoolWorker();    ///< Constructor.
-				~PoolWorker();   ///< Destructor.
+		public:
+			PoolWorker(Communicator const& comm);    ///< Constructor.
+			~PoolWorker();   ///< Destructor.
 
-			private:
-				PoolWorker(PoolWorker const& rhs);              ///< Copy constructor.
-				PoolWorker& operator=(PoolWorker const& rhs);   ///< Assignment operator.
-		};
+			void Run();   ///< Does the worker's work.
 
-	}   //  namespace src
+		private:
+			PoolWorker(PoolWorker const& rhs);              ///< Copy constructor.
+			PoolWorker& operator=(PoolWorker const& rhs);   ///< Assignment operator.
 
-}   //  namespace repo
+			Communicator const& m_comm;   ///< MPI communcator for the pool.
+
+	};
+
+}   //  namespace Mpi
 
 
-#endif  //  #ndef REPO_SRC_POOLWORKER_HPP
+#endif  //  #ndef MPI_POOLWORKER_HPP

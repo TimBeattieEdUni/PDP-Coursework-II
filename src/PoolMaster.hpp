@@ -5,8 +5,8 @@
 ///
 
 
-#ifndef REPO_SRC_POOLMASTER_HPP
-#define REPO_SRC_POOLMASTER_HPP
+#ifndef MPI_POOLMASTER_HPP
+#define MPI_POOLMASTER_HPP
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -27,7 +27,7 @@ namespace Mpi
 			PoolMaster(Communicator const& comm);    ///< Constructor.
 			~PoolMaster();   ///< Destructor.
 
-			void Run();
+			void Run();   ///< Does the master's work.
 
 		private:
 			PoolMaster(PoolMaster const& rhs);              ///< Copy constructor.
@@ -39,4 +39,4 @@ namespace Mpi
 }   //  namespace Mpi
 
 
-#endif  //  #ndef REPO_SRC_POOLMASTER_HPP
+#endif  //  #ndef MPI_POOLMASTER_HPP
