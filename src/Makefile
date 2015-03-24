@@ -15,7 +15,7 @@ CLEANFILES =
 
 ##############################################################################
 # Build products.
-APP := simsq
+APP := squirrels
 
 CLEANFILES += $(APP)
 
