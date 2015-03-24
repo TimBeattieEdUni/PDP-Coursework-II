@@ -14,6 +14,14 @@
 #include "Mpi.hpp"
 #include "MpiCommunicator.hpp"
 #include "ProcessPool.hpp"
+#include "PoolMaster.hpp"
+
+
+/// @todo Remove this once pool is wrapped up.
+extern "C"
+{
+	#include "pool.h"
+}
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -38,46 +46,63 @@ void PrintCmdLine(int argc, char* argv[])
 	{
 		ss << " " << argv[i];
 	}
-	
-	printf("%s\n", ss.str().c_str());	
+
+	printf("%s\n", ss.str().c_str());
 }
 
 
-//////////////////////////////////////////////////////////////////////////////
-/// @brief        Runs the process pool master.
-///
-/// @details      
-///
-/// @param        
-/// @return       
-///
-/// @pre          
-/// @post         
-///
-/// @exception    
-///
 void RunPoolMaster(Mpi::Communicator const& comm)
 {
-	printf("rank %d: running master\n", comm.GetRank());	
 }
 
 
 //////////////////////////////////////////////////////////////////////////////
 /// @brief        Runs a pool worker.
 ///
-/// @details      
+/// @details
 ///
-/// @param        
-/// @return       
+/// @param
+/// @return
 ///
-/// @pre          
-/// @post         
+/// @pre
+/// @post
 ///
-/// @exception    
+/// @exception
 ///
 void RunPoolWorker(Mpi::Communicator const& comm)
 {
-	printf("rank %d: running worker\n", comm.GetRank());	
+	printf("rank %d: running worker\n", comm.GetRank());
+
+	int workerStatus = 1;
+	while (workerStatus)
+	{
+		int myRank, parentId;
+		MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
+		parentId = getCommandData();    // We encode the parent ID in the wake up command data
+		if (parentId == 0)
+		{
+			// If my parent is the master (one of the 10 that the master started) then spawn two further children
+			int childOnePid = startWorkerProcess();
+			int childTwoPid = startWorkerProcess();
+
+			printf("Worker on process %d, started two child processes (%d and %d)\n", myRank, childOnePid, childTwoPid);
+			// Wait for these children to send me a message
+			MPI_Request childRequests[2];
+			MPI_Irecv(NULL, 0, MPI_INT, childOnePid, 0, MPI_COMM_WORLD, &childRequests[0]);
+			MPI_Irecv(NULL, 0, MPI_INT, childTwoPid, 0, MPI_COMM_WORLD, &childRequests[1]);
+			MPI_Waitall(2, childRequests, MPI_STATUS_IGNORE);
+			// Now tell the master that I am finished
+			MPI_Send(NULL, 0, MPI_INT, 0, 0, MPI_COMM_WORLD);
+		}
+		else
+		{
+			printf("Child worker on process %d started with parent %d\n", myRank, parentId);
+			// Tell my parent that I have been alive and am about to die
+			MPI_Send(NULL, 0, MPI_INT, parentId, 0, MPI_COMM_WORLD);
+		}
+
+		workerStatus = workerSleep(); // This MPI process will sleep, further workers may be run on this process now
+	}
 }
 
 
@@ -101,12 +126,13 @@ int main(int argc, char* argv[])
 		{
 			PrintCmdLine(argc, argv);
 		}
-		
+
 		switch(process_pool.GetType())
 		{
 			case Mpi::ProcessPool::eMaster:
 			{
-				RunPoolMaster(comm);
+				Mpi::PoolMaster master(comm);
+				master.Run();
 				break;
 			}
 			case Mpi::ProcessPool::eWorker:
@@ -120,7 +146,7 @@ int main(int argc, char* argv[])
 				break;
 			}
 		}
-		
+
 		if (0 == comm.GetRank())
 		{
 			printf("total program time:\t%f\n", MPI_Wtime() - start_time);
