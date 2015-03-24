@@ -9,31 +9,34 @@
 #define REPO_SRC_POOLMASTER_HPP
 
 
-namespace repo
+//////////////////////////////////////////////////////////////////////////////
+//  Local headers.
+#include "MpiCommunicator.hpp"
+
+
+namespace Mpi
 {
-	namespace src
+	//////////////////////////////////////////////////////////////////////////////
+	/// @brief      Runs the process pool's master.
+	///
+	/// @details
+	///
+	class PoolMaster
 	{
-		//////////////////////////////////////////////////////////////////////////////
-		/// @brief
-		///
-		/// @details
-		///
-		/// @invariant
-		///
-		class PoolMaster
-		{
-			public:
-				PoolMaster();    ///< Constructor.
-				~PoolMaster();   ///< Destructor.
+		public:
+			PoolMaster(Communicator const& comm);    ///< Constructor.
+			~PoolMaster();   ///< Destructor.
 
-			private:
-				PoolMaster(PoolMaster const& rhs);              ///< Copy constructor.
-				PoolMaster& operator=(PoolMaster const& rhs);   ///< Assignment operator.
-		};
+			void Run();
 
-	}   //  namespace src
+		private:
+			PoolMaster(PoolMaster const& rhs);              ///< Copy constructor.
+			PoolMaster& operator=(PoolMaster const& rhs);   ///< Assignment operator.
 
-}   //  namespace repo
+			Communicator const& m_comm;   ///< MPI communcator for the pool.
+	};
+
+}   //  namespace Mpi
 
 
 #endif  //  #ndef REPO_SRC_POOLMASTER_HPP
