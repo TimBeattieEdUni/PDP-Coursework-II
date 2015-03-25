@@ -52,16 +52,6 @@ void PrintCmdLine(int argc, char* argv[])
 }
 
 
-void RunPoolMaster(Mpi::Communicator const& comm)
-{
-}
-
-
-void RunPoolWorker(Mpi::Communicator const& comm)
-{
-}
-
-
 //////////////////////////////////////////////////////////////////////////////
 /// @brief      Program entry point.
 ///
@@ -75,26 +65,26 @@ int main(int argc, char* argv[])
 		Mpi::Communicator comm(MPI_COMM_WORLD);
 		Mpi::ProcessPool process_pool;
 
-		//  printf works better than std::cout when using MPI
-		printf("rank %d of %d\n", comm.GetRank(), comm.GetSize());
-
 		if (0 == comm.GetRank())
 		{
 			PrintCmdLine(argc, argv);
 		}
 
+		//  printf works better than std::cout when using MPI
+		printf("rank %d of %d\n", comm.GetRank(), comm.GetSize());
+
 		switch(process_pool.GetType())
 		{
 			case Mpi::ProcessPool::eMaster:
 			{
-				Mpi::PoolMaster master(comm);
-				master.Run();
+				Mpi::PoolMaster pool_master(comm);
+				pool_master.Run();
 				break;
 			}
 			case Mpi::ProcessPool::eWorker:
 			{
-				Mpi::PoolWorker worker(comm);
-				worker.Run();
+				Mpi::PoolWorker pool_worker(comm);
+				pool_worker.Run();
 				break;
 			}
 			case Mpi::ProcessPool::eQuit:

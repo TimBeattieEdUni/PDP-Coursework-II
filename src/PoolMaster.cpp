@@ -60,16 +60,16 @@ namespace Mpi
 	//////////////////////////////////////////////////////////////////////////////
 	/// @details    Runs the pool's master process.
 	///
-	/// @param      Describe parameters here, one line each.
-	///
-	/// @pre        List what must be true before this function is called.
-	/// @post       List what is guaranteed to be true after this function returns.
-	///
-	/// @exception  None; this is a destructor.
-	///
 	void PoolMaster::Run()
 	{
-		printf("rank %d: running master\n", m_comm.GetRank());
+		std::cout << __PRETTY_FUNCTION__ << std::endl;
+
+//		int initial_workers = 1;
+		startWorkerProcess();
+		while(masterPoll())
+		{
+			std::cout << "master woke up" << std::endl;
+		}
 
 		/*
 		 * This is the master, each call to master poll will block until a message is received and then will handle it and return
@@ -77,37 +77,37 @@ namespace Mpi
 		 * Basically it just starts 10 workers and then registers when each one has completed. When they have all completed it
 		 * shuts the entire pool down
 		 */
-		int i, activeWorkers = 0, returnCode;
-		MPI_Request initialWorkerRequests[10];
-		for (i = 0; i < 10; i++)
-		{
-			int workerPid = startWorkerProcess();
-			MPI_Irecv(NULL, 0, MPI_INT, workerPid, 0, MPI_COMM_WORLD, &initialWorkerRequests[i]);
-			activeWorkers++;
-			printf("Master started worker %d on MPI process %d\n", i , workerPid);
-		}
-		int masterStatus = masterPoll();
-		while (masterStatus)
-		{
-			masterStatus = masterPoll();
-			for (i = 0; i < 10; i++)
-			{
-				// Checks all outstanding workers that master spawned to see if they have completed
-				if (initialWorkerRequests[i] != MPI_REQUEST_NULL)
-				{
-					MPI_Test(&initialWorkerRequests[i], &returnCode, MPI_STATUS_IGNORE);
-					if (returnCode)
-					{
-						activeWorkers--;
-					}
-				}
-			}
-			// If we have no more active workers then quit poll loop which will effectively shut the pool down when  processPoolFinalise is called
-			if (activeWorkers == 0)
-			{
-				break;
-			}
-		}
+//		int i, activeWorkers = 0, returnCode;
+//		MPI_Request initialWorkerRequests[initial_workers];
+//		for (i = 0; i < initial_workers; i++)
+//		{
+//			int workerPid = startWorkerProcess();
+//			MPI_Irecv(NULL, 0, MPI_INT, workerPid, 0, MPI_COMM_WORLD, &initialWorkerRequests[i]);
+//			activeWorkers++;
+//			printf("Master started worker %d on MPI process %d\n", i , workerPid);
+//		}
+//		int masterStatus = masterPoll();
+//		while (masterStatus)
+//		{
+//			masterStatus = masterPoll();
+//			for (i = 0; i < initial_workers; i++)
+//			{
+//				// Checks all outstanding workers that master spawned to see if they have completed
+//				if (initialWorkerRequests[i] != MPI_REQUEST_NULL)
+//				{
+//					MPI_Test(&initialWorkerRequests[i], &returnCode, MPI_STATUS_IGNORE);
+//					if (returnCode)
+//					{
+//						activeWorkers--;
+//					}
+//				}
+//			}
+//			// If we have no more active workers then quit poll loop which will effectively shut the pool down when  processPoolFinalise is called
+//			if (activeWorkers == 0)
+//			{
+//				break;
+//			}
+//		}
 	}
 
 //		//////////////////////////////////////////////////////////////////////////////
