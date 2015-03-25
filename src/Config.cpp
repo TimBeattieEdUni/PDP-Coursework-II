@@ -28,7 +28,7 @@ namespace Pdp
 	/// @exception  Runtime error if config could not be obtained from command line.
 	///
 	Config::Config(int argc, char* argv[])
-		: m_cells(-1)
+		: m_cells(0)
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 		
