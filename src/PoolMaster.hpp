@@ -25,7 +25,7 @@ namespace Mpi
 	class PoolMaster
 	{
 		public:
-			PoolMaster(Communicator const& comm, Pdp::Config config);    ///< Constructor.
+			PoolMaster(Communicator const& comm, Pdp::Config const& config);    ///< Constructor.
 			~PoolMaster();   ///< Destructor.
 
 			void Run();   ///< Does the master's work.

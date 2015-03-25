@@ -34,7 +34,7 @@ namespace Mpi
 	///
 	/// @exception  List exceptions this function may throw here.
 	///
-	PoolMaster::PoolMaster(Communicator const& comm, Pdp::Config config)
+	PoolMaster::PoolMaster(Communicator const& comm, Pdp::Config const& config)
 		: m_comm(comm)
 		, m_config(config)
 	{
