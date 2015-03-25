@@ -32,7 +32,7 @@ namespace Pdp
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 		
-		if (2 < argc)
+		if (2 > argc)
 		{
 			throw std::runtime_error("bad command line");
 		}
