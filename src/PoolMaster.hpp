@@ -12,6 +12,7 @@
 //////////////////////////////////////////////////////////////////////////////
 //  Local headers.
 #include "MpiCommunicator.hpp"
+#include "Config.hpp"
 
 
 namespace Mpi
@@ -24,7 +25,7 @@ namespace Mpi
 	class PoolMaster
 	{
 		public:
-			PoolMaster(Communicator const& comm);    ///< Constructor.
+			PoolMaster(Communicator const& comm, Pdp::Config config);    ///< Constructor.
 			~PoolMaster();   ///< Destructor.
 
 			void Run();   ///< Does the master's work.
@@ -34,6 +35,7 @@ namespace Mpi
 			PoolMaster& operator=(PoolMaster const& rhs);   ///< Assignment operator.
 
 			Communicator const& m_comm;   ///< MPI communcator for the pool.
+			Pdp::Config const& m_config;   ///< App config.
 	};
 
 }   //  namespace Mpi

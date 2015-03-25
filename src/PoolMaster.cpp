@@ -34,8 +34,9 @@ namespace Mpi
 	///
 	/// @exception  List exceptions this function may throw here.
 	///
-	PoolMaster::PoolMaster(Communicator const& comm)
+	PoolMaster::PoolMaster(Communicator const& comm, Pdp::Config config)
 		: m_comm(comm)
+		, m_config(config)
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 	}
@@ -64,11 +65,14 @@ namespace Mpi
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 
-//		int initial_workers = 1;
-		startWorkerProcess();
+		for (int i=0; i<m_config.GetCells(); ++i)
+		{
+			startWorkerProcess();
+		}
+		
 		while(masterPoll())
 		{
-			std::cout << "master woke up" << std::endl;
+			std::cout << "we have awakened the master /igor" << std::endl;
 		}
 
 		/*

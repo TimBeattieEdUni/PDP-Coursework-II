@@ -16,6 +16,7 @@
 #include "ProcessPool.hpp"
 #include "PoolMaster.hpp"
 #include "PoolWorker.hpp"
+#include "Config.hpp"
 
 
 /// @todo Remove this once pool is wrapped up.
@@ -59,6 +60,8 @@ int main(int argc, char* argv[])
 {
 	try
 	{
+		Pdp::Config config(argc, argv);
+		
 		Mpi::Mpi mpi(argc, argv);
 		double start_time = MPI_Wtime();
 
@@ -77,7 +80,7 @@ int main(int argc, char* argv[])
 		{
 			case Mpi::ProcessPool::eMaster:
 			{
-				Mpi::PoolMaster pool_master(comm);
+				Mpi::PoolMaster pool_master(comm, config);
 				pool_master.Run();
 				break;
 			}
