@@ -12,8 +12,8 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //  Local headers.
-#include<Squirrel.hpp>
-#include<Cell.hpp>
+#include "Cell.hpp"
+#include "Squirrel.hpp"
 
 extern "C"
 {
@@ -66,12 +66,12 @@ namespace Mpi
 	{
 		if (m_comm.GetRank() % 2)
 		{
-			Squirrel squirrel;
+			Biology::Squirrel squirrel;
 			(void) squirrel;
 		}
 		else
 		{
-			Cell cell;
+			Biology::Cell cell;
 			(void) cell;
 		}
 		
