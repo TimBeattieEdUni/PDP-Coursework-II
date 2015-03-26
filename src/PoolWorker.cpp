@@ -12,10 +12,14 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //  Local headers.
+#include<Squirrel.hpp>
+#include<Cell.hpp>
+
 extern "C"
 {
 	#include "pool.h"
 }
+
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -60,6 +64,17 @@ namespace Mpi
 
 	void PoolWorker::Run()
 	{
+		if (m_comm.GetRank() % 2)
+		{
+			Squirrel squirrel;
+			(void) squirrel;
+		}
+		else
+		{
+			Cell cell;
+			(void) cell;
+		}
+		
 		printf("rank %d: running worker\n", m_comm.GetRank());
 
 		do

@@ -67,7 +67,8 @@ namespace Mpi
 
 		for (int i=0; i<m_config.GetCells(); ++i)
 		{
-			startWorkerProcess();
+			int pid = startWorkerProcess();
+			std::cout << "started process " << pid << std::endl;
 		}
 		
 		while(masterPoll())
