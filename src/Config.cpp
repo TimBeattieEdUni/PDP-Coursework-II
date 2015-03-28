@@ -29,6 +29,7 @@ namespace Pdp
 	///
 	Config::Config(int argc, char* argv[])
 		: m_cells(0)
+		, m_sqrls(0)
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 		
@@ -38,8 +39,12 @@ namespace Pdp
 		}
 		
 		std::stringstream converter;
-		converter << argv[1] << argv[2];
+
+		converter << argv[1] << " " << argv[2];
 		converter >> m_cells >> m_sqrls;
+
+//		converter << argv[2];
+//		converter >> m_sqrls;
 	}
 
 
