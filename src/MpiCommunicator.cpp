@@ -16,17 +16,17 @@
 
 namespace Mpi
 {
-	Communicator::Communicator(int comm_id)
+	Communicator::Communicator(int comm)
 		: m_comm(comm)
 		, m_rank(0)
 		, m_size(0)
 	{
-		if (MPI_Comm_rank(comm_id, &m_rank))
+		if (MPI_Comm_rank(comm, &m_rank))
 		{
 			throw std::runtime_error("failed to obtain MPI rank");
 		}
 
-		if (MPI_Comm_size(comm_id, &m_size))
+		if (MPI_Comm_size(comm, &m_size))
 		{
 			throw std::runtime_error("failed to obtain number of MPI processes");
 		}

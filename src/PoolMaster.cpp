@@ -73,15 +73,15 @@ namespace Mpi
 			std::cout << "started process " << pid << std::endl;
 			if (i%2)
 			{
-				int task = static_cast<int>(PdP::ETask::eSquirrel);
+				int task = static_cast<int>(Pdp::ETask::eSquirrel);
 				std::cout << "telling process " << pid << " to be a squirrel" << std::endl;
-				MPI_Send(&task, 1, MPI_INT, pid, Pdp::EAssignTask, m_comm.GetComm());
+				MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());
 			}
 			else
 			{
-				int task = static_cast<int>(PdP::ETask::eCell);
+				int task = static_cast<int>(Pdp::ETask::eCell);
 				std::cout << "telling process " << pid << " to be a cell" << std::endl;
-				MPI_Send(&task, 1, MPI_INT, pid, Pdp::EAssignTask, m_comm.GetComm());
+				MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());
 			}
 		}
 		

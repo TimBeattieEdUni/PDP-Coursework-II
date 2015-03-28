@@ -14,7 +14,7 @@
 //  Local headers.
 #include "Cell.hpp"
 #include "Squirrel.hpp"
-#include "PdpEnums.hpp@
+#include "PdpEnums.hpp"
 
 extern "C"
 {
@@ -68,7 +68,8 @@ namespace Mpi
 		printf("rank %d: running worker\n", m_comm.GetRank());
 
 		int task = -1;
-		MPI_Recv(&task, 1, MPI_INT, MPI_ANY, Pdp::EMpiMsgTag::EAssignTask, m_comm.GetCOmm());
+		MPI_Status status;
+		MPI_Recv(&task, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm(), &status);
 		
 		if (Pdp::ETask::eSquirrel == task)
 		{
