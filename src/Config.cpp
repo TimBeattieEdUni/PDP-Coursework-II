@@ -32,26 +32,19 @@ namespace Pdp
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 		
-		if (2 > argc)
+		if (3 > argc)
 		{
-			throw std::runtime_error("bad command line");
+			throw std::runtime_error("usage: squirrels <cells> <squirrels>");
 		}
 		
 		std::stringstream converter;
-		converter << argv[1];
-		converter >> m_cells;
+		converter << argv[1] << argv[2];
+		converter >> m_cells >> m_sqrls;
 	}
 
 
 	//////////////////////////////////////////////////////////////////////////////
 	/// @details    Describe object destruction here.
-	///
-	/// @param      Describe parameters here, one line each.
-	///
-	/// @pre        List what must be true before this function is called.
-	/// @post       List what is guaranteed to be true after this function returns.
-	///
-	/// @exception  None; this is a destructor.
 	///
 	Config::~Config()
 	{

@@ -67,22 +67,21 @@ namespace Mpi
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 
+		std::cout << "master starting cell workers " << i << std::endl;
 		for (int i=0; i<m_config.GetCells(); ++i)
 		{
 			int pid = startWorkerProcess();
 			std::cout << "started process " << pid << std::endl;
-			if (i%2)
-			{
-				int task = static_cast<int>(Pdp::ETask::eSquirrel);
-				std::cout << "telling process " << pid << " to be a squirrel" << std::endl;
-				MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());
-			}
-			else
-			{
-				int task = static_cast<int>(Pdp::ETask::eCell);
-				std::cout << "telling process " << pid << " to be a cell" << std::endl;
-				MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());
-			}
+			int task = static_cast<int>(Pdp::ETask::eCell);
+			MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());
+		}
+
+		for (int i=0; i<m_config.GetSqrls(); ++i)
+		{
+			int pid = startWorkerProcess();
+			std::cout << "telling process " << pid << " to be a cell" << std::endl;
+			MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());
+			int task = static_cast<int>(Pdp::ETask::eSquirrel);
 		}
 		
 		while(masterPoll())
