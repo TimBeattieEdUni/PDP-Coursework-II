@@ -20,3 +20,7 @@ squirrels
 
 # Batch output
 morar.sh.*
+
+# Doxygen output
+doxygen
+
