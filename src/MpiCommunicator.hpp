@@ -13,11 +13,6 @@
 //  Framework headers.
 #include "mpi.h"
 
-
-//  MPI just uses ints; lets give the data type a name.
-typedef int mpi_comm_t;
-
-
 namespace Mpi
 {
 	//////////////////////////////////////////////////////////////////////////////
@@ -28,13 +23,14 @@ namespace Mpi
 	class Communicator
 	{
 		public:
-			Communicator(mpi_comm_t comm_id);
+			Communicator(int comm);
+		
+			int GetComm() const { return m_comm; }
 			int GetRank() const { return m_rank; }
 			int GetSize() const { return m_size; }
 
 		private:
-			mpi_comm_t  m_comm_id;
-
+			int m_comm;
 			int m_rank;
 			int m_size;
 	};

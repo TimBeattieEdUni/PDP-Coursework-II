@@ -12,6 +12,8 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //  Local headers.
+#include "PdpEnums.hpp"
+
 extern "C"
 {
 	#include "pool.h"
@@ -69,6 +71,18 @@ namespace Mpi
 		{
 			int pid = startWorkerProcess();
 			std::cout << "started process " << pid << std::endl;
+			if (i%2)
+			{
+				int task = static_cast<int>(PdP::ETask::eSquirrel);
+				std::cout << "telling process " << pid << " to be a squirrel" << std::endl;
+				MPI_Send(&task, 1, MPI_INT, pid, Pdp::EAssignTask, m_comm.GetComm());
+			}
+			else
+			{
+				int task = static_cast<int>(PdP::ETask::eCell);
+				std::cout << "telling process " << pid << " to be a cell" << std::endl;
+				MPI_Send(&task, 1, MPI_INT, pid, Pdp::EAssignTask, m_comm.GetComm());
+			}
 		}
 		
 		while(masterPoll())
