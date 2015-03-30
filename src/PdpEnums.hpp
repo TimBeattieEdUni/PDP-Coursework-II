@@ -31,8 +31,9 @@ namespace Pdp
 	{
 		enum ETask
 		{
-			eSquirrel,   ///< Worker should be a squirrel.
-			eCell        ///< Worker should be a landscape cell.
+			eCoordinator,   ///< Worker should be the coordinator.
+			eSquirrel,      ///< Worker should be a squirrel.
+			eCell           ///< Worker should be a landscape cell.
 		};
 	}
 	

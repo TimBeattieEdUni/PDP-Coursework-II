@@ -13,6 +13,7 @@
 //////////////////////////////////////////////////////////////////////////////
 //  Local headers.
 #include "Cell.hpp"
+#include "SimCoordinator.hpp"
 #include "Squirrel.hpp"
 #include "PdpEnums.hpp"
 
@@ -71,17 +72,27 @@ namespace Mpi
 		MPI_Status status;
 		MPI_Recv(&task, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm(), &status);
 		
-		if (Pdp::ETask::eSquirrel == task)
+		switch(task)
+		case Pdp::ETask::eSquirrel:
 		{
 			Biology::Squirrel squirrel;
 			(void) squirrel;
+			break;
 		}
-		else
+		case Pdp::ETask::eCell:
 		{
 			Biology::Cell cell;
 			(void) cell;
+			break;
+		}
+		case Pdp::ETask::eCoordinator:
+		{
+			Biology::SimCoordinator sim_coordinator;
+			(void) sim_coordinator;
+			break;
 		}
 		
+		//  this loop represents the lifetime of an actor
 		do
 		{
 			for (int i=0; i<4; ++i)

@@ -19,6 +19,7 @@ namespace Biology
 		public:
 			Squirrel();    ///< Constructor.
 			~Squirrel();   ///< Destructor.
+	
 
 		private:
 			Squirrel(Squirrel const& rhs);              ///< Copy constructor.
