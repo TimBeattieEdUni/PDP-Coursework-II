@@ -67,8 +67,10 @@ namespace Biology
 		///
 		void SimCoordinator::Update()
 		{
+			std::cout << __PRETTY_FUNCTION__ << std::endl;
+
+			//  start initial set of actors first time we're called.
 			static bool first_time = true;
-			
 			if (first_time)
 			{
 				first_time = false;
@@ -76,14 +78,17 @@ namespace Biology
 				return;
 			}
 
-			std::cout << __PRETTY_FUNCTION__ << std::endl;
-			
-			//  wait for a second to pass.
-			usleep(1000000);
-			
-			// tmp - shut down sim after 1s
-			shutdownPool();
-			
+			static double last_time = MPI_Wtime();
+			double now = MPI_Wtime();
+			if (now - last_time > 1.0)
+			{
+				then = now;
+				std::cout << "coordinator: 1s passed; shutting down pool" << std::endl;
+
+				// tmp - shut down sim after 1s
+				shutdownPool();
+			}
+
 			//  send a message to all landscape cells at the end of each day.
 			
 			//  get stats back from landscape cells.
