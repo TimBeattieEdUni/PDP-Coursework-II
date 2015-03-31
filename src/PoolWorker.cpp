@@ -81,7 +81,7 @@ namespace Mpi
 			{
 				squirrel.Update();
 			}
-			while(! shouldWorkerStop())
+			while(! shouldWorkerStop());
 			break;
 		}
 		case Pdp::ETask::eCell:
@@ -91,7 +91,7 @@ namespace Mpi
 			{
 				cell.Update();
 			}
-			while(! shouldWorkerStop())
+			while(! shouldWorkerStop());
 			break;
 		}
 		case Pdp::ETask::eCoordinator:
@@ -101,7 +101,7 @@ namespace Mpi
 			{
 				sim_cdr.Update();
 			}
-			while(! shouldWorkerStop())
+			while(! shouldWorkerStop());
 			break;
 		}
 	}		
