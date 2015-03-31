@@ -96,10 +96,10 @@ namespace Mpi
 		}
 		case Pdp::ETask::eCoordinator:
 		{
-			Biology::SimCoordinator sim_cdr;
+			Biology::SimCoordinator sim_cdr(m_comm, m_config);
 			do
 			{
-				sim_cdr.Update(m_comm, m_config);
+				sim_cdr.Update();
 			}
 			while(! shouldWorkerStop());
 			break;
