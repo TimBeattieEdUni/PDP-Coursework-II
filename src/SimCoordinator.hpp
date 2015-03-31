@@ -15,6 +15,11 @@
 #include "MpiCommunicator.hpp"
 
 
+//////////////////////////////////////////////////////////////////////////////
+//  Standard headers.
+#include <vector>
+
+
 namespace Biology
 {
 	//////////////////////////////////////////////////////////////////////////////
@@ -33,12 +38,14 @@ namespace Biology
 			void Update();       ///< Runs the Coordinator's part of the simulation.
 			void CreateInitialActors();   ///< Sets up the landscape and initial squirrels.
 
-	private:
+		private:
 			SimCoordinator(SimCoordinator const& rhs);              ///< Copy constructor.
 			SimCoordinator& operator=(SimCoordinator const& rhs);   ///< Assignment operator.
 			
 			Mpi::Communicator const& m_comm;   ///< MPI communcator for the pool.
 			Pdp::Config const& m_config;   ///< App config.
+			std::vector<int> m_cell_pids;   ///< MPI process IDs for landscape cells.
+			
 	};
 
 }   //  namespace Biology

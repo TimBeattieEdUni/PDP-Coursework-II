@@ -39,6 +39,7 @@ namespace Biology
 		SimCoordinator::SimCoordinator(Mpi::Communicator const& comm, Pdp::Config const& config)
 			: m_comm(comm)
 			, m_config(config)
+			, m_cell_pids(config.GetCells())
 
 		{
 			std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -95,6 +96,7 @@ namespace Biology
 
 			//  detect end of simulation			
 		}
+
 	
 		//////////////////////////////////////////////////////////////////////////////
 		/// @details    Starts the number of landscape cells and initial squirrels
@@ -102,16 +104,21 @@ namespace Biology
 		///
 		void SimCoordinator::CreateInitialActors()
 		{
-			std::cout << "coordinator starting " << m_config.GetCells() << " cells and " << m_config.GetSqrls() << " squirrels " << std::endl;
-			for (int i=0; i<m_config.GetCells(); ++i)
+			//  start cells
+			std::cout << "coordinator starting " << m_config.GetCells() << " cells" << std::endl;
+			for (int cell_id = 0; 
+				 cell_id < m_config.GetCells(); 
+				 ++cell_id)
 			{
-				int pid = startWorkerProcess();
-				std::cout << "started cell on rank " << pid << std::endl;
+				//  store process ID in list using cell ID as index
+				m_cell_pids[cell_id] = startWorkerProcess();
+				std::cout << "started cell " << cell_id << " on rank " << m_cell_pids[cell_id] << std::endl;
 				int task = Pdp::ETask::eCell;
 				MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());
 			}
 			
-			std::cout << "master starting squirrel workers " << std::endl;
+			//  start squirrels
+			std::cout << "coordinator starting " << m_config.GetSqrls() << " squirrels" << std::endl;
 			for (int i=0; i<m_config.GetSqrls(); ++i)
 			{
 				int pid = startWorkerProcess();
