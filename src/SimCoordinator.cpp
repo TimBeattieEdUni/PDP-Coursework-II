@@ -16,10 +16,8 @@
 #include <unistd.h>
 
 
-namespace repo
+namespace Biology
 {
-	namespace src
-	{
 		//////////////////////////////////////////////////////////////////////////////
 		/// @details    Describe object initialisation here.
 		///
@@ -106,6 +104,4 @@ namespace repo
 //			return *this;
 //		}
 
-	}   //  namespace src
-
-}   //  namespace repo
+}   //  namespace Biology

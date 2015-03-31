@@ -73,6 +73,7 @@ namespace Mpi
 		MPI_Recv(&task, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm(), &status);
 		
 		switch(task)
+	{
 		case Pdp::ETask::eSquirrel:
 		{
 			Biology::Squirrel squirrel;
@@ -91,7 +92,7 @@ namespace Mpi
 			(void) sim_coordinator;
 			break;
 		}
-		
+	}		
 		//  this loop represents the lifetime of an actor
 		do
 		{
