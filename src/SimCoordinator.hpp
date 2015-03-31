@@ -12,6 +12,7 @@
 //////////////////////////////////////////////////////////////////////////////
 //  Local headers.
 #include "Config.hpp"
+#include "MpiCommunicator.hpp"
 
 
 namespace Biology
@@ -26,7 +27,7 @@ namespace Biology
 	class SimCoordinator
 	{
 		public:
-			SimCoordinator(Pdp::Config const& config);    ///< Constructor.
+			SimCoordinator(Mpi::Communicator const& comm, Pdp::Config const& config);    ///< Constructor.
 			~SimCoordinator();   ///< Destructor.
 
 			void Update();       ///< Runs the Coordinator's part of the simulation.
@@ -36,6 +37,7 @@ namespace Biology
 			SimCoordinator(SimCoordinator const& rhs);              ///< Copy constructor.
 			SimCoordinator& operator=(SimCoordinator const& rhs);   ///< Assignment operator.
 			
+			Mpi::Communicator const& m_comm;   ///< MPI communcator for the pool.
 			Pdp::Config const& m_config;   ///< App config.
 	};
 

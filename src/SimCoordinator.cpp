@@ -36,8 +36,10 @@ namespace Biology
 		///
 		/// @exception  List exceptions this function may throw here.
 		///
-		SimCoordinator::SimCoordinator(Pdp::Config const& config)
+		SimCoordinator::SimCoordinator(Mpi::Communicator const& comm, Pdp::Config const& config)
 			: m_config(config)
+			, m_config(config)
+
 		{
 			std::cout << __PRETTY_FUNCTION__ << std::endl;
 		}
