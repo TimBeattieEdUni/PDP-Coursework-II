@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 			}
 			case Mpi::ProcessPool::eWorker:
 			{
-				Mpi::PoolWorker pool_worker(comm);
+				Mpi::PoolWorker pool_worker(comm, config);
 				pool_worker.Run();
 				break;
 			}

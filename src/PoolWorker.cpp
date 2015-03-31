@@ -41,8 +41,9 @@ namespace Mpi
 	///
 	/// @exception  List exceptions this function may throw here.
 	///
-	PoolWorker::PoolWorker(Communicator const& comm)
+	PoolWorker::PoolWorker(Communicator const& comm, Pdp::Config const& config)
 		: m_comm(comm)
+		, m_config(config)
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 	}
