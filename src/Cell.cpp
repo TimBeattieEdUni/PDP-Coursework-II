@@ -50,10 +50,18 @@ namespace Biology
 
 	void Cell::Update()
 	{
-		static unsigned int updates = 0;
-		++updates;
+		static double start_time = MPI_Wtime();
+		static int cur_day = 1;
+
+		// length of a day in the sim, in seconds of wall time
+		double day_length = 1.0;
 		
-		std::cout << "cell update " << updates << std::endl;
+		double now = MPI_Wtime();
+		if ((now - start_time) / day_length > cur_day)
+		{
+			++cur_day;
+			std::cout << "cell: day has passed; sending stats to coordinator" << std::endl;			
+		}
 	}
 	
 

@@ -79,12 +79,13 @@ namespace Biology
 				return;
 			}
 
+			//  @todo remove this: shutting down sim after a few seconds
 			static double last_time = MPI_Wtime();
 			double now = MPI_Wtime();
-			if (now - last_time > 0.01)
+			if (now - last_time > 4.0)
 			{
 				last_time = now;
-				std::cout << "coordinator: 1s passed; shutting down pool" << std::endl;
+				std::cout << "coordinator: 4s passed; shutting down pool" << std::endl;
 
 				// tmp - shut down sim after 1s
 				shutdownPool();
