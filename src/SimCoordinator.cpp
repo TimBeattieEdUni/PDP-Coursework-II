@@ -81,7 +81,7 @@ namespace Biology
 
 			static double last_time = MPI_Wtime();
 			double now = MPI_Wtime();
-			if (now - last_time > 1.0)
+			if (now - last_time > 0.01)
 			{
 				last_time = now;
 				std::cout << "coordinator: 1s passed; shutting down pool" << std::endl;
@@ -114,7 +114,7 @@ namespace Biology
 				m_cell_pids[cell_id] = startWorkerProcess();
 				std::cout << "started cell " << cell_id << " on rank " << m_cell_pids[cell_id] << std::endl;
 				int task = Pdp::ETask::eCell;
-				MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());
+				MPI_Send(&task, 1, MPI_INT, m_cell_pids[cell_id], Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());
 			}
 			
 			//  start squirrels
