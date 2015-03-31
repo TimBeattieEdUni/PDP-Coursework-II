@@ -20,7 +20,8 @@ namespace Biology
 			Squirrel();    ///< Constructor.
 			~Squirrel();   ///< Destructor.
 	
-
+			void Update();   ///< Driver.
+		
 		private:
 			Squirrel(Squirrel const& rhs);              ///< Copy constructor.
 			Squirrel& operator=(Squirrel const& rhs);   ///< Assignment operator.

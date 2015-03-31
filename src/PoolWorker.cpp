@@ -77,34 +77,46 @@ namespace Mpi
 		case Pdp::ETask::eSquirrel:
 		{
 			Biology::Squirrel squirrel;
-			(void) squirrel;
+			do
+			{
+				squirrel.Update();
+			}
+			while(! shouldWorkerStop())
 			break;
 		}
 		case Pdp::ETask::eCell:
 		{
 			Biology::Cell cell;
-			(void) cell;
+			do
+			{
+				cell.Update();
+			}
+			while(! shouldWorkerStop())
 			break;
 		}
 		case Pdp::ETask::eCoordinator:
 		{
-			Biology::SimCoordinator sim_coordinator;
-			(void) sim_coordinator;
+			Biology::SimCoordinator sim_cdr;
+			do
+			{
+				sim_cdr.Update();
+			}
+			while(! shouldWorkerStop())
 			break;
 		}
 	}		
-		//  this loop represents the lifetime of an actor
-		do
-		{
-			for (int i=0; i<4; ++i)
-			{
-				usleep(1000000);
-				std::cout << "sleep " << i << std::endl;
-			}
-
-			shutdownPool();
-		}
-		while (workerSleep());
+//		//  this loop represents the lifetime of an actor
+//		do
+//		{
+//			for (int i=0; i<4; ++i)
+//			{
+//				usleep(1000000);
+//				std::cout << "sleep " << i << std::endl;
+//			}
+//
+//			shutdownPool();
+//		}
+//		while (workerSleep());
 
 //		int workerStatus = 1;
 //		while (workerStatus)

@@ -48,6 +48,12 @@ namespace Biology
 	}
 
 
+	void Squirrel::Update()
+	{
+		std::cout << __PRETTY_FUNCTION__ << std::endl;
+	}
+	
+	
 //	//////////////////////////////////////////////////////////////////////////////
 //	/// @details    Describe copy construction here.
 //	///

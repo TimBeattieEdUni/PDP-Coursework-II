@@ -20,6 +20,8 @@ namespace Biology
 			Cell();    ///< Constructor.
 			~Cell();   ///< Destructor.
 
+		void Update();   ///< Driver.
+
 		private:
 			Cell(Cell const& rhs);              ///< Copy constructor.
 			Cell& operator=(Cell const& rhs);   ///< Assignment operator.

@@ -85,6 +85,11 @@ namespace Mpi
 			MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());
 		}
 		
+		int pid = startWorkerProcess();
+		std::cout << "started coordinator on rank " << pid << std::endl;
+		int task = Pdp::ETask::eCoordinator;
+		MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());
+		
 		while(masterPoll())
 		{
 			std::cout << "we have awakened the master /igor" << std::endl;

@@ -60,6 +60,9 @@ namespace Biology
 			//  wait for a second to pass.
 			usleep(1000000);
 			
+			// tmp - shut down sim after 1s
+			shutdownPool();
+			
 			//  send a message to all landscape cells at the end of each day.
 			
 			//  get stats back from landscape cells.
