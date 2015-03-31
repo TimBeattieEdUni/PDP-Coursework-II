@@ -50,7 +50,10 @@ namespace Biology
 
 	void Cell::Update()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+		static unsigned int updates = 0;
+		++update;
+		
+		std::cout << "cell update " << update << std::endl;
 	}
 	
 

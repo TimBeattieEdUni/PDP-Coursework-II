@@ -13,6 +13,7 @@
 //////////////////////////////////////////////////////////////////////////////
 //  Standard headers.
 #include <iostream>
+#include <unistd.h>
 
 
 namespace Biology
@@ -50,7 +51,10 @@ namespace Biology
 
 	void Squirrel::Update()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+		static unsigned int updates = 0;
+		++update;
+		
+		std::cout << "squirrel update " << update << std::endl;
 	}
 	
 	
