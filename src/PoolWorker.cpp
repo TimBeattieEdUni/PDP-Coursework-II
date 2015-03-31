@@ -99,7 +99,7 @@ namespace Mpi
 			Biology::SimCoordinator sim_cdr;
 			do
 			{
-				sim_cdr.Update();
+				sim_cdr.Update(m_comm, m_config);
 			}
 			while(! shouldWorkerStop());
 			break;

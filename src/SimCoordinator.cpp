@@ -37,7 +37,7 @@ namespace Biology
 		/// @exception  List exceptions this function may throw here.
 		///
 		SimCoordinator::SimCoordinator(Mpi::Communicator const& comm, Pdp::Config const& config)
-			: m_config(config)
+			: m_comm(comm)
 			, m_config(config)
 
 		{
