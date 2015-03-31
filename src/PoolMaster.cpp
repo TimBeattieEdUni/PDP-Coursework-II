@@ -67,24 +67,6 @@ namespace Mpi
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 
-		std::cout << "master starting " << m_config.GetCells() << " cells and " << m_config.GetSqrls() << " squirrels " << std::endl;
-		for (int i=0; i<m_config.GetCells(); ++i)
-		{
-			int pid = startWorkerProcess();
-			std::cout << "started cell on rank " << pid << std::endl;
-			int task = Pdp::ETask::eCell;
-			MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());
-		}
-
-		std::cout << "master starting squirrel workers " << std::endl;
-		for (int i=0; i<m_config.GetSqrls(); ++i)
-		{
-			int pid = startWorkerProcess();
-			std::cout << "started squirrel on rank " << pid << std::endl;
-			int task = Pdp::ETask::eSquirrel;
-			MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());
-		}
-		
 		int pid = startWorkerProcess();
 		std::cout << "started coordinator on rank " << pid << std::endl;
 		int task = Pdp::ETask::eCoordinator;

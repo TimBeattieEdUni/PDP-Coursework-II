@@ -16,19 +16,22 @@ namespace Biology
 	///
 	/// @details
 	///
-	/// @invariant
+	/// @note       You should probably only create one of these.
 	///
 	class SimCoordinator
 	{
 		public:
-			SimCoordinator();    ///< Constructor.
+			SimCoordinator(Pdp::Config const& config);    ///< Constructor.
 			~SimCoordinator();   ///< Destructor.
 
 			void Update();       ///< Runs the Coordinator's part of the simulation.
+			void CreateInitialActors();   ///< Sets up the landscape and initial squirrels.
 
-		private:
+	private:
 			SimCoordinator(SimCoordinator const& rhs);              ///< Copy constructor.
 			SimCoordinator& operator=(SimCoordinator const& rhs);   ///< Assignment operator.
+			
+			Pdp::Config const& m_config;   ///< App config.
 	};
 
 }   //  namespace Biology
