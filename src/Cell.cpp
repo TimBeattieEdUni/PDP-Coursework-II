@@ -51,9 +51,9 @@ namespace Biology
 	void Cell::Update()
 	{
 		static unsigned int updates = 0;
-		++update;
+		++updates;
 		
-		std::cout << "cell update " << update << std::endl;
+		std::cout << "cell update " << updates << std::endl;
 	}
 	
 

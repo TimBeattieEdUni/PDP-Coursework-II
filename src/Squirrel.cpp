@@ -52,9 +52,9 @@ namespace Biology
 	void Squirrel::Update()
 	{
 		static unsigned int updates = 0;
-		++update;
+		++updates;
 		
-		std::cout << "squirrel update " << update << std::endl;
+		std::cout << "squirrel update " << updates << std::endl;
 	}
 	
 	
