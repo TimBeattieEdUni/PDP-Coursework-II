@@ -82,7 +82,7 @@ namespace Biology
 			double now = MPI_Wtime();
 			if (now - last_time > 1.0)
 			{
-				then = now;
+				last_time = now;
 				std::cout << "coordinator: 1s passed; shutting down pool" << std::endl;
 
 				// tmp - shut down sim after 1s
