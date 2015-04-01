@@ -93,7 +93,7 @@ namespace Mpi
 					while(squirrel_ok && pool_ok);
 					{
 						bool squirrel_ok = squirrel.Update();
-						bool pool_ok     = ! ShouldWorkerStop();
+						bool pool_ok     = ! shouldWorkerStop();
 					}
 					break;
 				}
@@ -107,7 +107,7 @@ namespace Mpi
 					while(cell_ok && pool_ok)
 					{
 						cell_ok     = cell.Update();
-						sim_running = ! ShouldWorkerStop();
+						sim_running = ! shouldWorkerStop();
 					}
 					break;
 				}
@@ -118,15 +118,15 @@ namespace Mpi
 					bool coord_ok = true;
 					bool pool_ok  = true;
 
-					while(sim_coord_ok && sim_running)
+					while(coord_ok && pool_ok)
 					{
 						coord_ok = sim_coord.Update();
-						pool_ok  = ! ShouldWorkerStop();
+						pool_ok  = ! shouldWorkerStop();
 					}
 					break;
 				}
 			}
-		} while (WorkerSleep())
+		} while (workerSleep());
 	}
 
 

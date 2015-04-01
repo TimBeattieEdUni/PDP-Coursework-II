@@ -129,7 +129,7 @@ namespace Biology
 							break;
 						}
 							
-						case PdP::EMpiMsgTag::eSquirrelLifetime
+						case Pdp::EMpiMsgTag::eSquirrelLifetime:
 						{
 							int birth_or_death = 0;
 							MPI_Recv(&birth_or_death, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_status);
