@@ -42,6 +42,8 @@ namespace Biology
 			, m_ticker(config.GetDayLen())
 			, m_cell_pids(config.GetCells())
 			, m_cur_day(0)
+			, m_cur_week(0)
+			, m_num_sq(0)
 
 		{
 			std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -79,18 +81,32 @@ namespace Biology
 				return;
 			}
 
-			//  shut down sim after configured number of days
+			//  do "new day" events
 			unsigned int today = m_ticker.GetDay();
 			if (today > m_cur_day)
 			{
 				m_cur_day = today;
 				
+				//  shut down sim after configured number of days
 				if (m_config.GetSimLen() < m_cur_day)
 				{
 					shutdownPool();
 					std::cout << "coordinator: 4s passed; shutting down pool" << std::endl;
+					
+					//  do nothing further
+					return;
+				}
+				
+				//  print stats at the end of each week
+				int this_week = today / 7;
+				if (this_week > m_cur_week)
+				{
+					m_cur_week = this_week;
+					
+					std::cout << "stats go here" << std::endl;
 				}
 			}
+
 
 			//  handle messages by polling
 			int msg_waiting = 0;
