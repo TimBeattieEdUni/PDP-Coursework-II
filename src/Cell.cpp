@@ -11,6 +11,11 @@
 
 
 //////////////////////////////////////////////////////////////////////////////
+//  Local headers.
+#include "PdpEnums.hpp"
+
+
+//////////////////////////////////////////////////////////////////////////////
 //  Standard headers.
 #include <iostream>
 
@@ -60,7 +65,7 @@ namespace Biology
 			std::cout << "cell: day " << m_cur_day << " complete; sending stats to coordinator" << std::endl;	
 			
 			//  blocking send as this cell's squirrel stats are likely to be modified soon
-			MPI_Send(&m_num_sq, 1, MPI_DOUBLE, 1, EMpiMsgTag::eCellStats, m_comm.GetComm());
+			MPI_Send(&m_num_sq, 1, MPI_DOUBLE, 1, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm());
 			m_cur_day = today;		
 		}
 	}
