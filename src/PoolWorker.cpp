@@ -87,7 +87,7 @@ namespace Mpi
 		}
 		case Pdp::ETask::eCell:
 		{
-			Biology::Cell cell;
+			Biology::Cell cell(m_comm, m_config);
 			do
 			{
 				cell.Update();
