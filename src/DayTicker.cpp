@@ -35,7 +35,7 @@ namespace Biology
 		: m_start_time(MPI_Wtime())
 		, m_day_len(day_len)
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+
 	}
 
 
@@ -51,16 +51,38 @@ namespace Biology
 	///
 	DayTicker::~DayTicker()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+
 	}
 
 
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      
+	///
+	/// @param        
+	/// @return       
+	///
+	/// @pre          
+	/// @post         
+	///
+	/// @exception    
+	///
 	unsigned int DayTicker::GetDay()
 	{
 		return (MPI_Wtime() - m_start_time) / m_day_len;		
 	}
 
 	
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      
+	///
+	/// @param        
+	/// @return       
+	///
+	/// @pre          
+	/// @post         
+	///
+	/// @exception    
+	///
 	unsigned int DayTicker::GetWeek()
 	{		
 		return GetDay() / 7;

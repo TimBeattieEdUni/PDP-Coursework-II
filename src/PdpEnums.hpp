@@ -20,7 +20,8 @@ namespace Pdp
 		{
 			ePoolPid  = 16383,   ///< Ensures our code won't use the same value.
 			ePoolCtrl = 16384,   ///< Ensures our code won't use the same value.
-			eAssignTask          ///< Tells a worker process what to do.
+			eAssignTask,         ///< Tells a worker process what to do.
+			eCellStats           ///< Squirrel statistics for coordinator.
 		};
 	}
 	

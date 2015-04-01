@@ -28,6 +28,7 @@ namespace Biology
 	///
 	Cell::Cell(Mpi::Communicator const& comm, Pdp::Config const& config)
 		: m_ticker(config.GetDayLen())
+		, m_num_sq(0)
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 	}
@@ -56,7 +57,10 @@ namespace Biology
 		if (today > m_cur_day)
 		{
 			//  if more than one day has passed, stats for all will be sent, but this is acceptable.
-			std::cout << "cell: day " << m_cur_day << " complete; sending stats to coordinator" << std::endl;			
+			std::cout << "cell: day " << m_cur_day << " complete; sending stats to coordinator" << std::endl;	
+			
+			//  blocking send as this cell's squirrel stats are likely to be modified soon
+			MPI_Send(&m_num_sq, 1, MPI_DOUBLE, 1, EMpiMsgTag::eCellStats, m_comm.GetComm());
 			m_cur_day = today;		
 		}
 	}

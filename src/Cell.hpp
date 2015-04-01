@@ -35,6 +35,7 @@ namespace Biology
 		
 			DayTicker m_ticker;             ///< Keeps track of simulation time.
 			unsigned int m_cur_day;         ///< The current day.
+			unsigned int m_num_sq;			///< Number of squirrels in this cell.
 
 	};
 

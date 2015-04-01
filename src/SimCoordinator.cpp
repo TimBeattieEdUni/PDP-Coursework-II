@@ -70,7 +70,7 @@ namespace Biology
 		///
 		void SimCoordinator::Update()
 		{
-			//  start initial set of actors first time we're called.
+			//  do initial setup first time we're called
 			static bool first_time = true;
 			if (first_time)
 			{
@@ -79,7 +79,7 @@ namespace Biology
 				return;
 			}
 
-			//  @todo remove this: shutting down sim after a few seconds
+			//  shut down sim after configured number of days
 			unsigned int today = m_ticker.GetDay();
 			if (today > m_cur_day)
 			{
@@ -92,9 +92,28 @@ namespace Biology
 				}
 			}
 
-			//  check for any new messages: stats from cells, births/deaths from squirrels
-			//  get stats back from landscape cells.
-
+			//  handle messages by polling
+			do
+			{
+				int msg_waiting = 0;
+				MPI_Status msg_status;			
+				MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, m_comm.GetComm(), &msg_waiting, &msg_status);
+				
+				if(msg_waiting)
+				{
+					switch (msg_status.MPI_TAG)
+					{
+						case EMpiMsgTag::eCellStats:
+						{
+							double num_sq = 0.0;
+							MPI_Recv(&num_sq, 1, MPI_DOUBLE, MPI_ANY_SOURCE, EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status);
+							st::cout << "cell stats rxd: " << msg_status.MPI_Source << " has " << num_sq << " squirrels" << std::endl;
+						}
+							break;
+					}					
+				}
+			} while(msg_waiting);
+				
 			//  detect end of simulation			
 		}
 
