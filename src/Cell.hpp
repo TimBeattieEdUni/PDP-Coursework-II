@@ -13,6 +13,7 @@
 //  Local headers.
 #include "Config.hpp"
 #include "MpiCommunicator.hpp"
+#include "DayTicker.hpp"
 
 
 namespace Biology
@@ -23,7 +24,7 @@ namespace Biology
 	class Cell
 	{
 		public:
-			Cell();    ///< Constructor.
+			Cell(Mpi::Communicator const& comm, Pdp::Config const& config);    ///< Constructor.
 			~Cell();   ///< Destructor.
 
 		void Update();   ///< Driver.
@@ -31,6 +32,10 @@ namespace Biology
 		private:
 			Cell(Cell const& rhs);              ///< Copy constructor.
 			Cell& operator=(Cell const& rhs);   ///< Assignment operator.
+		
+			DayTicker m_ticker;             ///< Keeps track of simulation time.
+			unsigned int m_cur_day;         ///< The current day.
+
 	};
 
 }   //  namespace Biology

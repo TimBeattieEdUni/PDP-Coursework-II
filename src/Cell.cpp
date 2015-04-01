@@ -26,7 +26,8 @@ namespace Biology
 	///
 	/// @exception  List exceptions this function may throw here.
 	///
-	Cell::Cell()
+	Cell::Cell(Mpi::Communicator const& comm, Pdp::Config const& config)
+		: m_ticker(config.GetDayLen())
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 	}
@@ -50,16 +51,12 @@ namespace Biology
 
 	void Cell::Update()
 	{
-		static double start_time = MPI_Wtime();
-		static int cur_day = 1;
-
-		// length of a day in the sim, in seconds of wall time
-		double day_length = 1.0;
-		
-		double now = MPI_Wtime();
-		if ((now - start_time) / day_length > cur_day)
+		//  detect new day
+		unsigned int today = m_ticker.GetDay();
+		if (today > m_cur_day)
 		{
-			++cur_day;
+			m_cur_day = today;
+			
 			std::cout << "cell: day has passed; sending stats to coordinator" << std::endl;			
 		}
 	}

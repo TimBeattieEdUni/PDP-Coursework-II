@@ -41,6 +41,7 @@ namespace Biology
 			, m_config(config)
 			, m_ticker(config.GetDayLen())
 			, m_cell_pids(config.GetCells())
+			, m_cur_day(0)
 
 		{
 			std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -69,8 +70,6 @@ namespace Biology
 		///
 		void SimCoordinator::Update()
 		{
-			std::cout << __PRETTY_FUNCTION__ << std::endl;
-
 			//  start initial set of actors first time we're called.
 			static bool first_time = true;
 			if (first_time)
@@ -81,13 +80,12 @@ namespace Biology
 			}
 
 			//  @todo remove this: shutting down sim after a few seconds
-			static unsigned int current_day = 0;
 			unsigned int today = m_ticker.GetDay();
-			if (today > current_day)
+			if (today > m_cur_day)
 			{
-				current_day = today;
+				m_cur_day = today;
 				
-				if (4 < today)
+				if (4 < m_cur_day)
 				{
 					shutdownPool();
 					std::cout << "coordinator: 4s passed; shutting down pool" << std::endl;
