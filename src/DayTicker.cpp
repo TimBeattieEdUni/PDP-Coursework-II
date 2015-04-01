@@ -35,7 +35,7 @@ namespace Biology
 		: m_start_time(MPI_Wtime())
 		, m_day_len(day_len)
 	{
-
+		std::cout << "day ticker: " << m_day_len << "" << m_start_time << std::endl;
 	}
 
 
@@ -67,8 +67,10 @@ namespace Biology
 	/// @exception    
 	///
 	unsigned int DayTicker::GetDay()
-	{
-		return (MPI_Wtime() - m_start_time) / m_day_len;		
+	{		
+		unsigned int day = (MPI_Wtime() - m_start_time) / m_day_len;
+		std::cout << "day ticker: " << day << std::endl;
+		return day;
 	}
 
 	
