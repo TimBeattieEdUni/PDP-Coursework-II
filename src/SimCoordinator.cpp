@@ -92,8 +92,7 @@ namespace Biology
 				}
 			}
 
-			//  send a message to all landscape cells at the end of each day.
-			
+			//  check for any new messages: stats from cells, births/deaths from squirrels
 			//  get stats back from landscape cells.
 
 			//  detect end of simulation			

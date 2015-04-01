@@ -55,9 +55,9 @@ namespace Biology
 		unsigned int today = m_ticker.GetDay();
 		if (today > m_cur_day)
 		{
-			m_cur_day = today;
-			
-			std::cout << "cell: day has passed; sending stats to coordinator" << std::endl;			
+			//  if more than one day has passed, stats for all will be sent, but this is acceptable.
+			std::cout << "cell: day " << m_cur_day << " complete; sending stats to coordinator" << std::endl;			
+			m_cur_day = today;		
 		}
 	}
 	
