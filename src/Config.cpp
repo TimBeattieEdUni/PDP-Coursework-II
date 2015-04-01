@@ -30,21 +30,19 @@ namespace Pdp
 	Config::Config(int argc, char* argv[])
 		: m_cells(0)
 		, m_sqrls(0)
+		, m_day_len(0.0)
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 		
-		if (3 > argc)
+		if (4 > argc)
 		{
 			throw std::runtime_error("usage: squirrels <cells> <squirrels>");
 		}
 		
 		std::stringstream converter;
 
-		converter << argv[1] << " " << argv[2];
-		converter >> m_cells >> m_sqrls;
-
-//		converter << argv[2];
-//		converter >> m_sqrls;
+		converter << argv[1] << " " << argv[2] << " " << argv[3];
+		converter >> m_cells >> m_sqrls >> m_day_len;
 	}
 
 

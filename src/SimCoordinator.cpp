@@ -39,6 +39,7 @@ namespace Biology
 		SimCoordinator::SimCoordinator(Mpi::Communicator const& comm, Pdp::Config const& config)
 			: m_comm(comm)
 			, m_config(config)
+			, m_ticker(config.GetDayLen())
 			, m_cell_pids(config.GetCells())
 
 		{
@@ -80,15 +81,17 @@ namespace Biology
 			}
 
 			//  @todo remove this: shutting down sim after a few seconds
-			static double last_time = MPI_Wtime();
-			double now = MPI_Wtime();
-			if (now - last_time > 4.0)
+			static unsigned int current_day = 0;
+			unsigned int today = m_ticker.GetDay();
+			if (today > current_day)
 			{
-				last_time = now;
-				std::cout << "coordinator: 4s passed; shutting down pool" << std::endl;
-
-				// tmp - shut down sim after 1s
-				shutdownPool();
+				current_day = today;
+				
+				if (4 < today)
+				{
+					shutdownPool();
+					std::cout << "coordinator: 4s passed; shutting down pool" << std::endl;
+				}
 			}
 
 			//  send a message to all landscape cells at the end of each day.

@@ -24,3 +24,5 @@ morar.sh.*
 # Doxygen output
 doxygen
 
+# Logs
+*.log

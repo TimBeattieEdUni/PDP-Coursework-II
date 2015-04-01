@@ -13,6 +13,7 @@
 //  Local headers.
 #include "Config.hpp"
 #include "MpiCommunicator.hpp"
+#include "DayTicker.hpp"
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -43,7 +44,9 @@ namespace Biology
 			SimCoordinator& operator=(SimCoordinator const& rhs);   ///< Assignment operator.
 			
 			Mpi::Communicator const& m_comm;   ///< MPI communcator for the pool.
-			Pdp::Config const& m_config;   ///< App config.
+			Pdp::Config const& m_config;    ///< App config.
+
+			DayTicker m_ticker;             ///< Keeps track of simulation time.
 			std::vector<int> m_cell_pids;   ///< MPI process IDs for landscape cells.
 			
 	};

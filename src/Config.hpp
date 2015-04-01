@@ -25,8 +25,9 @@ namespace Pdp
 			Config(int argc, char* argv[]);    ///< Constructor.
 			~Config();   ///< Destructor.
 		
-			size_t GetCells() const { return m_cells; }   ///< Getter.
-			size_t GetSqrls() const { return m_sqrls; }   ///< Getter.
+			size_t GetCells() const { return m_cells; }      ///< Getter.
+			size_t GetSqrls() const { return m_sqrls; }      ///< Getter.
+			double GetDayLen() const { return m_day_len; }   ///< Getter.
 
 		private:
 			Config(Config const& rhs);              ///< Copy constructor.
@@ -34,6 +35,7 @@ namespace Pdp
 			
 			size_t m_cells;   ///< Number of landscape cells.
 			size_t m_sqrls;   ///< Initial number of squirrels. 
+			double m_day_len;   ///< Length in wall time of a day in the simulation.
 	};
 
 }   //  namespace PDP
