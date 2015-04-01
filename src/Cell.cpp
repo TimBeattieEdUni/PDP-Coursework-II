@@ -67,8 +67,8 @@ namespace Biology
 			std::cout << "cell: day " << m_cur_day << " complete; sending stats to coordinator" << std::endl;	
 			
 			//  we aren't concerned with whether this message is received
-			MPI_Request msg_req;
-			MPI_Isend(&m_num_sq, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_req);
+			//MPI_Request msg_req;
+			//MPI_Isend(&m_num_sq, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_req);
 
 			//  after all the day's work is done, we start a new day
 			m_cur_day = today;

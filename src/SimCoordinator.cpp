@@ -117,7 +117,6 @@ namespace Biology
 				
 				if(msg_waiting)
 				{
-					
 					std::cout << "coordinator: message waiting" << std::endl;
 
 					switch (msg_status.MPI_TAG)

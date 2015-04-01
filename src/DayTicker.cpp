@@ -68,9 +68,7 @@ namespace Biology
 	///
 	unsigned int DayTicker::GetDay()
 	{		
-		unsigned int day = (MPI_Wtime() - m_start_time) / m_day_len;
-		std::cout << "day ticker: " << day << std::endl;
-		return day;
+		return (unsigned int) ((MPI_Wtime() - m_start_time) / (double)m_day_len);
 	}
 
 	
