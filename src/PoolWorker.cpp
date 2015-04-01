@@ -106,8 +106,8 @@ namespace Mpi
 
 					while(cell_ok && pool_ok)
 					{
-						cell_ok     = cell.Update();
-						sim_running = ! shouldWorkerStop();
+						cell_ok = cell.Update();
+						pool_ok = ! shouldWorkerStop();
 					}
 					break;
 				}
