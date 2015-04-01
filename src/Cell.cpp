@@ -68,6 +68,8 @@ namespace Biology
 	///
 	bool Cell::Update()
 	{
+		usleep(250000);		
+		
 		//  detect new day
 		unsigned int today = m_ticker.GetDay();
 

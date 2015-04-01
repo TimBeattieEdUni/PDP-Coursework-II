@@ -52,7 +52,7 @@ namespace Biology
 	bool Squirrel::Update()
 	{
 		/// @todo remove this
-		usleep(100000);
+		usleep(250000);
 		
 		return true;
 	}

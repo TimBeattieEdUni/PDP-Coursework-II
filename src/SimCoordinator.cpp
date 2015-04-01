@@ -74,6 +74,8 @@ namespace Biology
 		///
 		bool SimCoordinator::Update()
 		{
+			usleep(250000);
+
 			//  do initial setup first time we're called
 			static bool first_time = true;
 			if (first_time)
