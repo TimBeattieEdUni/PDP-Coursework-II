@@ -35,7 +35,9 @@ namespace Biology
 	Cell::Cell(Mpi::Communicator const& comm, Pdp::Config const& config)
 		: m_comm(comm)
 		, m_ticker(config.GetDayLen())
+		, m_cur_day(0)
 		, m_num_sq(0)
+		
 	{
 		std::cout << __PRETTY_FUNCTION__ <<  std::endl;
 	}
@@ -61,8 +63,7 @@ namespace Biology
 	{
 		//  detect new day
 		unsigned int today = m_ticker.GetDay();
-		std::cout << "day: " << today << std::endl;
-		usleep(100000);
+
 		if (today > m_cur_day)
 		{
 			//  if more than one day has passed, stats for all will be sent, but this is acceptable.
