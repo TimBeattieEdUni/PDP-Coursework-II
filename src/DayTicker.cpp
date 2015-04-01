@@ -35,7 +35,7 @@ namespace Biology
 		: m_start_time(MPI_Wtime())
 		, m_day_len(day_len)
 	{
-		std::cout << "day ticker: " << m_day_len << "" << m_start_time << std::endl;
+		std::cout << "day ticker: " << m_day_len << "  " << m_start_time << std::endl;
 	}
 
 
