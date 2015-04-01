@@ -107,7 +107,7 @@ namespace Biology
 						{
 							double num_sq = 0.0;
 							MPI_Recv(&num_sq, 1, MPI_DOUBLE, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status);
-							std::cout << "cell stats rxd: " << msg_status.MPI_Source << " has " << num_sq << " squirrels" << std::endl;
+							std::cout << "cell stats rxd: " << msg_status.MPI_SOURCE << " has " << num_sq << " squirrels" << std::endl;
 						}
 							break;
 					}					

@@ -32,7 +32,8 @@ namespace Biology
 	/// @exception  List exceptions this function may throw here.
 	///
 	Cell::Cell(Mpi::Communicator const& comm, Pdp::Config const& config)
-		: m_ticker(config.GetDayLen())
+		: m_comm(comm)
+		, m_ticker(config.GetDayLen())
 		, m_num_sq(0)
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
