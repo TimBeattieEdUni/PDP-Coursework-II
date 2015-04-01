@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
 
 		if (0 == comm.GetRank())
 		{
-			printf("total program time:\t%f\n", MPI_Wtime() - start_time);
+			printf("run time:\t%f\n", MPI_Wtime() - start_time);
 		}
 
 		return 0;

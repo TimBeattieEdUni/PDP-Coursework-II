@@ -85,7 +85,7 @@ namespace Biology
 			{
 				m_cur_day = today;
 				
-				if (4 < m_cur_day)
+				if (m_config.GetSimLen() < m_cur_day)
 				{
 					shutdownPool();
 					std::cout << "coordinator: 4s passed; shutting down pool" << std::endl;

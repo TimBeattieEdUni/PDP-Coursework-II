@@ -31,6 +31,7 @@ namespace Pdp
 		: m_cells(0)
 		, m_sqrls(0)
 		, m_day_len(0.0)
+		, m_sim_len(0)
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 		
@@ -41,8 +42,15 @@ namespace Pdp
 		
 		std::stringstream converter;
 
-		converter << argv[1] << " " << argv[2] << " " << argv[3];
-		converter >> m_cells >> m_sqrls >> m_day_len;
+		converter << argv[1] 
+		          << " " << argv[2] 
+		          << " " << argv[3]
+		          << " " << argv[4];
+		
+		converter >> m_cells 
+		          >> m_sqrls 
+				  >> m_day_len
+		          >> m_sim_len;
 	}
 
 
