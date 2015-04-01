@@ -34,7 +34,6 @@ namespace Biology
 	DayTicker::DayTicker(double day_len)
 		: m_start_time(MPI_Wtime())
 		, m_day_len(day_len)
-		, m_cur_day(0)
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 	}
