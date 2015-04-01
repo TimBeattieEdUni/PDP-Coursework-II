@@ -60,6 +60,7 @@ namespace Biology
 	{
 		//  detect new day
 		unsigned int today = m_ticker.GetDay();
+		
 		if (today > m_cur_day)
 		{
 			//  if more than one day has passed, stats for all will be sent, but this is acceptable.
