@@ -66,9 +66,12 @@ namespace Biology
 			//  if more than one day has passed, stats for all will be sent, but this is acceptable.
 			std::cout << "cell: day " << m_cur_day << " complete; sending stats to coordinator" << std::endl;	
 			
-			//  blocking send as this cell's squirrel stats are likely to be modified soon
-			MPI_Send(&m_num_sq, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm());
-			m_cur_day = today;		
+			//  we aren't concerned with whether this message is received
+			MPI_Request msg_req;
+			MPI_Isend(&m_num_sq, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_req);
+
+			//  after all the day's work is done, we start a new day
+			m_cur_day = today;
 		}
 	}
 	

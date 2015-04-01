@@ -131,10 +131,6 @@ namespace Biology
 							break;
 					}					
 				}
-				else
-				{
-					std::cout << "coordinator: no new messages" << std::endl;
-				}
 			} while(msg_waiting);
 				
 			//  detect end of simulation			
