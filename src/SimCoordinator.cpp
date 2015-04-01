@@ -80,7 +80,7 @@ namespace Biology
 			{
 				first_time = false;
 				CreateInitialActors();
-				return;
+				return true;
 			}
 
 			//  do "new day" events
