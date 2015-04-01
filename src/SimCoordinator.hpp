@@ -36,7 +36,7 @@ namespace Biology
 			SimCoordinator(Mpi::Communicator const& comm, Pdp::Config const& config);    ///< Constructor.
 			~SimCoordinator();   ///< Destructor.
 
-			void Update();       ///< Runs the Coordinator's part of the simulation.
+			bool Update();                ///< Driver. 
 			void CreateInitialActors();   ///< Sets up the landscape and initial squirrels.
 
 		private:

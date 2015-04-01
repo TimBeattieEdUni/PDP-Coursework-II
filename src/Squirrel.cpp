@@ -49,9 +49,12 @@ namespace Biology
 	}
 
 
-	void Squirrel::Update()
+	bool Squirrel::Update()
 	{
-
+		/// @todo remove this
+		usleep(100000);
+		
+		return true;
 	}
 	
 	

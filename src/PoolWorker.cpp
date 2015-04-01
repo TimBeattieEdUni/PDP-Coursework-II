@@ -65,90 +65,68 @@ namespace Mpi
 	}
 
 
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details    Called once in the lifetime of a process pool worker.  Finds 
+	///             out which type of Actor to be, then creates one of that type
+	///             and runs it until it dies.  Then loops and waits for the next 
+	///             one.  
+	///
 	void PoolWorker::Run()
 	{
 		printf("rank %d: running worker\n", m_comm.GetRank());
 
-		int task = -1;
-		MPI_Status status;
-		MPI_Recv(&task, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm(), &status);
-		
-		switch(task)
-	{
-		case Pdp::ETask::eSquirrel:
+		do
 		{
-			Biology::Squirrel squirrel;
-			do
+			int task = -1;
+			MPI_Status status;
+			MPI_Recv(&task, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm(), &status);
+			
+			switch(task)
 			{
-				squirrel.Update();
-			}
-			while(! shouldWorkerStop());
-			break;
-		}
-		case Pdp::ETask::eCell:
-		{
-			Biology::Cell cell(m_comm, m_config);
-			do
-			{
-				cell.Update();
-			}
-			while(! shouldWorkerStop());
-			break;
-		}
-		case Pdp::ETask::eCoordinator:
-		{
-			Biology::SimCoordinator sim_cdr(m_comm, m_config);
-			do
-			{
-				sim_cdr.Update();
-			}
-			while(! shouldWorkerStop());
-			break;
-		}
-	}		
-//		//  this loop represents the lifetime of an actor
-//		do
-//		{
-//			for (int i=0; i<4; ++i)
-//			{
-//				usleep(1000000);
-//				std::cout << "sleep " << i << std::endl;
-//			}
-//
-//			shutdownPool();
-//		}
-//		while (workerSleep());
+				case Pdp::ETask::eSquirrel:
+				{
+					Biology::Squirrel squirrel;
+					
+					bool squirrel_ok = true;
+					bool pool_ok     = true;
+					
+					while(squirrel_ok && pool_ok);
+					{
+						bool squirrel_ok = squirrel.Update();
+						bool pool_ok     = ! ShouldWorkerStop();
+					}
+					break;
+				}
+				case Pdp::ETask::eCell:
+				{
+					Biology::Cell cell(m_comm, m_config);
+					
+					bool cell_ok = true;
+					bool pool_ok = true;
 
-//		int workerStatus = 1;
-//		while (workerStatus)
-//		{
-//			int myRank, parentId;
-//			MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
-//			parentId = getCommandData();    // We encode the parent ID in the wake up command data
-//			if (parentId == 0)
-//			{
-//				// If my parent is the master (one of the 10 that the master started) then spawn two further children
-//				int childOnePid = startWorkerProcess();
-//				int childTwoPid = startWorkerProcess();
-//
-//				printf("Worker on process %d, started two child processes (%d and %d)\n", myRank, childOnePid, childTwoPid);
-//				// Wait for these children to send me a message
-//				MPI_Request childRequests[2];
-//				MPI_Irecv(NULL, 0, MPI_INT, childOnePid, 0, MPI_COMM_WORLD, &childRequests[0]);
-//				MPI_Irecv(NULL, 0, MPI_INT, childTwoPid, 0, MPI_COMM_WORLD, &childRequests[1]);
-//				MPI_Waitall(2, childRequests, MPI_STATUS_IGNORE);
-//				// Now tell the master that I am finished
-//				MPI_Send(NULL, 0, MPI_INT, 0, 0, MPI_COMM_WORLD);
-//			}
-//			else
-//			{
-//				printf("Child worker on process %d started with parent %d\n", myRank, parentId);
-//				// Tell my parent that I have been alive and am about to die
-//				MPI_Send(NULL, 0, MPI_INT, parentId, 0, MPI_COMM_WORLD);
-//			}
-//
-//			workerStatus = workerSleep(); // This MPI process will sleep, further workers may be run on this process now
-//		}
+					while(cell_ok && pool_ok)
+					{
+						cell_ok     = cell.Update();
+						sim_running = ! ShouldWorkerStop();
+					}
+					break;
+				}
+				case Pdp::ETask::eCoordinator:
+				{
+					Biology::SimCoordinator sim_coord(m_comm, m_config);
+
+					bool coord_ok = true;
+					bool pool_ok  = true;
+
+					while(sim_coord_ok && sim_running)
+					{
+						coord_ok = sim_coord.Update();
+						pool_ok  = ! ShouldWorkerStop();
+					}
+					break;
+				}
+			}
+		} while (WorkerSleep())
 	}
 
 

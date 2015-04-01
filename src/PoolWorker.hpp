@@ -28,7 +28,7 @@ namespace Mpi
 			PoolWorker(Communicator const& comm, Pdp::Config const& config);    ///< Constructor.
 			~PoolWorker();   ///< Destructor.
 
-			void Run();   ///< Does the worker's work.
+			void Run();   ///< Runs the worker process.
 
 		private:
 			PoolWorker(PoolWorker const& rhs);              ///< Copy constructor.

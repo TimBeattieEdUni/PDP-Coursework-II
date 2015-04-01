@@ -70,7 +70,9 @@ namespace Biology
 		/// @details    Handles any new messages.  Sends out day ticks. In charge of 
 		///             ending the simulation when appropriate.
 		///
-		void SimCoordinator::Update()
+		/// @return     True if the coordinator wants to keep running; false otherwise.
+		///
+		bool SimCoordinator::Update()
 		{
 			//  do initial setup first time we're called
 			static bool first_time = true;
@@ -90,11 +92,9 @@ namespace Biology
 				//  shut down sim after configured number of days
 				if (m_config.GetSimLen() < m_cur_day)
 				{
+					std::cout << "maximum simulation duration reached; shutting it down" << std::endl;
 					shutdownPool();
-					std::cout << "coordinator: 4s passed; shutting down pool" << std::endl;
-					
-					//  do nothing further
-					return;
+					return false;
 				}
 				
 				//  print stats at the end of each week
@@ -126,13 +126,23 @@ namespace Biology
 							int num_sq = 0.0;
 							MPI_Recv(&num_sq, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status);
 							std::cout << "cell stats rxd: " << msg_status.MPI_SOURCE << " has " << num_sq << " squirrels" << std::endl;
-						}
 							break;
+						}
+							
+						case PdP::EMpiMsgTag::eSquirrelLifetime
+						{
+							int birth_or_death = 0;
+							MPI_Recv(&birth_or_death, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_status);
+							std::cout << "squirrel lifetime event rxd from rank " << msg_status.MPI_SOURCE << ": " << birth_or_death << std::endl;
+							m_num_sq += event;
+							break;							
+						}
 					}					
 				}
+				
 			} while(msg_waiting);
 				
-			//  detect end of simulation			
+			return true;
 		}
 
 	

@@ -61,10 +61,8 @@ int main(int argc, char* argv[])
 	try
 	{
 		Pdp::Config config(argc, argv);
-		
 		Mpi::Mpi mpi(argc, argv);
-		double start_time = MPI_Wtime();
-
+		
 		Mpi::Communicator comm(MPI_COMM_WORLD);
 		Mpi::ProcessPool process_pool;
 
@@ -75,6 +73,8 @@ int main(int argc, char* argv[])
 
 		//  printf works better than std::cout when using MPI
 		printf("rank %d of %d\n", comm.GetRank(), comm.GetSize());
+		
+		double start_time = MPI_Wtime();
 
 		switch(process_pool.GetType())
 		{

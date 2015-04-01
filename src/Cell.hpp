@@ -27,7 +27,7 @@ namespace Biology
 			Cell(Mpi::Communicator const& comm, Pdp::Config const& config);    ///< Constructor.
 			~Cell();   ///< Destructor.
 
-		void Update();   ///< Driver.
+			bool Update();   ///< Updates the cell.
 
 		private:
 			Cell(Cell const& rhs);              ///< Copy constructor.

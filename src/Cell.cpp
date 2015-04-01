@@ -59,7 +59,14 @@ namespace Biology
 	}
 
 
-	void Cell::Update()
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details    Updates the state of the cell.
+	///
+	/// @return     True if the cell is ok, false otherwise.
+	///
+	/// @note       Currently always returns true, but consistent with other Actors' interfaces.
+	///
+	bool Cell::Update()
 	{
 		//  detect new day
 		unsigned int today = m_ticker.GetDay();
@@ -76,6 +83,8 @@ namespace Biology
 			//  after all the day's work is done, we start a new day
 			m_cur_day = today;
 		}
+		
+		return true;
 	}
 	
 
