@@ -67,7 +67,7 @@ namespace Biology
 			first_time = false;
 			
 			//  tell coordinator there's a new squirrel in town
-			std::cout << "squirrel: telling coordinator I'm allive" << std::endl;	
+			std::cout << "squirrel: telling coordinator I'm alive" << std::endl;	
 
 			//  we aren't concerned with whether this message is received
 			MPI_Request msg_req;
