@@ -23,6 +23,7 @@
 extern "C"
 {
 	#include "pool.h"
+	#include "squirrel-functions.h"	
 }
 
 

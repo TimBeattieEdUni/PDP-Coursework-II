@@ -17,7 +17,9 @@
 extern "C"
 {
 	#include "pool.h"
+	#include "squirrel-functions.h
 }
+
 
 //////////////////////////////////////////////////////////////////////////////
 //  Standard headers.
@@ -38,8 +40,14 @@ namespace Biology
 	///
 	Squirrel::Squirrel(Mpi::Communicator const& comm)
 		: m_comm(comm)
+		, m_rng_state(-1 - comm.GetRank())
+		, m_x(0.0)
+		, m_y(0.0)
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
+
+		//  init random seed as required by biologists' code
+		initialiseRNG(&m_rng_state);
 	}
 
 
@@ -79,23 +87,16 @@ namespace Biology
 			return true;
 		}
 		
-		//  @todo remove this
-		static int age = 0;
-		++age;
-		if (8 < age)
-		{
-			//  tell coordinator "this is an ex-squirrel" /Cleese
-			MPI_Request msg_req;
-			int birth = -1;
-			MPI_Isend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_req);
-			return false;
-		}
-
+		//  we do one step per update
+		squirrelStep(m_x, m_y, &m_x, &m_y, &m_rng_state);
+		std::cout << "rank " << comm.GetRank() << ": squirrel pos: " << m_x << " " << m_y << std::endl;
+		
 		/// @todo implement reproduction 
-		Spawn(m_comm);
+
+		/// @todo implement dying 
 
 		//  @todo delay here is just to make output manageable
-		usleep(1000000);
+		usleep(500000);
 		return true;
 	}
 	
@@ -118,6 +119,23 @@ namespace Biology
 		MPI_Isend(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, comm.GetComm(), &msg_req);
 
 		std::cout << "rank " << comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
+	}
+
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Informs coordinator and current land cell that the squirrel
+	///               is no more.
+	///
+	void Squirrel::Die()
+	{		
+		std::cout << "rank " << comm.GetRank() << ": informing coordinator of squirrel death" << std::endl;
+
+		//  tell coordinator "this is an ex-squirrel" /Cleese
+		MPI_Request msg_req;
+		int birth = -1;
+		MPI_Isend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_req);
+
+		std::cout << "rank " << comm.GetRank() << ": informed coordinator of squirrel death" << std::endl;
 	}
 
 	
