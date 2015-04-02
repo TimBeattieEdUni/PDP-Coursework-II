@@ -71,13 +71,14 @@ namespace Biology
 			first_time = false;
 			
 			//  tell coordinator there's a new squirrel in town
-			std::cout << "squirrel: telling coordinator I'm alive" << std::endl;	
+			std::cout << "rank " << m_comm.GetRank() << " first update; sending birth record to coordinator" << std::endl;	
 
 			//  we aren't concerned with whether this message is received
 			MPI_Request msg_req;
 			int birth = 1;
 			MPI_Isend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_req);
 
+			std::cout << "rank " << m_comm.GetRank() << " first update; sent birth record to coordinator" << std::endl;	
 			return true;
 		}
 		
@@ -113,7 +114,7 @@ namespace Biology
 		
 		int task = Pdp::ETask::eSquirrel;
 		MPI_Request msg_req;
-		MPI_Isend(&task, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eAssignTask, comm.GetComm(), &msg_req);
+		MPI_Isend(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, comm.GetComm(), &msg_req);
 
 		std::cout << "rank " << comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
 	}

@@ -141,10 +141,17 @@ namespace Biology
 							break;							
 						}
 						
+						case Pdp::EMpiMsgTag::ePoolPid, ePoolCtrl:
+						{
+							//  these will be handled by the pool
+							return true;
+							break;
+						}
 						default:
 						{
-							//  message is for the process pool; give it a chance to get it
-							return true;
+							//  unrecognised message; fail hard and fast to help diagnosis
+							std::cout << "error: unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
+							return false;
 						}
 					}					
 				}
