@@ -101,10 +101,17 @@ namespace Biology
 	///
 	static Squirrel::Spawn(Mpi::Communicator const& comm)
 	{
+		std::cout << "rank " << comm.GetRank() << ": squirrel giving birth" << std::endl;
+
 		int pid = startWorkerProcess();
-		std::cout << "started squirrel on rank " << pid << std::endl;
+		
 		int task = Pdp::ETask::eSquirrel;
-		MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());				
+		MPI_Request msg_req;
+		MPI_Isend(&task, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm(), &msg_req);
+
+//		MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());				
+
+		std::cout << "rank " << comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
 	}
 
 	

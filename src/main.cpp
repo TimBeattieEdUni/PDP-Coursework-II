@@ -71,8 +71,7 @@ int main(int argc, char* argv[])
 			PrintCmdLine(argc, argv);
 		}
 
-		//  printf works better than std::cout when using MPI
-		printf("rank %d of %d\n", comm.GetRank(), comm.GetSize());
+		std::cout << "rank " << comm.GetRank() << " of " comm.GetSize()) << " started" << std::endl;
 		
 		double start_time = MPI_Wtime();
 
@@ -101,6 +100,8 @@ int main(int argc, char* argv[])
 		{
 			printf("run time:\t%f\n", MPI_Wtime() - start_time);
 		}
+
+		std::cout << "rank " << comm.GetRank() << " of " comm.GetSize()) << " exiting" << std::endl;
 
 		return 0;
 	}
