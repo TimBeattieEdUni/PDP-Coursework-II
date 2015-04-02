@@ -112,6 +112,8 @@ namespace Biology
 
 		int pid = startWorkerProcess();
 		
+		std::cout << "rank " << comm.GetRank() << ": started worker for newborn squirrel: pid " << pid << std::endl;
+
 		int task = Pdp::ETask::eSquirrel;
 		MPI_Request msg_req;
 		MPI_Isend(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, comm.GetComm(), &msg_req);
