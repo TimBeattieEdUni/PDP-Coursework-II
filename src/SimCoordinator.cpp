@@ -144,7 +144,6 @@ namespace Biology
 						{
 							//  message is for the process pool; give it a chance to get it
 							return true;
-							break;
 						}
 					}					
 				}
@@ -188,6 +187,7 @@ namespace Biology
 			MPI_Send(&task, 1, MPI_INT, m_cell_pids[cell_id], Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());			
 		}
 		
+	
 		void SimCoordinator::SpawnSquirrel()
 		{
 			int pid = startWorkerProcess();

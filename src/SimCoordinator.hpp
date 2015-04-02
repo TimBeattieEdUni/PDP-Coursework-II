@@ -36,11 +36,11 @@ namespace Biology
 			SimCoordinator(Mpi::Communicator const& comm, Pdp::Config const& config);    ///< Constructor.
 			~SimCoordinator();   ///< Destructor.
 
-			bool Update();                ///< Driver. 
-			void CreateInitialActors();   ///< Sets up the landscape and initial squirrels.
+			bool Update();                 ///< Driver. 
+			void CreateInitialActors();    ///< Sets up the landscape and initial squirrels.
 
-			void SimCoordinator::SpawnSquirrel(int cell_id);   ///< Adds a squirrel to the simulation.
-			void SimCoordinator::SpawnCell();                  ///< Adds a landscape cell to the simulation.
+			void SpawnSquirrel();          ///< Adds a squirrel to the simulation.
+			void SpawnCell(int cell_id);   ///< Adds a landscape cell to the simulation.
 
 		private:
 			SimCoordinator(SimCoordinator const& rhs);              ///< Copy constructor.
