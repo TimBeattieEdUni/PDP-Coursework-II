@@ -11,6 +11,11 @@
 
 
 //////////////////////////////////////////////////////////////////////////////
+//  Local headers.
+#include "PdpEnums.hpp"
+
+
+//////////////////////////////////////////////////////////////////////////////
 //  Standard headers.
 #include <iostream>
 #include <unistd.h>
@@ -27,7 +32,8 @@ namespace Biology
 	///
 	/// @exception  List exceptions this function may throw here.
 	///
-	Squirrel::Squirrel()
+	Squirrel::Squirrel(Mpi::Communicator const& comm)
+		: m_comm(comm)
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 	}
