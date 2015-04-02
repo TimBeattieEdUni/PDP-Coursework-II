@@ -113,7 +113,7 @@ namespace Biology
 		
 		int task = Pdp::ETask::eSquirrel;
 		MPI_Request msg_req;
-		MPI_Isend(&task, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm(), &msg_req);
+		MPI_Isend(&task, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eAssignTask, comm.GetComm(), &msg_req);
 
 		std::cout << "rank " << comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
 	}
