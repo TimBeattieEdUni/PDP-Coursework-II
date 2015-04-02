@@ -85,7 +85,7 @@ namespace Mpi
 			{
 				case Pdp::ETask::eSquirrel:
 				{
-					Biology::Squirrel squirrel;
+					Biology::Squirrel squirrel(m_comm);
 					
 					bool squirrel_ok = true;
 					bool pool_ok     = true;
