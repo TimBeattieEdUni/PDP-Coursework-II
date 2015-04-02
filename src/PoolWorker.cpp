@@ -73,13 +73,14 @@ namespace Mpi
 	///
 	void PoolWorker::Run()
 	{
-		printf("rank %d: running worker\n", m_comm.GetRank());
+		std::cout << "rank " << m_comm.GetRank() << " waiting for assignment message" << std::endl;
 
 		do
 		{
 			int task = -1;
 			MPI_Status status;
 			MPI_Recv(&task, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm(), &status);
+			std::cout << "rank " << m_comm.GetRank() << " received assignment message: " << task << std::endl;
 			
 			switch(task)
 			{
