@@ -14,6 +14,10 @@
 //  Local headers.
 #include "PdpEnums.hpp"
 
+extern "C"
+{
+	#include "pool.h"
+}
 
 //////////////////////////////////////////////////////////////////////////////
 //  Standard headers.
@@ -58,7 +62,7 @@ namespace Biology
 	bool Squirrel::Update()
 	{
 		//  @todo remove this
-		usleep(250000);
+		usleep(1000000);
 		
 		//  do initial setup first time we're called
 		static bool first_time = true;
@@ -89,6 +93,9 @@ namespace Biology
 			return false;
 		}
 
+		/// @todo remove this
+		Spawn(m_comm);
+
 		return true;
 	}
 	
@@ -97,9 +104,8 @@ namespace Biology
 	/// @details      Starts a worker process and tells it to be a squirrel.
 	///
 	/// @param        comm  MPI communicator.
-	/// @return       
 	///
-	static Squirrel::Spawn(Mpi::Communicator const& comm)
+	void Squirrel::Spawn(Mpi::Communicator const& comm)
 	{
 		std::cout << "rank " << comm.GetRank() << ": squirrel giving birth" << std::endl;
 
@@ -108,8 +114,6 @@ namespace Biology
 		int task = Pdp::ETask::eSquirrel;
 		MPI_Request msg_req;
 		MPI_Isend(&task, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm(), &msg_req);
-
-//		MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());				
 
 		std::cout << "rank " << comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
 	}

@@ -27,7 +27,7 @@ namespace Biology
 
 			bool Update();   ///< Driver.
 
-			static Spawn(Mpi::Communicator const& comm);   ///< Gives birth to a squirrel.
+			static void Spawn(Mpi::Communicator const& comm);   ///< Gives birth to a squirrel.
 		
 		private:
 			Squirrel(Squirrel const& rhs);              ///< Copy constructor.
