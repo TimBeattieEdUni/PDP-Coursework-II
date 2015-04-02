@@ -61,6 +61,11 @@ namespace Biology
 
 	bool Squirrel::Update()
 	{
+		if (shouldWorkerStop())
+		{
+			return false;
+		}
+		
 		//  @todo remove this
 		usleep(1000000);
 		
