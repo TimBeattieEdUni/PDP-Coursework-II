@@ -90,7 +90,7 @@ namespace Mpi
 					bool squirrel_ok = true;
 					bool pool_ok     = true;
 					
-					while(squirrel_ok && pool_ok);
+					while(squirrel_ok && pool_ok)
 					{
 						bool squirrel_ok = squirrel.Update();
 						bool pool_ok     = ! shouldWorkerStop();
