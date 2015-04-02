@@ -166,7 +166,7 @@ namespace Biology
 				 cell_id < m_config.GetCells(); 
 				 ++cell_id)
 			{
-				SpawnCell(cell_id)
+				SpawnCell(cell_id);
 			}
 			
 			//  start squirrels
