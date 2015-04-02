@@ -93,6 +93,21 @@ namespace Biology
 	}
 	
 	
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Starts a worker process and tells it to be a squirrel.
+	///
+	/// @param        comm  MPI communicator.
+	/// @return       
+	///
+	static Squirrel::Spawn(Mpi::Communicator const& comm)
+	{
+		int pid = startWorkerProcess();
+		std::cout << "started squirrel on rank " << pid << std::endl;
+		int task = Pdp::ETask::eSquirrel;
+		MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());				
+	}
+
+	
 //	//////////////////////////////////////////////////////////////////////////////
 //	/// @details    Describe copy construction here.
 //	///

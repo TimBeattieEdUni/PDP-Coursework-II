@@ -24,8 +24,10 @@ namespace Biology
 		public:
 			Squirrel(Mpi::Communicator const& comm);    ///< Constructor.
 			~Squirrel();   ///< Destructor.
-	
+
 			bool Update();   ///< Driver.
+
+			static Spawn(Mpi::Communicator const& comm);   ///< Gives birth to a squirrel.
 		
 		private:
 			Squirrel(Squirrel const& rhs);              ///< Copy constructor.

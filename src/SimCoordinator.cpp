@@ -173,7 +173,7 @@ namespace Biology
 			std::cout << "coordinator starting " << m_config.GetSqrls() << " squirrels" << std::endl;
 			for (int i=0; i<m_config.GetSqrls(); ++i)
 			{
-				SpawnSquirrel();
+				Squirrel::Spawn(m_comm);
 			}			
 		}
 	
@@ -187,15 +187,6 @@ namespace Biology
 			MPI_Send(&task, 1, MPI_INT, m_cell_pids[cell_id], Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());			
 		}
 		
-	
-		void SimCoordinator::SpawnSquirrel()
-		{
-			int pid = startWorkerProcess();
-			std::cout << "started squirrel on rank " << pid << std::endl;
-			int task = Pdp::ETask::eSquirrel;
-			MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());		
-		}
-
 	
 //		//////////////////////////////////////////////////////////////////////////////
 //		/// @details    Describe copy construction here.
