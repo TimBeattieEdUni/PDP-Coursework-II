@@ -139,6 +139,13 @@ namespace Biology
 							m_num_sq += birth_or_death;
 							break;							
 						}
+						
+						default:
+						{
+							//  message is for the process pool; give it a chance to get it
+							return true;
+							break;
+						}
 					}					
 				}
 				

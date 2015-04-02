@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
 			}
 			case Mpi::ProcessPool::eQuit:
 			{
-				printf("rank %d: exiting\n", comm.GetRank());
+				printf("rank %d: process pool says to exit\n", comm.GetRank());
 				break;
 			}
 		}

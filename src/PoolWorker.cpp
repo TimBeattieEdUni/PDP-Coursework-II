@@ -95,6 +95,7 @@ namespace Mpi
 						bool squirrel_ok = squirrel.Update();
 						bool pool_ok     = ! shouldWorkerStop();
 					}
+					printf("squirrel destroyed\n", m_comm.GetRank());
 					break;
 				}
 				case Pdp::ETask::eCell:
@@ -109,6 +110,7 @@ namespace Mpi
 						cell_ok = cell.Update();
 						pool_ok = ! shouldWorkerStop();
 					}
+					printf("cell destroyed\n", m_comm.GetRank());
 					break;
 				}
 				case Pdp::ETask::eCoordinator:
@@ -123,10 +125,15 @@ namespace Mpi
 						coord_ok = sim_coord.Update();
 						pool_ok  = ! shouldWorkerStop();
 					}
+					printf("coordinator destroyed\n", m_comm.GetRank());
+
 					break;
 				}
 			}
 		} while (workerSleep());
+
+		printf("rank %d: exiting worker run()\n", m_comm.GetRank());
+
 	}
 
 
