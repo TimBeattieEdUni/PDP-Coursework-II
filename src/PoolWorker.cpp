@@ -92,8 +92,8 @@ namespace Mpi
 					
 					while(squirrel_ok && pool_ok)
 					{
-						bool squirrel_ok = squirrel.Update();
-						bool pool_ok     = ! shouldWorkerStop();
+						squirrel_ok = squirrel.Update();
+						pool_ok     = ! shouldWorkerStop();
 					}
 					printf("squirrel destroyed\n", m_comm.GetRank());
 					break;
