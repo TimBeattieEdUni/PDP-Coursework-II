@@ -60,10 +60,7 @@ namespace Biology
 
 
 	bool Squirrel::Update()
-	{
-		//  @todo remove this
-		usleep(1000000);
-		
+	{		
 		//  do initial setup first time we're called
 		static bool first_time = true;
 		if (first_time)
@@ -94,9 +91,11 @@ namespace Biology
 			return false;
 		}
 
-		/// @todo remove this
+		/// @todo implement reproduction 
 		Spawn(m_comm);
 
+		//  @todo delay here is just to make output manageable
+		usleep(1000000);
 		return true;
 	}
 	
@@ -107,13 +106,7 @@ namespace Biology
 	/// @param        comm  MPI communicator.
 	///
 	void Squirrel::Spawn(Mpi::Communicator const& comm)
-	{
-		//  @todo this is a kludge; sometimes we're trying to give birth when the sim is over.
-		if (shouldWorkerStop())
-		{
-			return;
-		}
-		
+	{		
 		std::cout << "rank " << comm.GetRank() << ": squirrel giving birth" << std::endl;
 
 		int pid = startWorkerProcess();
