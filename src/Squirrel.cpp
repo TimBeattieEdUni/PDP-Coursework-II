@@ -61,11 +61,6 @@ namespace Biology
 
 	bool Squirrel::Update()
 	{
-		if (shouldWorkerStop())
-		{
-			return false;
-		}
-		
 		//  @todo remove this
 		usleep(1000000);
 		
@@ -113,6 +108,12 @@ namespace Biology
 	///
 	void Squirrel::Spawn(Mpi::Communicator const& comm)
 	{
+		//  @todo this is a kludge; sometimes we're trying to give birth when the sim is over.
+		if (shouldWorkerStop())
+		{
+			return;
+		}
+		
 		std::cout << "rank " << comm.GetRank() << ": squirrel giving birth" << std::endl;
 
 		int pid = startWorkerProcess();
