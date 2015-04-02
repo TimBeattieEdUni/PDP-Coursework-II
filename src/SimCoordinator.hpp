@@ -39,6 +39,9 @@ namespace Biology
 			bool Update();                ///< Driver. 
 			void CreateInitialActors();   ///< Sets up the landscape and initial squirrels.
 
+			void SimCoordinator::SpawnSquirrel(int cell_id);   ///< Adds a squirrel to the simulation.
+			void SimCoordinator::SpawnCell();                  ///< Adds a landscape cell to the simulation.
+
 		private:
 			SimCoordinator(SimCoordinator const& rhs);              ///< Copy constructor.
 			SimCoordinator& operator=(SimCoordinator const& rhs);   ///< Assignment operator.

@@ -167,23 +167,36 @@ namespace Biology
 				 cell_id < m_config.GetCells(); 
 				 ++cell_id)
 			{
-				//  store process ID in list using cell ID as index
-				m_cell_pids[cell_id] = startWorkerProcess();
-				std::cout << "started cell " << cell_id << " on rank " << m_cell_pids[cell_id] << std::endl;
-				int task = Pdp::ETask::eCell;
-				MPI_Send(&task, 1, MPI_INT, m_cell_pids[cell_id], Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());
+				SpawnCell(cell_id)
 			}
 			
 			//  start squirrels
 			std::cout << "coordinator starting " << m_config.GetSqrls() << " squirrels" << std::endl;
 			for (int i=0; i<m_config.GetSqrls(); ++i)
 			{
-				int pid = startWorkerProcess();
-				std::cout << "started squirrel on rank " << pid << std::endl;
-				int task = Pdp::ETask::eSquirrel;
-				MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());
+				SpawnSquirrel();
 			}			
 		}
+	
+		
+		void SimCoordinator::SpawnCell(int cell_id)
+		{
+			//  store process ID in list using cell ID as index
+			m_cell_pids[cell_id] = startWorkerProcess();
+			std::cout << "started cell " << cell_id << " on rank " << m_cell_pids[cell_id] << std::endl;
+			int task = Pdp::ETask::eCell;
+			MPI_Send(&task, 1, MPI_INT, m_cell_pids[cell_id], Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());			
+		}
+		
+		void SimCoordinator::SpawnSquirrel()
+		{
+			int pid = startWorkerProcess();
+			std::cout << "started squirrel on rank " << pid << std::endl;
+			int task = Pdp::ETask::eSquirrel;
+			MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());		
+		}
+
+	
 //		//////////////////////////////////////////////////////////////////////////////
 //		/// @details    Describe copy construction here.
 //		///
