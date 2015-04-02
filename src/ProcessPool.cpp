@@ -35,9 +35,7 @@ namespace Mpi
 	///
 	ProcessPool::ProcessPool()
 		: m_type(static_cast<Type>(processPoolInit()))
-	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
-		
+	{		
 		if ((m_type != eQuit) && (m_type != eWorker) && (m_type != eMaster))
 		{
 			throw std::logic_error("undocumented value returned by processPoolInit()");
@@ -55,7 +53,6 @@ namespace Mpi
 	///
 	ProcessPool::~ProcessPool()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
 		processPoolFinalise();
 	}
 
