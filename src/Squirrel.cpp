@@ -51,6 +51,38 @@ namespace Biology
 
 	bool Squirrel::Update()
 	{
+		//  @todo remove this
+		usleep(250000);
+		
+		//  do initial setup first time we're called
+		static bool first_time = true;
+		if (first_time)
+		{
+			first_time = false;
+			
+			//  tell coordinator there's a new squirrel in town
+			std::cout << "squirrel: telling coordinator I'm allive" << std::endl;	
+
+			//  we aren't concerned with whether this message is received
+			MPI_Request msg_req;
+			int birth = 1;
+			MPI_Isend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_req);
+
+			return true;
+		}
+		
+		//  @todo remove this
+		static int age = 0;
+		++age;
+		if (8 < age)
+		{
+			//  tell coordinator "this is an ex-squirrel" /Cleese
+			MPI_Request msg_req;
+			int birth = -1;
+			MPI_Isend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_req);
+			return false;
+		}
+
 		return true;
 	}
 	
