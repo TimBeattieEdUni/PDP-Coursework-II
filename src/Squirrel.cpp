@@ -52,6 +52,7 @@ namespace Biology
 	bool Squirrel::Update()
 	{
 		/// @todo remove this
+		printf("squirrel update\n");
 		usleep(250000);
 		
 		return true;

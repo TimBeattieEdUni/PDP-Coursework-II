@@ -105,7 +105,7 @@ namespace Biology
 				{
 					m_cur_week = this_week;
 					
-					std::cout << "stats go here" << std::endl;
+					std::cout << "weekly stats go here" << std::endl;
 				}
 			}
 
