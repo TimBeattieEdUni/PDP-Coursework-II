@@ -192,7 +192,7 @@ namespace Biology
 		
 		
 		/// @todo remove this
-		new_cell = 1;
+		new_cell = 0;
 		
 		
 		if (new_cell != m_cur_cell)
