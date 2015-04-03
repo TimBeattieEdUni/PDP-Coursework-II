@@ -158,6 +158,8 @@ namespace Biology
 	///
 	void Cell::BumpStatistics()
 	{
+		std::cout << "rank " << m_comm.GetRank() << ": bump: " << m_infection1 << " " << m_infection2 << " " << m_infection3 << std::endl;
+
 		m_pop_influx3 = m_pop_influx2;
 		m_pop_influx2 = m_pop_influx1;
 		m_pop_influx1 = 0;
@@ -201,6 +203,7 @@ namespace Biology
 			case Pdp::ESquirrelStep::eOut:
 			{
 				--m_num_sq;
+				std::cout << "rank " << m_comm.GetRank() << ": infection: " << m_infection1 << std::endl;
 				break;
 			}
 			case Pdp::ESquirrelStep::eWithin:

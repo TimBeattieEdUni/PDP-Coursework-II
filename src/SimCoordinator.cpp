@@ -100,7 +100,7 @@ namespace Biology
 			unsigned int today = m_ticker.GetDay();
 			if (today > m_cur_day)
 			{
-				std::cout << "cordinator: day " << today << std::endl;
+				std::cout << "coordinator: day " << today << std::endl;
 				
 				//  shut down sim after configured number of days
 				if (today >= m_config.GetSimLen())
