@@ -83,7 +83,7 @@ namespace Biology
 		if (today > m_cur_day)
 		{
 			//  if more than one day has passed, stats for multiple days will be included, but this is acceptable.
-			std::cout << "rank " << m_comm.GetRank() << ": cell: day " << today << std::endl;
+//			std::cout << "rank " << m_comm.GetRank() << ": cell: day " << today << std::endl;
 
 			MPI_Bsend(&m_num_sq, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm());
 
@@ -175,7 +175,7 @@ namespace Biology
 		
 		if (infected)
 		{
-			++m_infection1;
+			std::cout << "rank " << m_comm.GetRank() << ": infected squirrel cell step received" << std::endl;
 		}
 
 		switch(step)
@@ -184,6 +184,11 @@ namespace Biology
 			{
 				++m_num_sq;
 				++m_pop_influx1;
+
+				if (infected)
+				{
+					++m_infection1;
+				}
 				break;
 			}
 			case Pdp::ESquirrelStep::eOut:
@@ -194,6 +199,11 @@ namespace Biology
 			case Pdp::ESquirrelStep::eWithin:
 			{
 				++m_pop_influx1;				
+
+				if (infected)
+				{
+					++m_infection1;
+				}
 				break;
 			}
 		}
