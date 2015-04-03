@@ -68,14 +68,13 @@ namespace Biology
 	/// @exception    
 	///
 	unsigned int DayTicker::GetDay()
-	{		
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
-		
-		double wtime = MPI_Wtime();
+	{				
+//		double wtime = MPI_Wtime();
+//		std::cout << wtime << std::endl;
 		
 		unsigned int day = (unsigned int) ((MPI_Wtime() - m_start_time) / (double)m_day_len);
 	
-		std::cout << wtime << " - " << m_start_time << " / " << m_day_len << " = " << day << std::endl;
+//		std::cout << wtime << " - " << m_start_time << " / " << m_day_len << " = " << day << std::endl;
 		
 		return day;
 	}

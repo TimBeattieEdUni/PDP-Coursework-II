@@ -50,8 +50,8 @@ namespace Pdp
 		converter >> m_cells 
 		          >> m_ini_sqrls 
 				  >> m_max_sqrls 
-				  >> m_day_len
-		          >> m_sim_len;
+				  >> m_sim_len
+				  >> m_day_len;
 	}
 
 
