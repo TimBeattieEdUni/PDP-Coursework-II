@@ -44,12 +44,12 @@ namespace Biology
 		, m_cur_day(0)
 		, m_cur_week(0)
 		, m_num_sq(0)
-		, m_pop_influx1(0)
-		, m_pop_influx2(0)
-		, m_pop_influx3(0)
-		, m_infection1(0)
-		, m_infection2(0)
-		, m_infection3(0)
+		, m_sq_steps1(0)
+		, m_sq_steps2(0)
+		, m_sq_steps3(0)
+		, m_inf_steps1(0)
+		, m_inf_steps2(0)
+		, m_inf_steps3(0)
 		
 	{
 		std::cout << __PRETTY_FUNCTION__ <<  std::endl;
@@ -99,7 +99,10 @@ namespace Biology
 			{
 				m_cur_week = this_week;
 				
-				std::cout << "rank " << m_comm.GetRank() << ": cell: week " << this_week << ": pop influx: " << m_pop_influx1 << " infection: " << m_infection1 << std::endl;
+				std::cout << "rank " << m_comm.GetRank() << ": cell: week " << this_week 
+						  << ": pop influx: " << m_sq_steps1 + m_sq_steps2 + m_sq_steps3 
+				          << "  infection level: " << m_inf_steps1 + m_inf_steps2 + m_inf_steps3 
+				          << std::endl;
 			}
 
 			//  ensure all cells stop on the right day (after printing stats for previous day/week)
@@ -160,13 +163,13 @@ namespace Biology
 	{
 		std::cout << "rank " << m_comm.GetRank() << ": bump: " << m_infection1 << " " << m_infection2 << " " << m_infection3 << std::endl;
 
-		m_pop_influx3 = m_pop_influx2;
-		m_pop_influx2 = m_pop_influx1;
-		m_pop_influx1 = 0;
+		m_sq_steps3 = m_sq_steps2;
+		m_sq_steps2 = m_sq_steps1;
+		m_sq_steps1 = 0;
 		
-		m_infection3 = m_infection2;
-		m_infection2 = m_infection1;
-		m_infection1 = 0;
+		m_inf_steps3 = m_inf_steps2;
+		m_inf_steps2 = m_inf_steps1;
+		m_inf_steps1 = 0;
 	}
 	
 	
@@ -191,77 +194,33 @@ namespace Biology
 			case Pdp::ESquirrelStep::eIn:
 			{
 				++m_num_sq;
-				++m_pop_influx1;
+				++m_sq_steps1;
 
 				if (infected)
 				{
-					++m_infection1;
-					std::cout << "rank " << m_comm.GetRank() << ": infection: " << m_infection1 << std::endl;
+					++m_sq_steps1;
+					std::cout << "rank " << m_comm.GetRank() << ": inf steps today: " << m_inf_steps1 << std::endl;
 				}
 				break;
 			}
 			case Pdp::ESquirrelStep::eOut:
 			{
 				--m_num_sq;
-				std::cout << "rank " << m_comm.GetRank() << ": infection: " << m_infection1 << std::endl;
+				std::cout << "rank " << m_comm.GetRank() << ": inf steps today: " << m_inf_steps1 << std::endl;
 				break;
 			}
 			case Pdp::ESquirrelStep::eWithin:
 			{
-				++m_pop_influx1;				
+				++m_sq_steps1;				
 
 				if (infected)
 				{
 					++m_infection1;
-					std::cout << "rank " << m_comm.GetRank() << ": infection: " << m_infection1 << std::endl;
+					std::cout << "rank " << m_comm.GetRank() << ": inf steps today: " << m_inf_steps1 << std::endl;
 				}
 				break;
 			}
 		}
 	}
-
-//  @todo: this shouldn't be needed; coordinator shuts down pool but cells carry on.
-//			if (today > m_config.GetSimLen())
-//			{
-//				std::cout << "rank " << m_comm.GetRank() << ": max sim days reached; exiting" << std::endl;	
-//				return false;
-//			}
-
-//	//////////////////////////////////////////////////////////////////////////////
-//	/// @details    Describe copy construction here.
-//	///
-//	/// @param      rhs  Object to copy.
-//	///
-//	/// @pre        List what must be true before this function is called.
-//	/// @post       List what is guaranteed to be true after this function returns.
-//	///
-//	/// @exception  List exceptions this function may throw here.
-//	///
-//	Cell::Cell(Cell const& rhs)
-//	{
-//		std::cout << __PRETTY_FUNCTION__ << std::endl;
-//
-//		(void) rhs;
-//	}
-//
-//
-//	//////////////////////////////////////////////////////////////////////////////
-//	/// @details    Describe object assignment here.
-//	///
-//	/// @param      rhs  Object on the right-hand side of the assignment statement.
-//	/// @return     Object which has been assigned.
-//	///
-//	/// @pre        List what must be true before this function is called.
-//	/// @post       List what is guaranteed to be true after this function returns.
-//	///
-//	/// @exception  List exceptions this function may throw here.
-//	///
-//	Cell& Cell::operator=(Cell const& rhs)
-//	{
-//		std::cout << __PRETTY_FUNCTION__ << std::endl;
-//
-//		(void) rhs;
-//		return *this;
-//	}
 
 }   //  namespace Biology
