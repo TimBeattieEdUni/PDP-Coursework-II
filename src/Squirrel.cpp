@@ -155,6 +155,7 @@ namespace Biology
 				{
 					case Pdp::EMpiMsgTag::ePoisonPill:
 					{
+						
 						MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm(), &msg_status);
 						std::cout << "squirrel: poison pill received" << std::endl;
 						m_shutdown = true;
