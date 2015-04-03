@@ -195,7 +195,7 @@ namespace Biology
 			m_cell_pids[cell_id] = startWorkerProcess();
 			std::cout << "started cell " << cell_id << " on rank " << m_cell_pids[cell_id] << std::endl;
 			int task = Pdp::ETask::eCell;
-			MPI_Bsend(&step, 1, MPI_INT, m_cur_cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm());			
+			MPI_Bsend(&task, 1, MPI_INT, m_cell_pids[cell_id], Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());			
 		}
 		
 	
