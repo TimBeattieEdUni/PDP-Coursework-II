@@ -44,6 +44,7 @@ namespace Biology
 		, m_x(0.0)
 		, m_y(0.0)
 		, m_cur_cell(-1)
+		, m_cur_step(-1)
 		, m_shutdown(false)
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -71,6 +72,7 @@ namespace Biology
 
 	bool Squirrel::Update()
 	{
+		//  
 		if (m_shutdown)
 		{
 			return false;
@@ -92,8 +94,6 @@ namespace Biology
 
 		/// @todo implement dying 
 
-		//  @todo delay here is just to make output manageable
-//		usleep(500000);
 		return true;
 	}
 	
@@ -186,6 +186,20 @@ namespace Biology
 	{
 		//  take a step
 		squirrelStep(m_x, m_y, &m_x, &m_y, &m_rng_state);
+		++m_cur_step;
+
+		//  chance of reproduction every 50 steps
+		if (0 == m_cur_step % 50)
+		{
+			/// @todo implement reproduction probability
+			if (0 == m_cur_step % 500)
+			{
+				std::cout << "rank " << m_comm.GetRank() << ": squirrel giving birth" << std::endl;
+				Spawn(m_comm);
+			}
+			
+		}
+
 		std::cout << "rank " << m_comm.GetRank() << ": squirrel pos: " << m_x << " " << m_y << std::endl;
 		
 		//  where are we, and have we moved?

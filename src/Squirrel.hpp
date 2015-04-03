@@ -49,8 +49,9 @@ namespace Biology
 			
 			float m_x;          ///< X-coordinate of squirrel.
 			float m_y;          ///< Y-coordinate of squirrel.
+			
 			int m_cur_cell;     ///< Landscape cell where this squirrel is.
-
+			int m_cur_step;     ///< Number of steps since the squirrel was born.
 			bool m_shutdown;    ///< Indicates pool is shutting down.
 	};
 
