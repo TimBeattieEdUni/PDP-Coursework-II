@@ -76,7 +76,9 @@ namespace Biology
 		double wtime = MyWtime();
 		std::cout << wtime << std::endl;
 		
-		unsigned int day = (unsigned int) ((MyWtime() - m_start_time) / (double)m_day_len);		
+		double dday = (MyWtime() - m_start_time) / double(m_day_len);
+		
+		unsigned int day = dday;
 
 //		unsigned int day = (unsigned int) ((MPI_Wtime() - m_start_time) / (double)m_day_len);
 	
