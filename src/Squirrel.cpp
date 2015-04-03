@@ -45,6 +45,7 @@ namespace Biology
 		, m_y(0.0)
 		, m_cur_cell(-1)
 		, m_cur_step(-1)
+		, m_infected(false)
 		, m_shutdown(false)
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;

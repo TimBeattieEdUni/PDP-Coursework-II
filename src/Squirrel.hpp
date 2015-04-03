@@ -51,6 +51,8 @@ namespace Biology
 			
 			int m_cur_cell;     ///< Landscape cell where this squirrel is.
 			int m_cur_step;     ///< Number of steps since the squirrel was born.
+		
+			bool m_infected;    ///< Indicates squirrel has the virus. 
 			bool m_shutdown;    ///< Indicates pool is shutting down.
 	};
 
