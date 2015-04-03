@@ -100,6 +100,7 @@ namespace Mpi
 					{
 						squirrel_ok = squirrel.Update();
 						pool_ok     = ! shouldWorkerStop();
+						std::cout << "rank " << m_comm.GetRank() << ": pool_ok is " << pool_ok << std::endl;
 					}
 					break;
 				}
