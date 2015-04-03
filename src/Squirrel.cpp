@@ -186,6 +186,12 @@ namespace Biology
 		
 		//  find our current cell
 		int new_cell = getCellFromPosition(m_x, m_y);
+		
+		
+		/// @todo remove this
+		new_cell = 0;
+		
+		
 		if (new_cell != m_cur_cell)
 		{
 			std::cout << "rank " << m_comm.GetRank() << ": squirrel moved from cell " << m_cur_cell << " to " << new_cell << std::endl;
