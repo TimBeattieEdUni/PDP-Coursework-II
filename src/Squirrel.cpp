@@ -144,7 +144,7 @@ namespace Biology
 			
 			if(msg_waiting)
 			{
-				std::cout << "squirrel " << m_comm.GetRank() << ": message waiting" << std::endl;
+//				std::cout << "rank " << m_comm.GetRank() << ": squirrel: message waiting" << std::endl;
 				
 				switch (msg_status.MPI_TAG)
 				{
@@ -152,7 +152,7 @@ namespace Biology
 					{
 						
 						MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm(), &msg_status);
-						std::cout << "squirrel: poison pill received" << std::endl;
+						std::cout << "rank " << m_comm.GetRank() << ": squirrel: poison pill received" << std::endl;
 						m_shutdown = true;
 						break;
 					}
