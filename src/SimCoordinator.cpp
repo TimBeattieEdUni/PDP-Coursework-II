@@ -188,8 +188,8 @@ namespace Biology
 			}
 			
 			//  start squirrels
-			std::cout << "coordinator starting " << m_config.GetSqrls() << " squirrels" << std::endl;
-			for (int i=0; i<m_config.GetSqrls(); ++i)
+			std::cout << "coordinator starting " << m_config.GetIniSqrls() << " squirrels" << std::endl;
+			for (int i=0; i<m_config.GetIniSqrls(); ++i)
 			{
 				Squirrel::Spawn(m_comm);
 			}			
