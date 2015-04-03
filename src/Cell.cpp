@@ -70,6 +70,8 @@ namespace Biology
 	///
 	bool Cell::Update()
 	{
+		std::cout << __PRETTY_FUNCTION__ << std::endl;
+
 		//  detect new day
 		unsigned int today = m_ticker.GetDay();
 
@@ -118,6 +120,7 @@ namespace Biology
 				{
 					case Pdp::EMpiMsgTag::eSquirrelStep:
 					{
+//		std::cout << "rank " << m_comm.GetRank() << ": cell: squirrel step msg waiting" << std::endl;
 						ReceiveSquirrelStep();
 						break;
 
@@ -158,8 +161,8 @@ namespace Biology
 	
 	void Cell::ReceiveSquirrelStep()
 	{
-//		std::cout << "rank " << m_comm.GetRank() << ": cell: squirrel step msg waiting" << std::endl;
-		
+		std::cout << __PRETTY_FUNCTION__ << std::endl;
+				
 		int sq_data[2];
 		MPI_Status msg_status;
 		MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm(), &msg_status);
