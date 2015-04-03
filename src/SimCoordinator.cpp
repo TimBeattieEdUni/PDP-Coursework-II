@@ -141,11 +141,11 @@ namespace Biology
 							break;							
 						}
 						
-						case Pdp::EMpiMsgTag::ePoolPid, ePoolCtrl:
+						case Pdp::EMpiMsgTag::ePoolPid:
+						case Pdp::EMpiMsgTag::ePoolCtrl:
 						{
 							//  these will be handled by the pool
 							return true;
-							break;
 						}
 						default:
 						{
