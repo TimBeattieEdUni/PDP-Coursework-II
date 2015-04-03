@@ -178,6 +178,8 @@ namespace Biology
 		///
 		void SimCoordinator::CreateInitialActors()
 		{
+			std::cout << __PRETTY_FUNCTION__ << std::endl;
+
 			//  start cells
 			std::cout << "coordinator starting " << m_config.GetCells() << " cells" << std::endl;
 			for (int cell_id = 0; 
@@ -198,6 +200,8 @@ namespace Biology
 		
 		void SimCoordinator::SpawnCell(int cell_id)
 		{
+			std::cout << __PRETTY_FUNCTION__ << std::endl;
+
 			//  store process ID in list using cell ID as index
 			m_cell_pids[cell_id] = startWorkerProcess();
 			std::cout << "coordinator: started process for cell " << cell_id << " on rank " << m_cell_pids[cell_id] << std::endl;
@@ -208,6 +212,8 @@ namespace Biology
 	
 		void SimCoordinator::SpawnSquirrel(float x, float y)
 		{
+			std::cout << __PRETTY_FUNCTION__ << std::endl;
+
 			int pid = startWorkerProcess();
 			std::cout << "coordinator: started process for squirrel on rank " << pid << std::endl;
 
@@ -221,6 +227,8 @@ namespace Biology
 
 		void SimCoordinator::ReceiveSquirrelBirthMsg()
 		{
+			std::cout << __PRETTY_FUNCTION__ << std::endl;
+
 			MPI_Status msg_status;
 			float sq_data[2];
 			MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelBirth, m_comm.GetComm(), &msg_status);

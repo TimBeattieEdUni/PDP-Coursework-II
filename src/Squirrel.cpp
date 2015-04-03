@@ -102,7 +102,7 @@ namespace Biology
 	///
 	/// @param        comm  MPI communicator.
 	///
-	void Squirrel::Spawn(Mpi::Communicator const& comm)
+	void Squirrel::Spawn()
 	{		
 		std::cout << "rank " << comm.GetRank() << ": squirrel reproducing" << std::endl;
 
@@ -190,7 +190,7 @@ namespace Biology
 			if (0 == m_cur_step % 500)
 			{
 				std::cout << "rank " << m_comm.GetRank() << ": squirrel giving birth" << std::endl;
-				Spawn(m_comm);
+				Spawn();
 			}
 			
 		}

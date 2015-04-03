@@ -35,9 +35,7 @@ namespace Biology
 			void Die();                 ///< Kills the squirrel.
 			void HandleFirstUpdate();   ///< Does the first update.      
 			void HandleMessages();      ///< Handles incoming MPI messages.
-
-			void Spawn(Mpi::Communicator const& comm);   ///< Gives birth to a squirrel.
-			
+			void Spawn();               ///< Gives birth to a squirrel.
 			void Step();                ///< Moves this squirrel one step.	
 
 			/// Tells a cell we've stepped.
