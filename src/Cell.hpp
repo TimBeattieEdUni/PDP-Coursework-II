@@ -44,6 +44,7 @@ namespace Biology
 			unsigned int m_cur_day;         ///< The current day.
 			unsigned int m_cur_week;        ///< The current week.
 			unsigned int m_num_sq;			///< Number of squirrels in this cell.
+			unsigend int m_pop_influx;      ///< Count of squirrel has steps within or into this cell today.
 			
 
 	};

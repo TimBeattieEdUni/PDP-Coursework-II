@@ -88,7 +88,7 @@ namespace Biology
 			{
 				m_cur_week = this_week;
 				
-				std::cout << "rank " << m_comm.GetRank() << ": cell: week " << this_week << ": squirrels: " << m_num_sq << std::endl;
+				std::cout << "rank " << m_comm.GetRank() << ": cell: week " << this_week << ": popInflux: " << m_pop_influx << std::endl;
 			}
 
 			//  after all the day's work is done, we start a new day
@@ -150,6 +150,7 @@ namespace Biology
 			case Pdp::ESquirrelStep::eIn:
 			{
 				++m_num_sq;
+				++m_pop_influx;
 				break;
 			}
 			case Pdp::ESquirrelStep::eOut:
@@ -159,7 +160,7 @@ namespace Biology
 			}
 			case Pdp::ESquirrelStep::eWithin:
 			{
-				
+				++m_pop_influx;				
 				break;
 			}
 		}
