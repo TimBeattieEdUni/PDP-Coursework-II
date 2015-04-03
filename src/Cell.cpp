@@ -75,6 +75,8 @@ namespace Biology
 
 		if (today > m_cur_day)
 		{
+			BumpPopInfluxes();
+			
 			//  if more than one day has passed, stats for multiple days will be included, but this is acceptable.
 			std::cout << "rank " << m_comm.GetRank() << ": cell: day " << today << std::endl;
 			
@@ -88,7 +90,7 @@ namespace Biology
 			{
 				m_cur_week = this_week;
 				
-				std::cout << "rank " << m_comm.GetRank() << ": cell: week " << this_week << ": popInflux: " << m_pop_influx << std::endl;
+				std::cout << "rank " << m_comm.GetRank() << ": cell: week " << this_week << ": popInflux: " << m_pop_influx1 << std::endl;
 			}
 
 			//  after all the day's work is done, we start a new day
@@ -135,6 +137,15 @@ namespace Biology
 		return true;
 	}
 
+	
+	void Cell::BumpPopInfluxes()
+	{
+		m_pop_influx3 = m_pop_influx2;
+		m_pop_influx2 = m_pop_influx1;
+		m_pop_influx1 = 0;
+	}
+	
+	
 	void Cell::ReceiveSquirrelStep()
 	{
 		std::cout << "rank " << m_comm.GetRank() << ": cell: squirrel step msg waiting" << std::endl;
