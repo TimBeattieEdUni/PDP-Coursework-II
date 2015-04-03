@@ -96,7 +96,7 @@ namespace Mpi
 					bool squirrel_ok = true;
 					bool pool_ok     = true;
 					
-					while(squirrel_ok && pool_ok)
+					while(pool_ok && squirrel_ok)
 					{
 						squirrel_ok = squirrel.Update();
 						pool_ok     = ! shouldWorkerStop();
@@ -110,7 +110,7 @@ namespace Mpi
 					bool cell_ok = true;
 					bool pool_ok = true;
 
-					while(cell_ok && pool_ok)
+					while(pool_ok && cell_ok)
 					{
 						cell_ok = cell.Update();
 						pool_ok = ! shouldWorkerStop();
@@ -124,7 +124,7 @@ namespace Mpi
 					bool coord_ok = true;
 					bool pool_ok  = true;
 
-					while(coord_ok && pool_ok)
+					while(pool_ok && coord_ok)
 					{
 						coord_ok = sim_coord.Update();
 						pool_ok  = ! shouldWorkerStop();
