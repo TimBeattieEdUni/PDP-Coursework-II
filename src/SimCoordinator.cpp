@@ -87,8 +87,6 @@ namespace Biology
 				CreateInitialActors();
 				return true;
 			}
-
-			std::cout << "cordinator: update" << std::endl;
 			
 			//  do "new day" events
 			unsigned int today = m_ticker.GetDay();
@@ -127,7 +125,7 @@ namespace Biology
 				
 				if(msg_waiting)
 				{
-					std::cout << "coordinator: message waiting" << std::endl;
+//					std::cout << "coordinator: message waiting" << std::endl;
 
 					switch (msg_status.MPI_TAG)
 					{
@@ -135,7 +133,7 @@ namespace Biology
 						{
 							int num_sq = 0;
 							MPI_Recv(&num_sq, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status);
-							std::cout << "cell stats rxd: " << msg_status.MPI_SOURCE << " has " << num_sq << " squirrels" << std::endl;
+//							std::cout << "cell stats rxd: " << msg_status.MPI_SOURCE << " has " << num_sq << " squirrels" << std::endl;
 							break;
 						}
 							

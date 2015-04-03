@@ -104,7 +104,7 @@ namespace Biology
 			
 			if(msg_waiting)
 			{
-				std::cout << "rank " << m_comm.GetRank() << ": cell: message waiting" << std::endl;
+//				std::cout << "rank " << m_comm.GetRank() << ": cell: message waiting" << std::endl;
 				
 				switch (msg_status.MPI_TAG)
 				{
