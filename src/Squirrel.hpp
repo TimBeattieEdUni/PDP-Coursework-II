@@ -33,14 +33,17 @@ namespace Biology
 			Squirrel(Squirrel const& rhs);              ///< Copy constructor.
 			Squirrel& operator=(Squirrel const& rhs);   ///< Assignment operator.
 
-			void Die();   ///< Kills the squirrel.
-		
+			void HandleFirstUpdate();   ///< Does the first update.      
+			void Step();                ///< Moves this squirrel one step.	
+			void Die();                 ///< Kills the squirrel.
+			
 			Mpi::Communicator const& m_comm;    ///< MPI communcator for the pool.
 			unsigned int update_count;          ///< Number of updates since last.
 
 			long m_rng_state;   ///< Random number generator state (required by biologists' code).
 			float m_x;          ///< X-coordinate of squirrel.
 			float m_y;          ///< Y-coordinate of squirrel.
+			int m_cur_cell;     ///< Landscape cell where this squirrel is.         
 	};
 
 }   //  namespace Biology

@@ -43,6 +43,7 @@ namespace Biology
 		, m_rng_state(-1 - comm.GetRank())
 		, m_x(0.0)
 		, m_y(0.0)
+		, m_cur_cell(-1)
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 
@@ -74,22 +75,11 @@ namespace Biology
 		if (first_time)
 		{
 			first_time = false;
-			
-			//  tell coordinator there's a new squirrel in town
-			std::cout << "rank " << m_comm.GetRank() << " first update; sending birth record to coordinator" << std::endl;	
-
-			//  we aren't concerned with whether this message is received
-			MPI_Request msg_req;
-			int birth = 1;
-			MPI_Isend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_req);
-
-			std::cout << "rank " << m_comm.GetRank() << " first update; sent birth record to coordinator" << std::endl;	
-			return true;
+			HandleFirstUpdate();
 		}
 		
 		//  we do one step per update
-		squirrelStep(m_x, m_y, &m_x, &m_y, &m_rng_state);
-		std::cout << "rank " << m_comm.GetRank() << ": squirrel pos: " << m_x << " " << m_y << std::endl;
+		Step();
 		
 		/// @todo implement reproduction 
 
@@ -119,6 +109,42 @@ namespace Biology
 		MPI_Isend(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, comm.GetComm(), &msg_req);
 
 		std::cout << "rank " << comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
+	}
+
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Informs coordinator of this squirrel's birth.
+	///
+	void Squirrel::HandleFirstUpdate()
+	{
+		//  tell coordinator there's a new squirrel in town
+		std::cout << "rank " << m_comm.GetRank() << " first update; sending birth record to coordinator" << std::endl;	
+		
+		//  todo: move to buffered sending
+		MPI_Request msg_req;
+		int birth = 1;
+		MPI_Isend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_req);
+		
+		std::cout << "rank " << m_comm.GetRank() << " first update; sent birth record to coordinator" << std::endl;	
+		return true;
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Moves the squirrel one step and updates any cells affected.
+	///
+	void Squirrel::Step()
+	{
+		//  take a step
+		squirrelStep(m_x, m_y, &m_x, &m_y, &m_rng_state);
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel pos: " << m_x << " " << m_y << std::endl;
+		
+		//  find our current cell
+		int new_cell = getCellFromPosition(m_x, m_y);
+		if (new_cell != m_cur_cell)
+		{
+			std::cout << "rank " << m_comm.GetRank() << ": squirrel moved from cell " << m_cur_cell << " to " << new_cell << std::endl;
+		}
+		
+		//  let interested parties know
 	}
 
 	
