@@ -78,6 +78,9 @@ namespace Biology
 			return false;
 		}
 
+		double wtime = MPI_Wtime();
+		std::cout << wtime << std::endl;
+		
 		//  do initial setup first time we're called
 		static bool first_time = true;
 		if (first_time)
