@@ -33,7 +33,14 @@ namespace Biology
 			Squirrel(Squirrel const& rhs);              ///< Copy constructor.
 			Squirrel& operator=(Squirrel const& rhs);   ///< Assignment operator.
 
+			void Die();   ///< Kills the squirrel.
+		
 			Mpi::Communicator const& m_comm;    ///< MPI communcator for the pool.
+			unsigned int update_count;          ///< Number of updates since last.
+
+			long m_rng_state;   ///< Random number generator state (required by biologists' code).
+			float m_x;          ///< X-coordinate of squirrel.
+			float m_y;          ///< Y-coordinate of squirrel.
 	};
 
 }   //  namespace Biology
