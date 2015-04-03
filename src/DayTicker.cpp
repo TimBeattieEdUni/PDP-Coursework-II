@@ -65,14 +65,14 @@ namespace Biology
 	///
 	unsigned int DayTicker::GetDay()
 	{		
-//		double dday = (MyWtime() - m_start_time) / double(m_day_len);
+		double dday = (MyWtime() - m_start_time) / double(m_day_len);
 		
-//		unsigned int day = dday;
+		unsigned int day = dday;
 
-//		return day;
+		return day;
 
 		unsigned int day = (unsigned int) ((MPI_Wtime() - m_start_time) / (double)m_day_len);		
-		return day;
+//		return day;
 	}
 
 	
