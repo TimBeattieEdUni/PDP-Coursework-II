@@ -15,6 +15,12 @@
 #include "PdpEnums.hpp"
 #include "Squirrel.hpp"
 
+extern "C"
+{
+	#include "pool.h"
+}
+
+
 //////////////////////////////////////////////////////////////////////////////
 //  Standard headers.
 #include <iostream>
