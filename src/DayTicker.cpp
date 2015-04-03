@@ -35,8 +35,8 @@ namespace Biology
 	///             several CPLabs machines.
 	///
 	DayTicker::DayTicker(double day_len)
-//		: m_start_time(MPI_Wtime())
-		: m_start_time(MyWtime())
+		: m_start_time(MPI_Wtime())
+//		: m_start_time(MyWtime())
 		, m_day_len(day_len)
 	{
 //		std::cout << __PRETTY_FUNCTION__ << " : " << m_start_time << " " << m_day_len << std::endl;
