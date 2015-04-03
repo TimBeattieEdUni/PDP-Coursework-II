@@ -190,11 +190,12 @@ namespace Biology
 				SpawnCell(cell_id);
 			}
 			
-			//  start squirrels
+			//  start initial infected squirrels
 			std::cout << "coordinator starting " << m_config.GetIniSqrls() << " squirrels" << std::endl;
 			for (int i=0; i<m_config.GetIniSqrls(); ++i)
 			{
-				SpawnSquirrel(0.0, 0.0);
+				int pid = SpawnSquirrel(0.0, 0.0);
+				MPI_Bsend(NULL, 0, MPI_INT, pid, Pdp::EMpiMsgTag::eInfect, m_comm.GetComm());			
 			}			
 		}
 	
@@ -203,6 +204,8 @@ namespace Biology
 		{
 			std::cout << __PRETTY_FUNCTION__ << std::endl;
 
+			/// @todo cell ids aren't needed any more
+			
 			//  store process ID in list using cell ID as index
 			m_cell_pids[cell_id] = startWorkerProcess();
 			std::cout << "coordinator: started process for cell " << cell_id << " on rank " << m_cell_pids[cell_id] << std::endl;
@@ -223,6 +226,8 @@ namespace Biology
 			int task = Pdp::ETask::eSquirrel;
 			MPI_Bsend(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());			
 			std::cout << "rank " << m_comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
+			
+			return pid;
 		}
 	
 
@@ -234,7 +239,7 @@ namespace Biology
 			float sq_data[2];
 			MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelBirth, m_comm.GetComm(), &msg_status);
 
-			if (m_num_sq == m_config.GetMaxSqrls())
+			if (m_num_sq >= m_config.GetMaxSqrls())
 			{
 				std::cout << "coordinator: max squirrels exceeded; shutting down" << std::endl;
 				m_shutdown = true;

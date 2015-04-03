@@ -24,6 +24,7 @@ namespace Pdp
 			eCellStats,          ///< Squirrel statistics for coordinator.
 			eSquirrelBirth,      ///< A squirrel is born
 			eSquirrelStep,       ///< Squirrel step event.
+			eInfect,             ///< Used by coordinator to infect initial squirrels.
 			ePoisonPill,         ///< Tells an actor to exit.
 
 			/// @todo remove this

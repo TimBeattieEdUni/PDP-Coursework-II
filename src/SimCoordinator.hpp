@@ -40,13 +40,13 @@ namespace Biology
 			void CreateInitialActors();             ///< Sets up the landscape and initial squirrels.
 			void ReceiveSquirrelBirthMsg();         ///< Receives message indicating a squirrel should be born.
 			void SpawnCell(int cell_id);            ///< Adds a landscape cell to the simulation.
-			void SpawnSquirrel(float x, float y);   ///< Gives birth to a squirreal.
 
 		private:
 			SimCoordinator(SimCoordinator const& rhs);              ///< Copy constructor.
 			SimCoordinator& operator=(SimCoordinator const& rhs);   ///< Assignment operator.
 			
-			void KillSquirrels();   ///< Sends poison pill to all squirrel.
+			void KillSquirrels();                  ///< Sends poison pill to all squirrel.
+			int SpawnSquirrel(float x, float y);   ///< Gives birth to a squirreal.
 		
 			Mpi::Communicator const& m_comm;   ///< MPI communcator for the pool.
 			Pdp::Config const& m_config;    ///< App config.

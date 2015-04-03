@@ -139,6 +139,13 @@ namespace Biology
 				
 				switch (msg_status.MPI_TAG)
 				{
+					case Pdp::EMpiMsgTag::eInfect:
+					{
+						MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eInfect, m_comm.GetComm(), &msg_status);
+						std::cout << "rank " << m_comm.GetRank() << ": squirrel: received infect message" << std::endl;
+						m_infected = true;
+						break;
+					}
 					case Pdp::EMpiMsgTag::ePoisonPill:
 					{
 						
