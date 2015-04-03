@@ -161,7 +161,7 @@ namespace Biology
 			case Pdp::ESquirrelStep::eIn:
 			{
 				++m_num_sq;
-				++m_pop_influx;
+				++m_pop_influx1;
 				break;
 			}
 			case Pdp::ESquirrelStep::eOut:
@@ -171,7 +171,7 @@ namespace Biology
 			}
 			case Pdp::ESquirrelStep::eWithin:
 			{
-				++m_pop_influx;				
+				++m_pop_influx1;				
 				break;
 			}
 		}
