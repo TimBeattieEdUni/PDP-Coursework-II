@@ -135,7 +135,7 @@ namespace Biology
 		int birth = -1;
 		MPI_Isend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_req);
 
-		std::cout << "rank " << comm.GetRank() << ": informed coordinator of squirrel death" << std::endl;
+		std::cout << "rank " << m_comm.GetRank() << ": informed coordinator of squirrel death" << std::endl;
 	}
 
 	
