@@ -161,13 +161,13 @@ namespace Biology
 					case Pdp::EMpiMsgTag::ePoolCtrl:
 					{
 						//  these will be handled by the pool
-						return true;
+						break;
 					}
 					default:
 					{
 						//  unrecognised message; fail hard and fast to help diagnosis
-						std::cout << "cell " << m_comm.GetRank() << ": error: unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
-						return false;
+						std::cout << "squirrel " << m_comm.GetRank() << ": error: unrecognised message tag: " << msg_status.MPI_TAG << std::endl;
+						break;
 					}
 				}					
 			}
