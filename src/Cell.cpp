@@ -145,8 +145,11 @@ namespace Biology
 	void Cell::ReceiveSquirrelStep()
 	{
 		std::cout << "cell " << m_comm.GetRank() << ": squirrel step msg waiting" << std::endl;
+		
 		Pdp::ESquirrelStep::ESquirrelStep step;
+		MPI_Status msg_status;			
 		MPI_Recv(&step, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm(), &msg_status);
+
 		std::cout << "cell " << m_comm.GetRank() << ": squirrel step rxd: " << step << std::endl;
 		
 		switch(step)
