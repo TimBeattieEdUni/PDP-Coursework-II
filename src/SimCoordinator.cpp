@@ -103,10 +103,8 @@ namespace Biology
 				{
 					std::cout << "\n\ncoordinator: maximum simulation length reached; shutting down\n\n" << std::endl;
 					/// @todo squirrels get 0 from shouldWorkerStop() even after shutdownPool() is called, so kill them manually
-					MPI_Bsend(NULL, 0, MPI_INT, 18, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm());
-					std::cout << "\n\ncoordinator: sent poison pill\n\n" << std::endl;					
+					MPI_Bsend(NULL, 0, MPI_INT, 3, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm());
 					shutdownPool();
-					std::cout << "\n\ncoordinator: called shutdownPool()\n\n" << std::endl;					
 					return false;
 				}
 				
@@ -116,7 +114,7 @@ namespace Biology
 				{
 					m_cur_week = this_week;
 					
-					std::cout << "week " << this_week << ": total squirrels: " << m_num_sq << std::endl;
+					std::cout << "coordinator: week " << this_week << ": total squirrels: " << m_num_sq << std::endl;
 				}
 
 				m_cur_day = today;
