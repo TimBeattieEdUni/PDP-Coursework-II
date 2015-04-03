@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 		Pdp::Config config(argc, argv);
 
 		//  buffer for calls to MPI_Bsend()
-		size_t const buf_size = 1024;
+		size_t const buf_size = 4096;
 		unsigned char mpi_buffer[buf_size];
 		
 		Mpi::Mpi mpi(argc, argv);
