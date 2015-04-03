@@ -72,21 +72,15 @@ namespace Biology
 	/// @exception    
 	///
 	unsigned int DayTicker::GetDay()
-	{
-		double wtime = MyWtime();
-		std::cout << "MyWtime(): " << wtime << std::endl;
-		
+	{		
 		double dday = (MyWtime() - m_start_time) / double(m_day_len);
-		std::cout << "dday: " << dday << std::endl;
 		
 		unsigned int day = dday;
-		std::cout << "day: " << day << std::endl;
 
-//		unsigned int day = (unsigned int) ((MPI_Wtime() - m_start_time) / (double)m_day_len);
-	
-//		std::cout << wtime << " - " << m_start_time << " / " << m_day_len << " = " << day << std::endl;
-		
 		return day;
+
+//		unsigned int day = (unsigned int) ((MPI_Wtime() - m_start_time) / (double)m_day_len);		
+//		return day;
 	}
 
 	
@@ -117,9 +111,9 @@ namespace Biology
 
 		gettimeofday(&tv, &tz);
 		
-		double wt = (double)tv.tv_usec/1000000.;
+		double wall_time = (double)tv.tv_usec / 1000000.0;
 
-		return (wt);		
+		return wall_time;		
 	}
 	
 }   //  namespace Biology

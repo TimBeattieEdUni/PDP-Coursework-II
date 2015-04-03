@@ -52,7 +52,13 @@ namespace Pdp
 				  >> m_max_sqrls 
 				  >> m_sim_len
 				  >> m_day_len;
-	}
+		
+		std::cout << "cells=" << m_cells
+		          << "  squirrels=" << m_ini_sqrls
+				  << "  maxsq=" << m_max_sqrls
+				  << "  simlen=" << m_sim_len
+				  << "  daylen=" << m_day_len;
+ 	}
 
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -62,43 +68,5 @@ namespace Pdp
 	{
 
 	}
-
-
-//	//////////////////////////////////////////////////////////////////////////////
-//	/// @details    Describe copy construction here.
-//	///
-//	/// @param      rhs  Object to copy.
-//	///
-//	/// @pre        List what must be true before this function is called.
-//	/// @post       List what is guaranteed to be true after this function returns.
-//	///
-//	/// @exception  List exceptions this function may throw here.
-//	///
-//	Config::Config(Config const& rhs)
-//	{
-//		std::cout << __PRETTY_FUNCTION__ << std::endl;
-//
-//		(void) rhs;
-//	}
-//
-//
-//	//////////////////////////////////////////////////////////////////////////////
-//	/// @details    Describe object assignment here.
-//	///
-//	/// @param      rhs  Object on the right-hand side of the assignment statement.
-//	/// @return     Object which has been assigned.
-//	///
-//	/// @pre        List what must be true before this function is called.
-//	/// @post       List what is guaranteed to be true after this function returns.
-//	///
-//	/// @exception  List exceptions this function may throw here.
-//	///
-//	Config& Config::operator=(Config const& rhs)
-//	{
-//		std::cout << __PRETTY_FUNCTION__ << std::endl;
-//
-//		(void) rhs;
-//		return *this;
-//	}
-
+	
 }   //  namespace Pdp
