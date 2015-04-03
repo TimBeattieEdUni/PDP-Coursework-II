@@ -51,13 +51,7 @@ namespace Pdp
 		          >> m_ini_sqrls 
 				  >> m_max_sqrls 
 				  >> m_sim_len
-				  >> m_day_len;
-		
-		std::cout << "cells=" << m_cells
-		          << "  squirrels=" << m_ini_sqrls
-				  << "  maxsq=" << m_max_sqrls
-				  << "  simlen=" << m_sim_len
-				  << "  daylen=" << m_day_len;
+				  >> m_day_len;		
  	}
 
 
