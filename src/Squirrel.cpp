@@ -189,21 +189,14 @@ namespace Biology
 		squirrelStep(m_x, m_y, &m_x, &m_y, &m_rng_state);
 		std::cout << "rank " << m_comm.GetRank() << ": squirrel pos: " << m_x << " " << m_y << std::endl;
 		
-		//  find our current cell
-		int new_cell = getCellFromPosition(m_x, m_y);
-		
-		
-		/// @todo remove this
-		new_cell = 0;
-		
-		
+		//  where are we, and have we moved?
+		int new_cell = getCellFromPosition(m_x, m_y);		
 		if (new_cell != m_cur_cell)
 		{
 			std::cout << "rank " << m_comm.GetRank() << ": squirrel moved from cell " << m_cur_cell << " to " << new_cell << std::endl;
 		}
 		
 		//  let interested parties know
-		Pdp::ESquirrelStep::ESquirrelStep step;
 		if (new_cell != m_cur_cell)
 		{
 			NotifyCell(m_cur_cell, Pdp::ESquirrelStep::eOut);

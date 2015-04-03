@@ -76,8 +76,6 @@ namespace Biology
 		///
 		bool SimCoordinator::Update()
 		{
-			std::cout << __PRETTY_FUNCTION__ << std::endl;
-
 			usleep(250000);
 
 			//  do initial setup first time we're called
@@ -101,7 +99,7 @@ namespace Biology
 				//  shut down sim after configured number of days
 				if (today > m_config.GetSimLen())
 				{
-					std::cout << "coordinator: max days reached; shutting down" << std::endl;
+					std::cout << "coordinator: sim days complete; shutting down" << std::endl;
 					shutdownPool();
 					return false;
 				}
