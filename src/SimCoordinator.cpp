@@ -103,9 +103,10 @@ namespace Biology
 				std::cout << "cordinator: day " << today << std::endl;
 				
 				//  shut down sim after configured number of days
-				if (today > m_config.GetSimLen())
+				if (today >= m_config.GetSimLen())
 				{
 					std::cout << "coordinator: sim days complete; shutting down" << std::endl;
+					KillSquirrels();
 					shutdownPool();
 					return false;
 				}
@@ -237,6 +238,7 @@ namespace Biology
 			{
 				std::cout << "coordinator: max squirrels exceeded; shutting down" << std::endl;
 				m_shutdown = true;
+				KillSquirrels();
 				shutdownPool();
 				return;
 			}
@@ -247,7 +249,23 @@ namespace Biology
 			SpawnSquirrel(x, y);
 		}
 				
-				
+		//////////////////////////////////////////////////////////////////////////////
+		/// @details      Sends poison pill to all squirrels.
+		///
+		/// @note         It's not clear why this is necessary; the cells all shut 
+		///               down when shutdownPool() is called, but the squirrels carry 
+		///               on forever without this.
+		void SimCoordinator::KillSquirrels()
+		{
+			for (int pid = 2 + m_config.GetCells(); 
+				 pid < m_comm.GetSize();
+				++pid)
+			{
+				MPI_Bsend(NULL, 0, MPI_INT, pid, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm());
+			}
+		}
+	
+	
 //		//////////////////////////////////////////////////////////////////////////////
 //		/// @details    Describe copy construction here.
 //		///

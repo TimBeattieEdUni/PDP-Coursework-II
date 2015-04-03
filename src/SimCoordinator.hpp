@@ -46,6 +46,8 @@ namespace Biology
 			SimCoordinator(SimCoordinator const& rhs);              ///< Copy constructor.
 			SimCoordinator& operator=(SimCoordinator const& rhs);   ///< Assignment operator.
 			
+			void KillSquirrels();   ///< Sends poison pill to all squirrel.
+		
 			Mpi::Communicator const& m_comm;   ///< MPI communcator for the pool.
 			Pdp::Config const& m_config;    ///< App config.
 

@@ -23,7 +23,7 @@ namespace Pdp
 	{
 		public:
 			Config(int argc, char* argv[]);   ///< Constructor.
-			~Config();                        ///< Destructor.
+			~Config();							///< Destructor.
 		
 			int GetCells()    const { return m_cells; }       ///< Getter.
 			int GetIniSqrls() const { return m_ini_sqrls; }   ///< Getter.
