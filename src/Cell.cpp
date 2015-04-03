@@ -113,14 +113,11 @@ namespace Biology
 			MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, m_comm.GetComm(), &msg_waiting, &msg_status);
 			
 			if(msg_waiting)
-			{
-//				std::cout << "rank " << m_comm.GetRank() << ": cell: message waiting" << std::endl;
-				
+			{				
 				switch (msg_status.MPI_TAG)
 				{
 					case Pdp::EMpiMsgTag::eSquirrelStep:
 					{
-//		std::cout << "rank " << m_comm.GetRank() << ": cell: squirrel step msg waiting" << std::endl;
 						ReceiveSquirrelStep();
 						break;
 

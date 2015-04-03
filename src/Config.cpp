@@ -63,4 +63,14 @@ namespace Pdp
 
 	}
 	
+	
+	Config::Print()
+	{
+		std::cout << "configurationL cells=" << m_cells
+		<< "  squirrels=" << m_ini_sqrls
+		<< "  maxsq=" << m_max_sqrls
+		<< "  simlen=" << m_sim_len
+		<< "  daylen=" << m_day_len
+		<< std::endl;
+	}
 }   //  namespace Pdp

@@ -31,6 +31,8 @@ namespace Pdp
 			int GetSimLen()   const { return m_sim_len; }     ///< Getter.
 
 			double GetDayLen() const { return m_day_len; }    ///< Getter.
+
+			void Print();   ///< Writes config to stdout.
 		
 		private:
 			Config(Config const& rhs);              ///< Copy constructor.

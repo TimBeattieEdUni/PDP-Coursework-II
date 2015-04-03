@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 
 		if (0 == comm.GetRank())
 		{
-			PrintCmdLine(argc, argv);
+			config.Print();
 		}
 
 		std::cout << "rank " << comm.GetRank() << " of " << comm.GetSize() << " started" << std::endl;

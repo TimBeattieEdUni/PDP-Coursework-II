@@ -39,24 +39,16 @@ namespace Biology
 		: m_start_time(MyWtime())
 		, m_day_len(day_len)
 	{
-		std::cout << __PRETTY_FUNCTION__ << " : " << m_start_time << " " << m_day_len << std::endl;
+//		std::cout << __PRETTY_FUNCTION__ << " : " << m_start_time << " " << m_day_len << std::endl;
 	}
 
 
 	//////////////////////////////////////////////////////////////////////////////
-	/// @details    Describe object destruction here.
-	///
-	/// @param      Describe parameters here, one line each.
-	///
-	/// @pre        List what must be true before this function is called.
-	/// @post       List what is guaranteed to be true after this function returns.
-	///
-	/// @exception  None; this is a destructor.
+	/// @details    No cleanup necessary 
 	///
 	DayTicker::~DayTicker()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
-
+//		std::cout << __PRETTY_FUNCTION__ << std::endl;
 	}
 
 
@@ -73,14 +65,14 @@ namespace Biology
 	///
 	unsigned int DayTicker::GetDay()
 	{		
-		double dday = (MyWtime() - m_start_time) / double(m_day_len);
+//		double dday = (MyWtime() - m_start_time) / double(m_day_len);
 		
-		unsigned int day = dday;
+//		unsigned int day = dday;
 
-		return day;
-
-//		unsigned int day = (unsigned int) ((MPI_Wtime() - m_start_time) / (double)m_day_len);		
 //		return day;
+
+		unsigned int day = (unsigned int) ((MPI_Wtime() - m_start_time) / (double)m_day_len);		
+		return day;
 	}
 
 	
