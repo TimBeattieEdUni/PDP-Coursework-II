@@ -34,7 +34,7 @@ namespace Biology
 			Cell(Cell const& rhs);              ///< Copy constructor.
 			Cell& operator=(Cell const& rhs);   ///< Assignment operator.
 
-			void ShiftPopInfluxes();            ///< Bumps daily influx values.
+			void BumpPopInfluxes();             ///< Bumps daily influx values.
 			void ReceiveSquirrelStep();         ///< Receives a squirrel step event.
 			
 			Mpi::Communicator const& m_comm;    ///< MPI communcator for the pool.
