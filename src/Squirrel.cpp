@@ -124,13 +124,16 @@ namespace Biology
 	void Squirrel::HandleFirstUpdate()
 	{
 		//  tell coordinator there's a new squirrel in town
+		/// @todo move to buffered sending
 		std::cout << "rank " << m_comm.GetRank() << " first update; sending birth record to coordinator" << std::endl;	
-		
-		//  todo: move to buffered sending
 		MPI_Request msg_req;
 		int birth = 1;
 		MPI_Isend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_req);
 		
+		//  start squirrel in a cell
+		/// @todo squirrels need to start at parent's position
+		// m_cur_cell = getCellFromPosition(0, 0);
+		m_cur_cell = 0;
 		std::cout << "rank " << m_comm.GetRank() << " first update; sent birth record to coordinator" << std::endl;	
 	}
 	
@@ -189,7 +192,7 @@ namespace Biology
 		
 		
 		/// @todo remove this
-		new_cell = 0;
+		new_cell = 1;
 		
 		
 		if (new_cell != m_cur_cell)

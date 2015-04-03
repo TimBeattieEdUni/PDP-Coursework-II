@@ -161,7 +161,7 @@ namespace Biology
 						default:
 						{
 							//  unrecognised message; fail hard and fast to help diagnosis
-							std::cout << "error: unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
+							std::cout << "coordinator: unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
 							return false;
 						}
 					}					
