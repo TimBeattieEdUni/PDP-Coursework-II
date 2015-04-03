@@ -35,7 +35,7 @@ namespace Biology
 		: m_start_time(MPI_Wtime())
 		, m_day_len(day_len)
 	{
-		std::cout << __PRETTY_FUNCTION__ << " : " << m_start_time << std::endl;
+		std::cout << __PRETTY_FUNCTION__ << " : " << m_start_time << " " << m_day_len << std::endl;
 	}
 
 
