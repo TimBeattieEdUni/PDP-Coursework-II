@@ -101,9 +101,7 @@ namespace Biology
 				//  shut down sim after configured number of days
 				if (today > m_config.GetSimLen())
 				{
-					std::cout << "\n\ncoordinator: maximum simulation length reached; shutting down\n\n" << std::endl;
-					/// @todo squirrels get 0 from shouldWorkerStop() even after shutdownPool() is called, so kill them manually
-					//MPI_Bsend(NULL, 0, MPI_INT, 3, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm());
+					std::cout << "coordinator: max days reached; shutting down" << std::endl;
 					shutdownPool();
 					return false;
 				}

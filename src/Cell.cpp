@@ -37,6 +37,7 @@ namespace Biology
 		, m_config(config)
 		, m_ticker(config.GetDayLen())
 		, m_cur_day(0)
+		, m_cur_week(0)
 		, m_num_sq(0)
 		
 	{
@@ -74,7 +75,7 @@ namespace Biology
 
 		if (today > m_cur_day)
 		{
-			//  if more than one day has passed, stats for all will be sent, but this is acceptable.
+			//  if more than one day has passed, stats for multiple days will be included, but this is acceptable.
 			std::cout << "cell: day " << today << std::endl;
 			
 			//  we aren't concerned with whether this message is received
@@ -87,7 +88,16 @@ namespace Biology
 				std::cout << "rank " << m_comm.GetRank() << ": max sim days reached; exiting" << std::endl;	
 				return false;
 			}
-			
+
+			//  print stats at the end of each week
+			int this_week = today / 7;
+			if (this_week > m_cur_week)
+			{
+				m_cur_week = this_week;
+				
+				std::cout << "cell: week " << this_week << ": squirrels: " << m_num_sq << std::endl;
+			}
+
 			//  after all the day's work is done, we start a new day
 			m_cur_day = today;
 		}
@@ -107,10 +117,7 @@ namespace Biology
 				{
 					case Pdp::EMpiMsgTag::eSquirrelStep:
 					{
-						std::cout << "cell " << m_comm.GetRank() << ": squirrel step msg rxd" << std::endl;
-						Pdp::ESquirrelStep::ESquirrelStep step;
-						MPI_Recv(&step, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm(), &msg_status);
-						std::cout << "cell " << m_comm.GetRank() << ": squirrel step rxd: " << step << std::endl;
+						ReceiveSquirrelStep();
 						break;
 
 					}
@@ -134,7 +141,34 @@ namespace Biology
 
 		return true;
 	}
-	
+
+	void Cell::ReceiveSquirrelStep()
+	{
+		std::cout << "cell " << m_comm.GetRank() << ": squirrel step msg waiting" << std::endl;
+		Pdp::ESquirrelStep::ESquirrelStep step;
+		MPI_Recv(&step, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm(), &msg_status);
+		std::cout << "cell " << m_comm.GetRank() << ": squirrel step rxd: " << step << std::endl;
+		
+		switch(step)
+		{
+			case Pdp::ESquirrelStep::eIn:
+			{
+				++m_num_sq;
+				break;
+			}
+			case Pdp::ESquirrelStep::eOut:
+			{
+				--m_num_sq;
+				break;
+			}
+			case Pdp::ESquirrelStep::eWithin:
+			{
+				
+				break;
+			}
+		}
+
+	}
 
 //	//////////////////////////////////////////////////////////////////////////////
 //	/// @details    Describe copy construction here.
