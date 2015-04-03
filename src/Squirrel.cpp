@@ -133,9 +133,8 @@ namespace Biology
 		std::cout << "rank " << m_comm.GetRank() << " squirrel: sent birth to coordinator" << std::endl;	
 		
 		//  start squirrel in a cell
-		/// @todo squirrels need to start at parent's position
-		// m_cur_cell = getCellFromPosition(0, 0);
-		m_cur_cell = 0;
+		m_cur_cell = getCellFromPosition(m_x, m_y);
+		NotifyCell(m_cur_cell, Pdp::ESquirrelStep::eIn);
 	}
 	
 	
