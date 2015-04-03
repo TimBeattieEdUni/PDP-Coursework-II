@@ -92,7 +92,7 @@ namespace Biology
 			}
 
 			//  ensure all cells stop on the right day (after printing stats for previous day/week)
-			if today > m_config.GetSimLen()
+			if (today > m_config.GetSimLen())
 			{
 				std::cout << "rank " << m_comm.GetRank() << ": cell: max days reached; exiting " << today << std::endl;
 				return false;
