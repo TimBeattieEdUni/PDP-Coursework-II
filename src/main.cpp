@@ -62,9 +62,15 @@ int main(int argc, char* argv[])
 	try
 	{
 		Pdp::Config config(argc, argv);
-		Mpi::Mpi mpi(argc, argv);
+
+		//  buffer for calls to MPI_Bsend()
+		size_t const buf_size = 1024;
+		unsigned char mpi_buffer[buf_size];
 		
+		Mpi::Mpi mpi(argc, argv);
 		Mpi::Communicator comm(MPI_COMM_WORLD);
+		MPI_Buffer_attach(mpi_buffer, buf_size);
+
 		Mpi::ProcessPool process_pool;
 
 		if (0 == comm.GetRank())
