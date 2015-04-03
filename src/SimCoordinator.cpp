@@ -103,7 +103,7 @@ namespace Biology
 				{
 					std::cout << "\n\ncoordinator: maximum simulation length reached; shutting down\n\n" << std::endl;
 					/// @todo squirrels get 0 from shouldWorkerStop() even after shutdownPool() is called, so kill them manually
-					MPI_Bsend(NULL, 0, MPI_INT, 3, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm());
+					//MPI_Bsend(NULL, 0, MPI_INT, 3, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm());
 					shutdownPool();
 					return false;
 				}
