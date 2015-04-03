@@ -18,21 +18,25 @@
 //////////////////////////////////////////////////////////////////////////////
 //  Standard headers.
 #include <iostream>
+#include <sys/time.h>
 
 
 namespace Biology
 {
 	//////////////////////////////////////////////////////////////////////////////
-	/// @details    Describe object initialisation here.
+	/// @details    Stores the current wall time for reference.
 	///
-	/// @param      Describe parameters here, one line each.
+	/// @param      Length of a day in seconds.
 	///
-	/// @post       List what is guaranteed to be true after this function returns.
 	///
-	/// @exception  List exceptions this function may throw here.
+	/// @note       Very oddly, and completely at random, MPI_Wtime() started always 
+	///             returning the same value: 1.42809e+09.  No idea why, couldn't 
+	///             fix, so modified this to use gettimeofday().  On both MORAR and
+	///             several CPLabs machines.
 	///
 	DayTicker::DayTicker(double day_len)
-		: m_start_time(MPI_Wtime())
+//		: m_start_time(MPI_Wtime())
+		: m_start_time(MyWtime())
 		, m_day_len(day_len)
 	{
 		std::cout << __PRETTY_FUNCTION__ << " : " << m_start_time << " " << m_day_len << std::endl;
@@ -68,11 +72,13 @@ namespace Biology
 	/// @exception    
 	///
 	unsigned int DayTicker::GetDay()
-	{				
-//		double wtime = MPI_Wtime();
-//		std::cout << wtime << std::endl;
+	{
+		double wtime = MyWtim();
+		std::cout << wtime << std::endl;
 		
-		unsigned int day = (unsigned int) ((MPI_Wtime() - m_start_time) / (double)m_day_len);
+		unsigned int day = (unsigned int) ((MyWtime() - m_start_time) / (double)m_day_len);		
+
+//		unsigned int day = (unsigned int) ((MPI_Wtime() - m_start_time) / (double)m_day_len);
 	
 //		std::cout << wtime << " - " << m_start_time << " / " << m_day_len << " = " << day << std::endl;
 		
@@ -97,41 +103,19 @@ namespace Biology
 	}
 
 	
-//		//////////////////////////////////////////////////////////////////////////////
-//		/// @details    Describe copy construction here.
-//		///
-//		/// @param      rhs  Object to copy.
-//		///
-//		/// @pre        List what must be true before this function is called.
-//		/// @post       List what is guaranteed to be true after this function returns.
-//		///
-//		/// @exception  List exceptions this function may throw here.
-//		///
-//		DayTicker::DayTicker(DayTicker const& rhs)
-//		{
-//			std::cout << __PRETTY_FUNCTION__ << std::endl;
-//
-//			(void) rhs;
-//		}
-//
-//
-//		//////////////////////////////////////////////////////////////////////////////
-//		/// @details    Describe object assignment here.
-//		///
-//		/// @param      rhs  Object on the right-hand side of the assignment statement.
-//		/// @return     Object which has been assigned.
-//		///
-//		/// @pre        List what must be true before this function is called.
-//		/// @post       List what is guaranteed to be true after this function returns.
-//		///
-//		/// @exception  List exceptions this function may throw here.
-//		///
-//		DayTicker& DayTicker::operator=(DayTicker const& rhs)
-//		{
-//			std::cout << __PRETTY_FUNCTION__ << std::endl;
-//
-//			(void) rhs;
-//			return *this;
-//		}
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Replacement for MPI_Wtime(), which stopped working randomly.
+	///
+	double DayTicker::MyWtime()
+	{
+		struct timeval tv;
+		struct timezone tz;
 
+		gettimeofday(&tv, &tz);
+		
+		double wt = (double)tv.tv_usec/1000000.;
+
+		return (wt);		
+	}
+	
 }   //  namespace Biology

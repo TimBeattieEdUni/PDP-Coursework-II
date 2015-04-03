@@ -28,6 +28,8 @@ namespace Biology
 			DayTicker(DayTicker const& rhs);              ///< Copy constructor.
 			DayTicker& operator=(DayTicker const& rhs);   ///< Assignment operator.
 		
+			double MyWtime();          ///< Stand-in for MPI_Wtime().
+		
 			double m_start_time;       ///< Time to measure days from.
 			double m_day_len;          ///< Length of a day in seconds of wall time.
 	};
