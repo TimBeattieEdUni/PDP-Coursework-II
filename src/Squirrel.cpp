@@ -93,7 +93,7 @@ namespace Biology
 		/// @todo implement dying 
 
 		//  @todo delay here is just to make output manageable
-		usleep(500000);
+//		usleep(500000);
 		return true;
 	}
 	
