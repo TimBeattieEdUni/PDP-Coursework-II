@@ -89,7 +89,7 @@ namespace Biology
 		
 		//  we do one step per update
 		squirrelStep(m_x, m_y, &m_x, &m_y, &m_rng_state);
-		std::cout << "rank " << comm.GetRank() << ": squirrel pos: " << m_x << " " << m_y << std::endl;
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel pos: " << m_x << " " << m_y << std::endl;
 		
 		/// @todo implement reproduction 
 
@@ -128,7 +128,7 @@ namespace Biology
 	///
 	void Squirrel::Die()
 	{		
-		std::cout << "rank " << comm.GetRank() << ": informing coordinator of squirrel death" << std::endl;
+		std::cout << "rank " << m_comm.GetRank() << ": informing coordinator of squirrel death" << std::endl;
 
 		//  tell coordinator "this is an ex-squirrel" /Cleese
 		MPI_Request msg_req;
