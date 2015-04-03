@@ -89,8 +89,6 @@ namespace Biology
 		
 		HandleMessages();
 		
-		/// @todo implement reproduction 
-
 		/// @todo implement dying 
 
 		return true;
@@ -119,14 +117,6 @@ namespace Biology
 	///
 	void Squirrel::HandleFirstUpdate()
 	{
-//		//  tell coordinator there's a new squirrel in town
-//		/// @todo move to buffered sending
-//		std::cout << "rank " << m_comm.GetRank() << " squirrel: sending birth to coordinator" << std::endl;	
-//		MPI_Request msg_req;
-//		int birth = 1;
-//		MPI_Isend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_req);
-//		std::cout << "rank " << m_comm.GetRank() << " squirrel: sent birth to coordinator" << std::endl;	
-		
 		//  start squirrel in a cell
 		m_cur_cell = getCellFromPosition(m_x, m_y);
 		NotifyCell(m_cur_cell, Pdp::ESquirrelStep::eIn);
@@ -199,14 +189,11 @@ namespace Biology
 		
 		//  where are we, and have we moved?
 		int new_cell = getCellFromPosition(m_x, m_y);		
-		if (new_cell != m_cur_cell)
-		{
-//			std::cout << "rank " << m_comm.GetRank() << ": squirrel moved from cell " << m_cur_cell << " to " << new_cell << std::endl;
-		}
 		
 		//  let interested parties know
 		if (new_cell != m_cur_cell)
 		{
+//			std::cout << "rank " << m_comm.GetRank() << ": squirrel moved from cell " << m_cur_cell << " to " << new_cell << std::endl;
 			NotifyCell(m_cur_cell, Pdp::ESquirrelStep::eOut);
 			NotifyCell(new_cell,   Pdp::ESquirrelStep::eIn);
 		}
@@ -227,7 +214,7 @@ namespace Biology
 	{		
 		std::cout << "rank " << m_comm.GetRank() << ": informing coordinator of squirrel death" << std::endl;
 
-		//  tell coordinator "this is an ex-squirrel" /Cleese
+		//  tell coordinator the sad news
 		MPI_Request msg_req;
 		int birth = -1;
 		MPI_Isend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_req);
@@ -238,7 +225,12 @@ namespace Biology
 	
 	void Squirrel::NotifyCell(int cell, Pdp::ESquirrelStep::ESquirrelStep step)
 	{
-		MPI_Bsend(&step, 1, MPI_INT, cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm());
+		int sq_data[2];
+		
+		sq_data[0] = step;
+		sq_data[1] = m_infected ? 1 : 0;
+		
+		MPI_Bsend(sq_data, 2, MPI_INT, cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm());
 	}
 
 	

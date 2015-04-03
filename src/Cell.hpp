@@ -34,7 +34,7 @@ namespace Biology
 			Cell(Cell const& rhs);              ///< Copy constructor.
 			Cell& operator=(Cell const& rhs);   ///< Assignment operator.
 
-			void BumpPopInfluxes();             ///< Bumps daily influx values.
+			void BumpStatistics();              ///< Bumps daily influx and infection values.
 			void ReceiveSquirrelStep();         ///< Receives a squirrel step event.
 			
 			Mpi::Communicator const& m_comm;    ///< MPI communcator for the pool.
@@ -50,7 +50,9 @@ namespace Biology
 			unsigned int m_pop_influx2;     ///< ...and yesterday...
 			unsigned int m_pop_influx3;     ///< ...and two days ago.
 			
-
+			unsigned int m_infection1;      ///< Number of infected squirrels today...
+			unsigned int m_infection2;      ///< ...and yesterday...
+			unsigned int m_infection3;      ///< ...and two days ago.
 	};
 
 }   //  namespace Biology

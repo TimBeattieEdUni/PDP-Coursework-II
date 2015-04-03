@@ -88,7 +88,7 @@ namespace Biology
 			{
 				m_cur_week = this_week;
 				
-				std::cout << "rank " << m_comm.GetRank() << ": cell: week " << this_week << ": pop influx: " << m_pop_influx1 << std::endl;
+				std::cout << "rank " << m_comm.GetRank() << ": cell: week " << this_week << ": pop influx: " << m_pop_influx1 << " infection: " << m_infection1 << std::endl;
 			}
 
 			//  ensure all cells stop on the right day (after printing stats for previous day/week)
@@ -100,7 +100,7 @@ namespace Biology
 
 			//  after all the day's work is done, we start a new day
 			m_cur_day = today;
-			BumpPopInfluxes();
+			BumpStatistics();
 		}
 		
 		//  handle messages by polling
@@ -143,11 +143,16 @@ namespace Biology
 	}
 
 	
-	void Cell::BumpPopInfluxes()
+	void Cell::BumpStatistics()
 	{
 		m_pop_influx3 = m_pop_influx2;
 		m_pop_influx2 = m_pop_influx1;
 		m_pop_influx1 = 0;
+		
+		m_infection3 = m_infection2;
+		m_infection2 = m_infection1;
+		m_infection1 = 0;
+		
 	}
 	
 	
@@ -155,9 +160,12 @@ namespace Biology
 	{
 //		std::cout << "rank " << m_comm.GetRank() << ": cell: squirrel step msg waiting" << std::endl;
 		
-		Pdp::ESquirrelStep::ESquirrelStep step;
+		int sq_data[2];
 		MPI_Status msg_status;
 		MPI_Recv(&step, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm(), &msg_status);
+
+		int step = sq_data[0];
+		bool infected = (bool)sq_data[1];
 
 //		std::cout << "rank " << m_comm.GetRank() << ": cell: squirrel step rxd: " << step << std::endl;
 		
@@ -181,6 +189,10 @@ namespace Biology
 			}
 		}
 
+		if (infected)
+		{
+			++m_infected1;
+		}
 	}
 
 //  @todo: this shouldn't be needed; coordinator shuts down pool but cells carry on.
