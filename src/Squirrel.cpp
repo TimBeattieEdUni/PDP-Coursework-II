@@ -181,7 +181,7 @@ namespace Biology
 			if (0 == m_cur_step % 500)
 			{
 				std::cout << "rank " << m_comm.GetRank() << ": squirrel giving birth" << std::endl;
-				Spawn();
+				//Spawn();
 			}
 			
 		}
