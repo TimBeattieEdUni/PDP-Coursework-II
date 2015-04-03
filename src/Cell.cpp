@@ -199,14 +199,14 @@ namespace Biology
 				if (infected)
 				{
 					++m_sq_steps1;
-					std::cout << "rank " << m_comm.GetRank() << ": inf steps today: " << m_inf_steps1 << std::endl;
+					std::cout << "rank " << m_comm.GetRank() << ": inf steps in today: " << m_inf_steps1 << std::endl;
 				}
 				break;
 			}
 			case Pdp::ESquirrelStep::eOut:
 			{
 				--m_num_sq;
-				std::cout << "rank " << m_comm.GetRank() << ": inf steps today: " << m_inf_steps1 << std::endl;
+				std::cout << "rank " << m_comm.GetRank() << ": inf steps out today: " << m_inf_steps1 << std::endl;
 				break;
 			}
 			case Pdp::ESquirrelStep::eWithin:
@@ -216,7 +216,7 @@ namespace Biology
 				if (infected)
 				{
 					++m_inf_steps1;
-					std::cout << "rank " << m_comm.GetRank() << ": inf steps today: " << m_inf_steps1 << std::endl;
+					std::cout << "rank " << m_comm.GetRank() << ": inf steps within today: " << m_inf_steps1 << std::endl;
 				}
 				break;
 			}
