@@ -218,6 +218,7 @@ namespace Biology
 
 		void SimCoordinator::ReceiveSquirrelBirthMsg()
 		{
+			MPI_Status msg_status;
 			float sq_data[2];
 			MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelBirth, m_comm.GetComm(), &msg_status);
 

@@ -156,7 +156,7 @@ namespace Biology
 //		std::cout << "rank " << m_comm.GetRank() << ": cell: squirrel step msg waiting" << std::endl;
 		
 		Pdp::ESquirrelStep::ESquirrelStep step;
-		MPI_Status msg_status;			
+		MPI_Status msg_status;
 		MPI_Recv(&step, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm(), &msg_status);
 
 //		std::cout << "rank " << m_comm.GetRank() << ": cell: squirrel step rxd: " << step << std::endl;
