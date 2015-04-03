@@ -144,6 +144,8 @@ namespace Biology
 		}
 		
 		//  let interested parties know
+
+		m_cur_cell = new_cell;
 	}
 
 	
