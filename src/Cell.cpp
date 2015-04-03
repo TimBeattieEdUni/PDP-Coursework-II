@@ -74,12 +74,19 @@ namespace Biology
 		if (today > m_cur_day)
 		{
 			//  if more than one day has passed, stats for all will be sent, but this is acceptable.
-			std::cout << "cell: day " << m_cur_day << " complete; sending stats to coordinator" << std::endl;	
+			std::cout << "cell: day " << m_cur_day << " complete; sending stats to coordinator" << std::endl;
 			
 			//  we aren't concerned with whether this message is received
 			MPI_Request msg_req;
 			MPI_Isend(&m_num_sq, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_req);
 
+			//  @todo: this shouldn't be needed; coordinator shuts down pool but cells carry on.
+			if (today > m_config.GetSimLen())
+			{
+				std::cout << "rank " << m_comm.GetRank() << ": max sim days reached; exiting" << std::endl;	
+				return false;
+			}
+			
 			//  after all the day's work is done, we start a new day
 			m_cur_day = today;
 		}
