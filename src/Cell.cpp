@@ -44,6 +44,12 @@ namespace Biology
 		, m_cur_day(0)
 		, m_cur_week(0)
 		, m_num_sq(0)
+		, m_pop_influx1(0)
+		, m_pop_influx2(0)
+		, m_pop_influx3(0)
+		, m_infection1(0)
+		, m_infection2(0)
+		, m_infection3(0)
 		
 	{
 		std::cout << __PRETTY_FUNCTION__ <<  std::endl;
