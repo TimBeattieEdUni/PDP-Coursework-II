@@ -255,6 +255,7 @@ namespace Biology
 		/// @note         It's not clear why this is necessary; the cells all shut 
 		///               down when shutdownPool() is called, but the squirrels carry 
 		///               on forever without this.
+		///
 		void SimCoordinator::KillSquirrels()
 		{
 			for (int pid = 2 + m_config.GetCells(); 

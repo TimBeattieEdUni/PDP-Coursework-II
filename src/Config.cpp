@@ -66,7 +66,7 @@ namespace Pdp
 	
 	void Config::Print()
 	{
-		std::cout << "configurationL cells=" << m_cells
+		std::cout << "configuration:  cells=" << m_cells
 		<< "  squirrels=" << m_ini_sqrls
 		<< "  maxsq=" << m_max_sqrls
 		<< "  simlen=" << m_sim_len
