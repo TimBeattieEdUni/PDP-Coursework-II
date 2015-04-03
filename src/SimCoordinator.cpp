@@ -126,7 +126,7 @@ namespace Biology
 					{
 						case Pdp::EMpiMsgTag::eCellStats:
 						{
-							int num_sq = 0.0;
+							int num_sq = 0;
 							MPI_Recv(&num_sq, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status);
 							std::cout << "cell stats rxd: " << msg_status.MPI_SOURCE << " has " << num_sq << " squirrels" << std::endl;
 							break;

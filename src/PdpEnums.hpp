@@ -20,14 +20,15 @@ namespace Pdp
 		{
 			ePoolPid  = 16383,   ///< Ensures our code won't use the same value.
 			ePoolCtrl = 16384,   ///< Ensures our code won't use the same value.
-			eAssignTask,         ///< Tells a worker process what to do.
+			eAssignTask,         ///< Tells a worker process what type of actor to be.
 			eCellStats,          ///< Squirrel statistics for coordinator.
-			eSquirrelLifetime    ///< Squirrel birth/death event.
+			eSquirrelLifetime,   ///< Squirrel birth/death event.
+			eSquirrelStep        ///< Squirrel step event.
 		};
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// @brief      Tasks for worker processes
+	/// @brief      Tasks for worker processes.
 	///
 	namespace ETask
 	{
@@ -39,6 +40,18 @@ namespace Pdp
 		};
 	}
 	
+	//////////////////////////////////////////////////////////////////////////////
+	/// @brief      Squirrels steps relative to landscape cells.
+	///
+	namespace ESquirrelStep
+	{
+		enum ESquirrelStep
+		{
+			eIn,      ///< Squirrel arriving in a cell.
+			eOut,     ///< Squirrel leaving a cell.
+			eWithin   ///< Squirrel moving within a cell.
+		};
+	}
 }   //  namespace Pdp
 
 

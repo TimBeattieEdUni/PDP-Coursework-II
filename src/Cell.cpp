@@ -84,6 +84,46 @@ namespace Biology
 			m_cur_day = today;
 		}
 		
+		//  handle messages by polling
+		int msg_waiting = 0;
+		do
+		{
+			MPI_Status msg_status;			
+			MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, m_comm.GetComm(), &msg_waiting, &msg_status);
+			
+			if(msg_waiting)
+			{
+				std::cout << "cell " << m_comm.GetRank() << ": message waiting" << std::endl;
+				
+				switch (msg_status.MPI_TAG)
+				{
+					case Pdp::EMpiMsgTag::eSquirrelStep:
+					{
+						std::cout << "cell " << m_comm.GetRank() << ": squirrel step msg rxd" << std::endl;
+						Pdp::eSquirrelStep::eSquirrelStep step;
+						MPI_Recv(&step, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm(), &msg_status);
+						std::cout << "cell " << m_comm.GetRank() << ": squirrel step rxd: " << step << std::endl;
+						break;
+
+					}
+					case Pdp::EMpiMsgTag::ePoolPid:
+					case Pdp::EMpiMsgTag::ePoolCtrl:
+					{
+						//  these will be handled by the pool
+						return true;
+					}
+					default:
+					{
+						//  unrecognised message; fail hard and fast to help diagnosis
+						std::cout << "cell " << m_comm.GetRank() << ": error: unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
+						return false;
+					}
+				}					
+			}
+			
+		} while(msg_waiting);
+	
+
 		return true;
 	}
 	

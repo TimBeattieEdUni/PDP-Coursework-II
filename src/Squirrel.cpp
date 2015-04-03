@@ -144,7 +144,24 @@ namespace Biology
 		}
 		
 		//  let interested parties know
-
+		Pdp::eSquirrelStep::eSquirrelStep step;
+		if (new_cell != m_cur_cell)
+		{			
+			//  tell old cell we've left
+			step = Pdp::eSquirrelStep::eOut;
+			MPI_BSend(&step, 1, MPI_INT, m_cur_cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm())
+			
+			//  tell new cell we've arrived
+			step = Pdp::eSquirrelStep::eIn;
+			MPI_BSend(&step, 1, MPI_INT, new_cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm())
+		}
+		else
+		{
+			//  tell current cell we've stepped within it
+			step = Pdp::eSquirrelStep::eWithin;
+			MPI_BSend(&step, 1, MPI_INT, m_cur_cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm())
+		}
+		MPI_BSend(&, 1, MPI_INT, new_cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm())
 		m_cur_cell = new_cell;
 	}
 

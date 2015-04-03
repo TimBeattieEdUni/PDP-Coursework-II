@@ -75,6 +75,11 @@ namespace Mpi
 	{
 		std::cout << "rank " << m_comm.GetRank() << " waiting for assignment message" << std::endl;
 
+		//  all actors use buffered sends, so allocate buffer here
+		size_t const buf_size = 1024;
+		unsigned char mpi_buffer[buf_size];
+		MPI_Buffer_attach(mpi_buffer, buf_size);
+		
 		do
 		{
 			int task = -1;
