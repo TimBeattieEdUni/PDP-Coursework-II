@@ -31,9 +31,11 @@ namespace Biology
 			bool Update();   ///< Updates the cell.
 
 		private:
-			void HandleSquirrelStepMsg()
 			Cell(Cell const& rhs);              ///< Copy constructor.
 			Cell& operator=(Cell const& rhs);   ///< Assignment operator.
+
+			void ReceiveSquirrelStep();         ///< Receives a squirrel step event.
+			
 			Mpi::Communicator const& m_comm;    ///< MPI communcator for the pool.
 			Pdp::Config const& m_config;        ///< App config.
 
