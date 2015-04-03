@@ -29,13 +29,14 @@ namespace Pdp
 	///
 	Config::Config(int argc, char* argv[])
 		: m_cells(0)
-		, m_sqrls(0)
-		, m_day_len(0.0)
+		, m_ini_sqrls(0)
+		, m_max_sqrls(0)
 		, m_sim_len(0)
+		, m_day_len(0.0)
 	{		
-		if (4 > argc)
+		if (5 > argc)
 		{
-			throw std::runtime_error("usage: squirrels <cells> <squirrels>");
+			throw std::runtime_error("usage: squirrels <cells> <squirrels> ");
 		}
 		
 		std::stringstream converter;
@@ -43,10 +44,12 @@ namespace Pdp
 		converter << argv[1] 
 		          << " " << argv[2] 
 		          << " " << argv[3]
-		          << " " << argv[4];
+		          << " " << argv[4]
+				  << " " << argv[5];
 		
 		converter >> m_cells 
-		          >> m_sqrls 
+		          >> m_ini_sqrls 
+				  >> m_max_sqrls 
 				  >> m_day_len
 		          >> m_sim_len;
 	}

@@ -22,22 +22,26 @@ namespace Pdp
 	class Config
 	{
 		public:
-			Config(int argc, char* argv[]);    ///< Constructor.
-			~Config();   ///< Destructor.
+			Config(int argc, char* argv[]);   ///< Constructor.
+			~Config();                        ///< Destructor.
 		
-			size_t GetCells()  const { return m_cells; }      ///< Getter.
-			size_t GetSqrls()  const { return m_sqrls; }      ///< Getter.
-			double GetDayLen() const { return m_day_len; }   ///< Getter.
-			size_t GetSimLen() const { return m_sim_len; }   ///< Getter.
+			int GetCells()    const { return m_cells; }       ///< Getter.
+			int GetIniSqrls() const { return m_ini_sqrls; }   ///< Getter.
+			int GetMaxSqrls() const { return m_max_sqrls; }   ///< Getter.
+			int GetSimLen()   const { return m_sim_len; }     ///< Getter.
+
+			double GetDayLen() const { return m_day_len; }    ///< Getter.
 		
 		private:
 			Config(Config const& rhs);              ///< Copy constructor.
 			Config& operator=(Config const& rhs);   ///< Assignment operator.
 			
-			size_t m_cells;     ///< Number of landscape cells.
-			size_t m_sqrls;     ///< Initial number of squirrels. 
-			double m_day_len;   ///< Length of a simulated day in seconds of wall time.
-			size_t m_sim_len;   ///< Maximum length of sim in days.
+			int m_cells;       ///< Number of landscape cells.
+			int m_ini_sqrls;   ///< Initial number of squirrels. 
+			int m_max_sqrls;   ///< Maximum number of squirrels.
+			int m_sim_len;     ///< Maximum length of sim in days.
+			
+			double m_day_len;  ///< Length of a simulated day in seconds of wall time.
 	};
 
 }   //  namespace PDP

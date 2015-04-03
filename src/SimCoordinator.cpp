@@ -143,6 +143,11 @@ namespace Biology
 							MPI_Recv(&birth_or_death, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_status);
 							std::cout << "squirrel lifetime event rxd from rank " << msg_status.MPI_SOURCE << ": " << birth_or_death << std::endl;
 							m_num_sq += birth_or_death;
+							if (m_num_sq > m_config.GetMaxSqrls())
+							{
+								std::cout << "too many squirrels; shutting down" << std::endl;
+								return false;
+							}
 							break;							
 						}
 						
