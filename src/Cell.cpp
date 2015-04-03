@@ -188,6 +188,7 @@ namespace Biology
 				if (infected)
 				{
 					++m_infection1;
+					std::cout << "rank " << m_comm.GetRank() << ": infection: " << m_infection1 << std::endl;
 				}
 				break;
 			}
@@ -203,6 +204,7 @@ namespace Biology
 				if (infected)
 				{
 					++m_infection1;
+					std::cout << "rank " << m_comm.GetRank() << ": infection: " << m_infection1 << std::endl;
 				}
 				break;
 			}
