@@ -214,7 +214,7 @@ namespace Biology
 		}
 		
 	
-		void SimCoordinator::SpawnSquirrel(float x, float y)
+		int SimCoordinator::SpawnSquirrel(float x, float y)
 		{
 			std::cout << __PRETTY_FUNCTION__ << std::endl;
 
