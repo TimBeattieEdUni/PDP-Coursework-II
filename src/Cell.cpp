@@ -162,7 +162,7 @@ namespace Biology
 	
 	void Cell::ReceiveSquirrelStep()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+//		std::cout << __PRETTY_FUNCTION__ << std::endl;
 				
 		int sq_data[2];
 		MPI_Status msg_status;
@@ -170,8 +170,6 @@ namespace Biology
 
 		int step = sq_data[0];
 		bool infected = (bool)sq_data[1];
-
-//		std::cout << "rank " << m_comm.GetRank() << ": cell: squirrel step rxd: " << step << std::endl;
 		
 		switch(step)
 		{
