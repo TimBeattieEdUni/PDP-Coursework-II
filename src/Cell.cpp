@@ -14,6 +14,11 @@
 //  Local headers.
 #include "PdpEnums.hpp"
 
+extern "C"
+{
+	#include "pool.h"
+}
+
 
 //////////////////////////////////////////////////////////////////////////////
 //  Standard headers.
