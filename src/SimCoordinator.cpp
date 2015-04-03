@@ -150,7 +150,7 @@ namespace Biology
 						case Pdp::EMpiMsgTag::ePoolCtrl:
 						{
 							//  these will be handled by the pool
-							return true;
+							break;;
 						}
 						default:
 						{

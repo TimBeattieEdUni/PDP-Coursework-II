@@ -75,8 +75,6 @@ namespace Biology
 
 		if (today > m_cur_day)
 		{
-			BumpPopInfluxes();
-			
 			//  if more than one day has passed, stats for multiple days will be included, but this is acceptable.
 			std::cout << "rank " << m_comm.GetRank() << ": cell: day " << today << std::endl;
 			
@@ -90,11 +88,12 @@ namespace Biology
 			{
 				m_cur_week = this_week;
 				
-				std::cout << "rank " << m_comm.GetRank() << ": cell: week " << this_week << ": popInflux: " << m_pop_influx1 << std::endl;
+				std::cout << "rank " << m_comm.GetRank() << ": cell: week " << this_week << ": pop influx: " << m_pop_influx1 << std::endl;
 			}
 
 			//  after all the day's work is done, we start a new day
 			m_cur_day = today;
+			BumpPopInfluxes();
 		}
 		
 		//  handle messages by polling
@@ -120,7 +119,7 @@ namespace Biology
 					case Pdp::EMpiMsgTag::ePoolCtrl:
 					{
 						//  these will be handled by the pool
-						return true;
+						break;
 					}
 					default:
 					{
@@ -133,7 +132,6 @@ namespace Biology
 			
 		} while(msg_waiting);
 	
-
 		return true;
 	}
 
