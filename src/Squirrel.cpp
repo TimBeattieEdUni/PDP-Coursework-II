@@ -104,7 +104,7 @@ namespace Biology
 	///
 	void Squirrel::Spawn()
 	{		
-		std::cout << "rank " << comm.GetRank() << ": squirrel reproducing" << std::endl;
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel reproducing" << std::endl;
 
 		float sq_data[2];
 		sq_data[0] = m_x;
