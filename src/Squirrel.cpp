@@ -91,7 +91,7 @@ namespace Biology
 		{
 			if (m_cur_step - m_inf_step > 50)
 			{
-				if (willDie(m_rng_state))
+				if (willDie(&m_rng_state))
 				{
 					m_dead = true;
 					return false;
