@@ -142,7 +142,7 @@ namespace Biology
 							break;
 						}
 							
-						case Pdp::EMpiMsgTag::eSquirrelBirth::
+						case Pdp::EMpiMsgTag::eSquirrelBirth:
 						{
 							ReceiveSquirrelBirthMsg();
 							break;							
@@ -188,7 +188,7 @@ namespace Biology
 			std::cout << "coordinator starting " << m_config.GetIniSqrls() << " squirrels" << std::endl;
 			for (int i=0; i<m_config.GetIniSqrls(); ++i)
 			{
-				Squirrel::Spawn(m_comm);
+				SpawnSquirrel(m_comm);
 			}			
 		}
 	
