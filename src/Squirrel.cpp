@@ -200,13 +200,13 @@ namespace Biology
 			
 		}
 
-		std::cout << "rank " << m_comm.GetRank() << ": squirrel pos: " << m_x << " " << m_y << std::endl;
+//		std::cout << "rank " << m_comm.GetRank() << ": squirrel pos: " << m_x << " " << m_y << std::endl;
 		
 		//  where are we, and have we moved?
 		int new_cell = getCellFromPosition(m_x, m_y);		
 		if (new_cell != m_cur_cell)
 		{
-			std::cout << "rank " << m_comm.GetRank() << ": squirrel moved from cell " << m_cur_cell << " to " << new_cell << std::endl;
+//			std::cout << "rank " << m_comm.GetRank() << ": squirrel moved from cell " << m_cur_cell << " to " << new_cell << std::endl;
 		}
 		
 		//  let interested parties know
