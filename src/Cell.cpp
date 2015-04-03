@@ -84,10 +84,8 @@ namespace Biology
 		{
 			//  if more than one day has passed, stats for multiple days will be included, but this is acceptable.
 			std::cout << "rank " << m_comm.GetRank() << ": cell: day " << today << std::endl;
-						
-			//  we aren't concerned with whether this message is received
-			MPI_Request msg_req;
-			MPI_Isend(&m_num_sq, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_req);
+
+			MPI_Bsend(&m_num_sq, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm());
 
 			//  print stats at the end of each week
 			int this_week = today / 7;
