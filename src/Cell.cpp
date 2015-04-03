@@ -162,7 +162,7 @@ namespace Biology
 		
 		int sq_data[2];
 		MPI_Status msg_status;
-		MPI_Recv(&step, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm(), &msg_status);
+		MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm(), &msg_status);
 
 		int step = sq_data[0];
 		bool infected = (bool)sq_data[1];
@@ -191,7 +191,7 @@ namespace Biology
 
 		if (infected)
 		{
-			++m_infected1;
+			++m_infection1;
 		}
 	}
 
