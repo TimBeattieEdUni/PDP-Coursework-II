@@ -70,6 +70,15 @@ namespace Biology
 //		unsigned int day = dday;
 //		return day;
 
+		double wtime = MPI_Wtime();
+		double ptime = wtime - m_start_time;
+		double dday  = ptime / m_day_len;
+		unsigned int day = (unsigned int)dday;
+		
+		if (day > 100)
+		{
+			std::cout << "weird timing: " << wtime << " " << ptime << " " << dday << " " << day << " " << m_start_time << " " << m_day_len << std::endl;
+		}
 		unsigned int day = (unsigned int) ((MPI_Wtime() - m_start_time) / (double)m_day_len);		
 		return day;
 	}
