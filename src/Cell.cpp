@@ -75,7 +75,7 @@ namespace Biology
 		if (today > m_cur_day)
 		{
 			//  if more than one day has passed, stats for all will be sent, but this is acceptable.
-			std::cout << "cell: day " << m_cur_day << " complete; sending stats to coordinator" << std::endl;
+			std::cout << "cell: day " << today << std::endl;
 			
 			//  we aren't concerned with whether this message is received
 			MPI_Request msg_req;

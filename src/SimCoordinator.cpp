@@ -76,29 +76,34 @@ namespace Biology
 		///
 		bool SimCoordinator::Update()
 		{
+			std::cout << __PRETTY_FUNCTION__ << std::endl;
+
 			usleep(250000);
 
 			//  do initial setup first time we're called
 			static bool first_time = true;
 			if (first_time)
 			{
+				std::cout << "cordinator: first update" << std::endl;
 				first_time = false;
 				CreateInitialActors();
 				return true;
 			}
 
+			std::cout << "cordinator: update" << std::endl;
+			
 			//  do "new day" events
 			unsigned int today = m_ticker.GetDay();
 			if (today > m_cur_day)
 			{
-				m_cur_day = today;
+				std::cout << "cordinator: day " << today << std::endl;
 				
 				//  shut down sim after configured number of days
-				if (m_config.GetSimLen() < m_cur_day)
+				if (today > m_config.GetSimLen())
 				{
-					std::cout << "\n\nmaximum simulation duration reached; shutting it down\n\n" << std::endl;
+					std::cout << "\n\nmaximum simulation length reached; shutting down\n\n" << std::endl;
 					/// @todo squirrels get 0 from shouldWorkerStop() even after shutdownPool() is called, so kill them manually
-					MPI_Bsend(NULL, 0, MPI_INT, 18, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm());
+					MPI_Bsend(NULL, 0, MPI_INT, 18, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm());					
 					shutdownPool();
 					return false;
 				}
@@ -111,6 +116,9 @@ namespace Biology
 					
 					std::cout << "week " << this_week << ": total squirrels: " << m_num_sq << std::endl;
 				}
+
+				m_cur_day = today;
+				return true;
 			}
 
 
