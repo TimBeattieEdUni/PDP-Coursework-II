@@ -44,6 +44,7 @@ namespace Biology
 		, m_x(0.0)
 		, m_y(0.0)
 		, m_cur_cell(-1)
+		, m_shutdown(false)
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 
@@ -69,7 +70,12 @@ namespace Biology
 
 
 	bool Squirrel::Update()
-	{		
+	{
+		if (m_shutdown)
+		{
+			return false;
+		}
+
 		//  do initial setup first time we're called
 		static bool first_time = true;
 		if (first_time)
@@ -78,8 +84,9 @@ namespace Biology
 			HandleFirstUpdate();
 		}
 		
-		//  we do one step per update
 		Step();
+		
+		HandleMessages();
 		
 		/// @todo implement reproduction 
 
@@ -125,6 +132,47 @@ namespace Biology
 		MPI_Isend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_req);
 		
 		std::cout << "rank " << m_comm.GetRank() << " first update; sent birth record to coordinator" << std::endl;	
+	}
+	
+	
+	void Squirrel::HandleMessages()
+	{
+		//  handle messages by polling
+		int msg_waiting = 0;
+		do
+		{
+			MPI_Status msg_status;			
+			MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, m_comm.GetComm(), &msg_waiting, &msg_status);
+			
+			if(msg_waiting)
+			{
+				std::cout << "squirrel " << m_comm.GetRank() << ": message waiting" << std::endl;
+				
+				switch (msg_status.MPI_TAG)
+				{
+					case Pdp::EMpiMsgTag::ePoisonPill:
+					{
+						MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm(), &msg_status);
+						std::cout << "squirrel: poison pill received" << std::endl;
+						m_shutdown = true;
+						break;
+					}
+					case Pdp::EMpiMsgTag::ePoolPid:
+					case Pdp::EMpiMsgTag::ePoolCtrl:
+					{
+						//  these will be handled by the pool
+						return true;
+					}
+					default:
+					{
+						//  unrecognised message; fail hard and fast to help diagnosis
+						std::cout << "cell " << m_comm.GetRank() << ": error: unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
+						return false;
+					}
+				}					
+			}
+			
+		} while(msg_waiting);
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////

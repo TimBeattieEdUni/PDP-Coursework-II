@@ -97,6 +97,7 @@ namespace Biology
 				if (m_config.GetSimLen() < m_cur_day)
 				{
 					std::cout << "maximum simulation duration reached; shutting it down" << std::endl;
+					
 					shutdownPool();
 					return false;
 				}
@@ -193,7 +194,7 @@ namespace Biology
 			m_cell_pids[cell_id] = startWorkerProcess();
 			std::cout << "started cell " << cell_id << " on rank " << m_cell_pids[cell_id] << std::endl;
 			int task = Pdp::ETask::eCell;
-			MPI_Send(&task, 1, MPI_INT, m_cell_pids[cell_id], Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());			
+			MPI_Bsend(NULL, 0, MPI_INT, 18, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm());			
 		}
 		
 	

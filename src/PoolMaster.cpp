@@ -74,7 +74,7 @@ namespace Mpi
 		
 		while(masterPoll())
 		{
-			std::cout << "we have awakened the master /igor" << std::endl;
+			std::cout << "pool master woken" << std::endl;
 		}
 
 		/*

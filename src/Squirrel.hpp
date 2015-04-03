@@ -41,9 +41,12 @@ namespace Biology
 			unsigned int update_count;          ///< Number of updates since last.
 
 			long m_rng_state;   ///< Random number generator state (required by biologists' code).
+			
 			float m_x;          ///< X-coordinate of squirrel.
 			float m_y;          ///< Y-coordinate of squirrel.
-			int m_cur_cell;     ///< Landscape cell where this squirrel is.         
+			int m_cur_cell;     ///< Landscape cell where this squirrel is.
+
+			bool m_shutdown;    ///< Indicates pool is shutting down.
 	};
 
 }   //  namespace Biology
