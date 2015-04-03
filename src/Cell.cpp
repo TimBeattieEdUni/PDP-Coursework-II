@@ -82,13 +82,6 @@ namespace Biology
 			MPI_Request msg_req;
 			MPI_Isend(&m_num_sq, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_req);
 
-			//  @todo: this shouldn't be needed; coordinator shuts down pool but cells carry on.
-//			if (today > m_config.GetSimLen())
-//			{
-//				std::cout << "rank " << m_comm.GetRank() << ": max sim days reached; exiting" << std::endl;	
-//				return false;
-//			}
-
 			//  print stats at the end of each week
 			int this_week = today / 7;
 			if (this_week > m_cur_week)
@@ -172,6 +165,13 @@ namespace Biology
 		}
 
 	}
+
+//  @todo: this shouldn't be needed; coordinator shuts down pool but cells carry on.
+//			if (today > m_config.GetSimLen())
+//			{
+//				std::cout << "rank " << m_comm.GetRank() << ": max sim days reached; exiting" << std::endl;	
+//				return false;
+//			}
 
 //	//////////////////////////////////////////////////////////////////////////////
 //	/// @details    Describe copy construction here.

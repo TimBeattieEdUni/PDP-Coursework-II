@@ -33,11 +33,14 @@ namespace Biology
 			Squirrel(Squirrel const& rhs);              ///< Copy constructor.
 			Squirrel& operator=(Squirrel const& rhs);   ///< Assignment operator.
 
+			void Die();                 ///< Kills the squirrel.
 			void HandleFirstUpdate();   ///< Does the first update.      
 			void HandleMessages();   ///< Handles incoming MPI messages.
 			void Step();                ///< Moves this squirrel one step.	
-			void Die();                 ///< Kills the squirrel.
-			
+
+			/// Tells a cell we've stepped.
+			void NotifyCell(int cell, Pdp::ESquirrelStep::ESquirrelStep step);
+
 			Mpi::Communicator const& m_comm;    ///< MPI communcator for the pool.
 			unsigned int update_count;          ///< Number of updates since last.
 

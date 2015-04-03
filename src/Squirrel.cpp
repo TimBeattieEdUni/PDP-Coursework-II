@@ -118,6 +118,7 @@ namespace Biology
 		std::cout << "rank " << comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
 	}
 
+	
 	//////////////////////////////////////////////////////////////////////////////
 	/// @details      Informs coordinator of this squirrel's birth.
 	///
@@ -125,16 +126,16 @@ namespace Biology
 	{
 		//  tell coordinator there's a new squirrel in town
 		/// @todo move to buffered sending
-		std::cout << "rank " << m_comm.GetRank() << " first update; sending birth record to coordinator" << std::endl;	
+		std::cout << "rank " << m_comm.GetRank() << " squirrel: sending birth to coordinator" << std::endl;	
 		MPI_Request msg_req;
 		int birth = 1;
 		MPI_Isend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_req);
+		std::cout << "rank " << m_comm.GetRank() << " squirrel: sent birth to coordinator" << std::endl;	
 		
 		//  start squirrel in a cell
 		/// @todo squirrels need to start at parent's position
 		// m_cur_cell = getCellFromPosition(0, 0);
 		m_cur_cell = 0;
-		std::cout << "rank " << m_comm.GetRank() << " first update; sent birth record to coordinator" << std::endl;	
 	}
 	
 	
@@ -204,21 +205,15 @@ namespace Biology
 		//  let interested parties know
 		Pdp::ESquirrelStep::ESquirrelStep step;
 		if (new_cell != m_cur_cell)
-		{			
-			//  tell old cell we've left
-			step = Pdp::ESquirrelStep::eOut;
-			MPI_Bsend(&step, 1, MPI_INT, m_cur_cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm());
-			
-			//  tell new cell we've arrived
-			step = Pdp::ESquirrelStep::eIn;
-			MPI_Bsend(&step, 1, MPI_INT, new_cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm());
+		{
+			NotifyCell(m_cur_cell, Pdp::ESquirrelStep::eOut);
+			NotifyCell(new_cell,   Pdp::ESquirrelStep::eIn);
 		}
 		else
 		{
-			//  tell current cell we've stepped within it
-			step = Pdp::ESquirrelStep::eWithin;
-			MPI_Bsend(&step, 1, MPI_INT, m_cur_cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm());
+			NotifyCell(m_cur_cell, Pdp::ESquirrelStep::eWithin);
 		}
+
 		m_cur_cell = new_cell;
 	}
 
@@ -237,6 +232,12 @@ namespace Biology
 		MPI_Isend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_req);
 
 		std::cout << "rank " << m_comm.GetRank() << ": informed coordinator of squirrel death" << std::endl;
+	}
+
+	
+	void Squirrel::NotifyCell(int cell, Pdp::ESquirrelStep::ESquirrelStep step)
+	{
+		MPI_Bsend(&step, 1, MPI_INT, cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm());		
 	}
 
 	
