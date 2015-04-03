@@ -46,7 +46,8 @@ namespace Biology
 		, m_cur_cell(-1)
 		, m_cur_step(-1)
 		, m_infected(false)
-		, m_shutdown(false)
+		, m_inf_step(-1)
+		, m_dead(false)
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 
@@ -73,11 +74,6 @@ namespace Biology
 
 	bool Squirrel::Update()
 	{
-		if (m_shutdown)
-		{
-			return false;
-		}
-		
 		//  do initial setup first time we're called
 		static bool first_time = true;
 		if (first_time)
@@ -85,7 +81,24 @@ namespace Biology
 			first_time = false;
 			HandleFirstUpdate();
 		}
-		
+
+		if (m_dead)
+		{
+			return false;
+		}
+
+		if (m_infected)
+		{
+			if (m_cur_step - m_inf_step > 50)
+			{
+				if (willDie(m_rng_state))
+				{
+					m_dead = true;
+					return false;
+				}
+			}
+		}
+
 		Step();
 		
 		HandleMessages();
@@ -144,6 +157,7 @@ namespace Biology
 						MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eInfect, m_comm.GetComm(), &msg_status);
 						std::cout << "rank " << m_comm.GetRank() << ": squirrel: received infect message" << std::endl;
 						m_infected = true;
+						m_inf_step = m_cur_step;
 						break;
 					}
 					case Pdp::EMpiMsgTag::ePoisonPill:
@@ -151,7 +165,7 @@ namespace Biology
 						
 						MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm(), &msg_status);
 						std::cout << "rank " << m_comm.GetRank() << ": squirrel: poison pill received" << std::endl;
-						m_shutdown = true;
+						m_dead = true;
 						shutdownPool();
 						break;
 					}
@@ -193,8 +207,6 @@ namespace Biology
 			}
 			
 		}
-
-//		std::cout << "rank " << m_comm.GetRank() << ": squirrel pos: " << m_x << " " << m_y << std::endl;
 		
 		//  where are we, and have we moved?
 		int new_cell = getCellFromPosition(m_x, m_y);		
@@ -202,7 +214,6 @@ namespace Biology
 		//  let interested parties know
 		if (new_cell != m_cur_cell)
 		{
-//			std::cout << "rank " << m_comm.GetRank() << ": squirrel moved from cell " << m_cur_cell << " to " << new_cell << std::endl;
 			NotifyCell(m_cur_cell, Pdp::ESquirrelStep::eOut);
 			NotifyCell(new_cell,   Pdp::ESquirrelStep::eIn);
 		}

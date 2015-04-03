@@ -147,6 +147,9 @@ namespace Biology
 	}
 
 	
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Shifts the set of 3 days worth of statistics along by one.
+	///
 	void Cell::BumpStatistics()
 	{
 		m_pop_influx3 = m_pop_influx2;
@@ -156,7 +159,6 @@ namespace Biology
 		m_infection3 = m_infection2;
 		m_infection2 = m_infection1;
 		m_infection1 = 0;
-		
 	}
 	
 	
@@ -171,6 +173,11 @@ namespace Biology
 		int step = sq_data[0];
 		bool infected = (bool)sq_data[1];
 		
+		if (infected)
+		{
+			++m_infection1;
+		}
+
 		switch(step)
 		{
 			case Pdp::ESquirrelStep::eIn:
@@ -189,11 +196,6 @@ namespace Biology
 				++m_pop_influx1;				
 				break;
 			}
-		}
-
-		if (infected)
-		{
-			++m_infection1;
 		}
 	}
 

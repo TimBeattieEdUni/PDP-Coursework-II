@@ -53,7 +53,8 @@ namespace Biology
 			int m_cur_step;     ///< Number of steps since the squirrel was born.
 		
 			bool m_infected;    ///< Indicates squirrel has the virus. 
-			bool m_shutdown;    ///< Indicates pool is shutting down.
+			int  m_inf_step;    ///< Step at which the squirrel became infected.
+			bool m_dead;        ///< Indicates squirrel is dead or pool is shutting down.
 	};
 
 }   //  namespace Biology
