@@ -77,7 +77,7 @@ namespace Biology
 		{
 			//  if more than one day has passed, stats for multiple days will be included, but this is acceptable.
 			std::cout << "rank " << m_comm.GetRank() << ": cell: day " << today << std::endl;
-			
+						
 			//  we aren't concerned with whether this message is received
 			MPI_Request msg_req;
 			MPI_Isend(&m_num_sq, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_req);
@@ -89,6 +89,13 @@ namespace Biology
 				m_cur_week = this_week;
 				
 				std::cout << "rank " << m_comm.GetRank() << ": cell: week " << this_week << ": pop influx: " << m_pop_influx1 << std::endl;
+			}
+
+			//  ensure all cells stop on the right day (after printing stats for previous day/week)
+			if today > m_config.GetSimLen()
+			{
+				std::cout << "rank " << m_comm.GetRank() << ": cell: max days reached; exiting " << today << std::endl;
+				return false;
 			}
 
 			//  after all the day's work is done, we start a new day
