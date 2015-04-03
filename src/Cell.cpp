@@ -76,7 +76,7 @@ namespace Biology
 		if (today > m_cur_day)
 		{
 			//  if more than one day has passed, stats for multiple days will be included, but this is acceptable.
-			std::cout << "cell: day " << today << std::endl;
+			std::cout << "rank " << m_comm.GetRank() << ": cell: day " << today << std::endl;
 			
 			//  we aren't concerned with whether this message is received
 			MPI_Request msg_req;
@@ -88,7 +88,7 @@ namespace Biology
 			{
 				m_cur_week = this_week;
 				
-				std::cout << "cell: week " << this_week << ": squirrels: " << m_num_sq << std::endl;
+				std::cout << "rank " << m_comm.GetRank() << ": cell: week " << this_week << ": squirrels: " << m_num_sq << std::endl;
 			}
 
 			//  after all the day's work is done, we start a new day
@@ -104,7 +104,7 @@ namespace Biology
 			
 			if(msg_waiting)
 			{
-				std::cout << "cell " << m_comm.GetRank() << ": message waiting" << std::endl;
+				std::cout << "rank " << m_comm.GetRank() << ": cell: message waiting" << std::endl;
 				
 				switch (msg_status.MPI_TAG)
 				{
@@ -123,7 +123,7 @@ namespace Biology
 					default:
 					{
 						//  unrecognised message; fail hard and fast to help diagnosis
-						std::cout << "cell " << m_comm.GetRank() << ": error: unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
+						std::cout << "rank " << m_comm.GetRank() << ": cell: error: unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
 						return false;
 					}
 				}					
@@ -137,13 +137,13 @@ namespace Biology
 
 	void Cell::ReceiveSquirrelStep()
 	{
-		std::cout << "cell " << m_comm.GetRank() << ": squirrel step msg waiting" << std::endl;
+		std::cout << "rank " << m_comm.GetRank() << ": cell: squirrel step msg waiting" << std::endl;
 		
 		Pdp::ESquirrelStep::ESquirrelStep step;
 		MPI_Status msg_status;			
 		MPI_Recv(&step, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm(), &msg_status);
 
-		std::cout << "cell " << m_comm.GetRank() << ": squirrel step rxd: " << step << std::endl;
+		std::cout << "rank " << m_comm.GetRank() << ": cell: squirrel step rxd: " << step << std::endl;
 		
 		switch(step)
 		{
