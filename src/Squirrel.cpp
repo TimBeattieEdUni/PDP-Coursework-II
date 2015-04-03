@@ -149,17 +149,17 @@ namespace Biology
 		{			
 			//  tell old cell we've left
 			step = Pdp::ESquirrelStep::eOut;
-			MPI_Bsend(&step, 1, MPI_INT, m_cur_cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm())
+			MPI_Bsend(&step, 1, MPI_INT, m_cur_cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm());
 			
 			//  tell new cell we've arrived
 			step = Pdp::ESquirrelStep::eIn;
-			MPI_Bsend(&step, 1, MPI_INT, new_cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm())
+			MPI_Bsend(&step, 1, MPI_INT, new_cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm());
 		}
 		else
 		{
 			//  tell current cell we've stepped within it
 			step = Pdp::ESquirrelStep::eWithin;
-			MPI_Bsend(&step, 1, MPI_INT, m_cur_cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm())
+			MPI_Bsend(&step, 1, MPI_INT, m_cur_cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm());
 		}
 		m_cur_cell = new_cell;
 	}
