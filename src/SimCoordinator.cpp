@@ -46,6 +46,7 @@ namespace Biology
 			, m_cur_day(0)
 			, m_cur_week(0)
 			, m_num_sq(0)
+			, m_shutdown(false)
 
 		{
 			std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -76,6 +77,8 @@ namespace Biology
 		///
 		bool SimCoordinator::Update()
 		{
+			std::cout << __PRETTY_FUNCTION__ << std::endl;
+
 			if (m_shutdown)
 			{
 				return false;
