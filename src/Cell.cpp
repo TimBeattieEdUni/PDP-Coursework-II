@@ -70,7 +70,7 @@ namespace Biology
 	///
 	bool Cell::Update()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+//		std::cout << __PRETTY_FUNCTION__ << std::endl;
 
 		//  detect new day
 		unsigned int today = m_ticker.GetDay();
