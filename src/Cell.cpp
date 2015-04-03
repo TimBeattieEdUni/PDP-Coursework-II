@@ -34,6 +34,7 @@ namespace Biology
 	///
 	Cell::Cell(Mpi::Communicator const& comm, Pdp::Config const& config)
 		: m_comm(comm)
+		, m_config(config)
 		, m_ticker(config.GetDayLen())
 		, m_cur_day(0)
 		, m_num_sq(0)

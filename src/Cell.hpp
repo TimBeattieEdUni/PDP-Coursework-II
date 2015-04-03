@@ -14,6 +14,7 @@
 #include "Config.hpp"
 #include "MpiCommunicator.hpp"
 #include "DayTicker.hpp"
+#include "Config.hpp"
 
 
 namespace Biology
@@ -33,10 +34,13 @@ namespace Biology
 			Cell(Cell const& rhs);              ///< Copy constructor.
 			Cell& operator=(Cell const& rhs);   ///< Assignment operator.
 			Mpi::Communicator const& m_comm;    ///< MPI communcator for the pool.
+			Pdp::Config const& m_config;        ///< App config.
 
 			DayTicker m_ticker;             ///< Keeps track of simulation time.
+			
 			unsigned int m_cur_day;         ///< The current day.
 			unsigned int m_num_sq;			///< Number of squirrels in this cell.
+			
 
 	};
 
