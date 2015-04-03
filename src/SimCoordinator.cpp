@@ -188,7 +188,7 @@ namespace Biology
 			std::cout << "coordinator starting " << m_config.GetIniSqrls() << " squirrels" << std::endl;
 			for (int i=0; i<m_config.GetIniSqrls(); ++i)
 			{
-				SpawnSquirrel(m_comm);
+				SpawnSquirrel(0.0, 0.0);
 			}			
 		}
 	
@@ -206,17 +206,17 @@ namespace Biology
 		void SimCoordinator::SpawnSquirrel(float x, float y)
 		{
 			int pid = startWorkerProcess();
-			std::cout << "coordinator: started process for squirrel on rank " << m_cell_pids[cell_id] << std::endl;
+			std::cout << "coordinator: started process for squirrel on rank " << pid << std::endl;
 
 			++m_num_sq;
 
 			int task = Pdp::ETask::eSquirrel;
 			MPI_Bsend(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());			
-			std::cout << "rank " << comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
+			std::cout << "rank " << m_comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
 		}
 	
 
-		void SimCoordinator::ReceiveSquirrelBirthMsg();
+		void SimCoordinator::ReceiveSquirrelBirthMsg()
 		{
 			float sq_data[2];
 			MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelBirth, m_comm.GetComm(), &msg_status);
