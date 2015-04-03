@@ -39,8 +39,8 @@ namespace Biology
 			bool Update();                 ///< Driver. 
 			void CreateInitialActors();    ///< Sets up the landscape and initial squirrels.
 
-			void SpawnSquirrel();          ///< Adds a squirrel to the simulation.
 			void SpawnCell(int cell_id);   ///< Adds a landscape cell to the simulation.
+			void SpawnSquirrel();          ///< Adds a squirrel to the simulation.
 
 		private:
 			SimCoordinator(SimCoordinator const& rhs);              ///< Copy constructor.
@@ -54,6 +54,8 @@ namespace Biology
 			unsigned int m_cur_day;         ///< The current day.
 			unsigned int m_cur_week;        ///< The current week.
 			unsigned int m_num_sq;          ///< Total number of squirrels in the simulation.
+
+			bool m_shutdown;                ///< Indicates pool is shutting down.
 		
 	};
 

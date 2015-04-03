@@ -22,9 +22,12 @@ namespace Pdp
 			ePoolCtrl = 16384,   ///< Ensures our code won't use the same value.
 			eAssignTask,         ///< Tells a worker process what type of actor to be.
 			eCellStats,          ///< Squirrel statistics for coordinator.
-			eSquirrelLifetime,   ///< Squirrel birth/death event.
+			eSquirrelBirth,      ///< A squirrel is born
 			eSquirrelStep,       ///< Squirrel step event.
-			ePoisonPill          ///< Tells an actor to exit.
+			ePoisonPill,         ///< Tells an actor to exit.
+
+			/// @todo remove this
+			eSquirrelLifetime   ///< Squirrel birth/death event.
 		};
 	}
 	

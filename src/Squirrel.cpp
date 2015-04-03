@@ -72,7 +72,6 @@ namespace Biology
 
 	bool Squirrel::Update()
 	{
-		//  
 		if (m_shutdown)
 		{
 			return false;
@@ -105,17 +104,13 @@ namespace Biology
 	///
 	void Squirrel::Spawn(Mpi::Communicator const& comm)
 	{		
-		std::cout << "rank " << comm.GetRank() << ": starting worker for new squirrel" << std::endl;
+		std::cout << "rank " << comm.GetRank() << ": squirrel reproducing" << std::endl;
 
-		int pid = startWorkerProcess();
+		float sq_data[2];
+		sq_data[0] = m_x;
+		sq_data[1] = m_y;
 		
-		std::cout << "rank " << comm.GetRank() << ": started worker for new squirrel: pid " << pid << std::endl;
-
-		int task = Pdp::ETask::eSquirrel;
-		MPI_Request msg_req;
-		MPI_Isend(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, comm.GetComm(), &msg_req);
-
-		std::cout << "rank " << comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
+		MPI_Bsend(sq_data, 4, MPI_FLOAT, 1, Pdp::EMpiMsgTag::eSquirrelBirth, m_comm.GetComm());		
 	}
 
 	
@@ -243,7 +238,7 @@ namespace Biology
 	
 	void Squirrel::NotifyCell(int cell, Pdp::ESquirrelStep::ESquirrelStep step)
 	{
-		MPI_Bsend(&step, 1, MPI_INT, cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm());		
+		MPI_Bsend(&step, 1, MPI_INT, cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm());
 	}
 
 	

@@ -76,6 +76,11 @@ namespace Biology
 		///
 		bool SimCoordinator::Update()
 		{
+			if (m_shutdown)
+			{
+				return false;
+			}
+
 //			usleep(250000);
 
 			//  do initial setup first time we're called
@@ -137,17 +142,9 @@ namespace Biology
 							break;
 						}
 							
-						case Pdp::EMpiMsgTag::eSquirrelLifetime:
+						case Pdp::EMpiMsgTag::eSquirrelBirth::
 						{
-							int birth_or_death = 0;
-							MPI_Recv(&birth_or_death, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_status);
-							std::cout << "squirrel lifetime event rxd from rank " << msg_status.MPI_SOURCE << ": " << birth_or_death << std::endl;
-							m_num_sq += birth_or_death;
-							if (m_num_sq > m_config.GetMaxSqrls())
-							{
-								std::cout << "too many squirrels; shutting down" << std::endl;
-								return false;
-							}
+							ReceiveSquirrelBirthMsg();
 							break;							
 						}
 						
@@ -200,12 +197,45 @@ namespace Biology
 		{
 			//  store process ID in list using cell ID as index
 			m_cell_pids[cell_id] = startWorkerProcess();
-			std::cout << "started cell " << cell_id << " on rank " << m_cell_pids[cell_id] << std::endl;
+			std::cout << "coordinator: started process for cell " << cell_id << " on rank " << m_cell_pids[cell_id] << std::endl;
 			int task = Pdp::ETask::eCell;
 			MPI_Bsend(&task, 1, MPI_INT, m_cell_pids[cell_id], Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());			
 		}
 		
 	
+		void SimCoordinator::SpawnSquirrel(float x, float y)
+		{
+			int pid = startWorkerProcess();
+			std::cout << "coordinator: started process for squirrel on rank " << m_cell_pids[cell_id] << std::endl;
+
+			++m_num_sq;
+
+			int task = Pdp::ETask::eSquirrel;
+			MPI_Bsend(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());			
+			std::cout << "rank " << comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
+		}
+	
+
+		void SimCoordinator::ReceiveSquirrelBirthMsg();
+		{
+			float sq_data[2];
+			MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelBirth, m_comm.GetComm(), &msg_status);
+
+			if (m_num_sq == m_config.GetMaxSqrls())
+			{
+				std::cout << "coordinator: max squirrels exceeded; shutting down" << std::endl;
+				m_shutdown = true;
+				shutdownPool();
+				return;
+			}
+				
+			float x = sq_data[0];
+			float y = sq_data[1];
+
+			SpawnSquirrel(x, y);
+		}
+				
+				
 //		//////////////////////////////////////////////////////////////////////////////
 //		/// @details    Describe copy construction here.
 //		///

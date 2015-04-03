@@ -4,7 +4,7 @@
 #$ -l h_rt=:10:
 
 # Run with
-# qsub -pe mpi N morar.sh <cells> <squirrels> <simdays> <daylen> 
+# qsub -pe mpi N morar.sh <cells> <squirrels> <maxsq> <simdays> <daylen> 
 # ...where:
 #   N is the number of PEs to run
 #   <cells>      is the number of landscape cells.

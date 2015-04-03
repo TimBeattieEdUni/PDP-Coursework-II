@@ -27,8 +27,6 @@ namespace Biology
 			~Squirrel();   ///< Destructor.
 
 			bool Update();   ///< Driver.
-
-			static void Spawn(Mpi::Communicator const& comm);   ///< Gives birth to a squirrel.
 		
 		private:
 			Squirrel(Squirrel const& rhs);              ///< Copy constructor.
@@ -36,7 +34,10 @@ namespace Biology
 
 			void Die();                 ///< Kills the squirrel.
 			void HandleFirstUpdate();   ///< Does the first update.      
-			void HandleMessages();   ///< Handles incoming MPI messages.
+			void HandleMessages();      ///< Handles incoming MPI messages.
+
+			void Spawn(Mpi::Communicator const& comm);   ///< Gives birth to a squirrel.
+			
 			void Step();                ///< Moves this squirrel one step.	
 
 			/// Tells a cell we've stepped.
