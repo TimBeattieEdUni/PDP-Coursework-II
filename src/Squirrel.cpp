@@ -144,7 +144,7 @@ namespace Biology
 		}
 		
 		//  let interested parties know
-		Pdp::ESquirrelStep::eSquirrelStep step;
+		Pdp::ESquirrelStep::ESquirrelStep step;
 		if (new_cell != m_cur_cell)
 		{			
 			//  tell old cell we've left

@@ -100,7 +100,7 @@ namespace Biology
 					case Pdp::EMpiMsgTag::eSquirrelStep:
 					{
 						std::cout << "cell " << m_comm.GetRank() << ": squirrel step msg rxd" << std::endl;
-						Pdp::ESquirrelStep::eSquirrelStep step;
+						Pdp::ESquirrelStep::ESquirrelStep step;
 						MPI_Recv(&step, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm(), &msg_status);
 						std::cout << "cell " << m_comm.GetRank() << ": squirrel step rxd: " << step << std::endl;
 						break;
