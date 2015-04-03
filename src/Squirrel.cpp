@@ -110,7 +110,7 @@ namespace Biology
 		sq_data[0] = m_x;
 		sq_data[1] = m_y;
 		
-		MPI_Bsend(sq_data, 4, MPI_FLOAT, 1, Pdp::EMpiMsgTag::eSquirrelBirth, m_comm.GetComm());		
+		MPI_Bsend(sq_data, 2, MPI_FLOAT, 1, Pdp::EMpiMsgTag::eSquirrelBirth, m_comm.GetComm());		
 	}
 
 	
