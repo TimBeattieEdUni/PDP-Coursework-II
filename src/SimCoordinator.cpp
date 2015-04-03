@@ -252,9 +252,8 @@ namespace Biology
 		//////////////////////////////////////////////////////////////////////////////
 		/// @details      Sends poison pill to all squirrels.
 		///
-		/// @note         It's not clear why this is necessary; the cells all shut 
-		///               down when shutdownPool() is called, but the squirrels carry 
-		///               on forever without this.
+		/// @note         It's not clear why this is necessary, butthe squirrels carry 
+		///               on forever without it.
 		///
 		void SimCoordinator::KillSquirrels()
 		{
@@ -262,7 +261,8 @@ namespace Biology
 				 pid < m_comm.GetSize();
 				++pid)
 			{
-				MPI_Bsend(NULL, 0, MPI_INT, pid, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm());
+				//  
+				MPI_Send(NULL, 0, MPI_INT, pid, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm());
 			}
 		}
 	

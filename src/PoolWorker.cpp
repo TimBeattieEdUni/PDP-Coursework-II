@@ -110,7 +110,9 @@ namespace Mpi
 						cell_ok = cell.Update();
 						pool_ok = ! shouldWorkerStop();
 					}
-					break;
+					
+					//  cell workers don't return to the pool
+					return;
 				}
 				case Pdp::ETask::eCoordinator:
 				{
@@ -124,7 +126,9 @@ namespace Mpi
 						coord_ok = sim_coord.Update();
 						pool_ok  = ! shouldWorkerStop();
 					}
-					break;
+
+					//  sim coordinator doesn't return to the pool
+					return;
 				}
 			}
 
