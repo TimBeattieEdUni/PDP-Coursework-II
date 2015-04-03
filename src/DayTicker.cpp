@@ -73,7 +73,7 @@ namespace Biology
 	///
 	unsigned int DayTicker::GetDay()
 	{
-		double wtime = MyWtim();
+		double wtime = MyWtime();
 		std::cout << wtime << std::endl;
 		
 		unsigned int day = (unsigned int) ((MyWtime() - m_start_time) / (double)m_day_len);		
