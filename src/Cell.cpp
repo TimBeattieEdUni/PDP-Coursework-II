@@ -97,6 +97,7 @@ namespace Biology
 			if (today >= m_config.GetSimLen())
 			{
 				std::cout << "rank " << m_comm.GetRank() << ": cell: max days reached; exiting " << today << std::endl;
+				shutdownPool();
 				return false;
 			}
 
