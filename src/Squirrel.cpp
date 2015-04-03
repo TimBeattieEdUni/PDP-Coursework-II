@@ -119,13 +119,13 @@ namespace Biology
 	///
 	void Squirrel::HandleFirstUpdate()
 	{
-		//  tell coordinator there's a new squirrel in town
-		/// @todo move to buffered sending
-		std::cout << "rank " << m_comm.GetRank() << " squirrel: sending birth to coordinator" << std::endl;	
-		MPI_Request msg_req;
-		int birth = 1;
-		MPI_Isend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_req);
-		std::cout << "rank " << m_comm.GetRank() << " squirrel: sent birth to coordinator" << std::endl;	
+//		//  tell coordinator there's a new squirrel in town
+//		/// @todo move to buffered sending
+//		std::cout << "rank " << m_comm.GetRank() << " squirrel: sending birth to coordinator" << std::endl;	
+//		MPI_Request msg_req;
+//		int birth = 1;
+//		MPI_Isend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm(), &msg_req);
+//		std::cout << "rank " << m_comm.GetRank() << " squirrel: sent birth to coordinator" << std::endl;	
 		
 		//  start squirrel in a cell
 		m_cur_cell = getCellFromPosition(m_x, m_y);
