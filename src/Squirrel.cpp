@@ -124,6 +124,7 @@ namespace Biology
 		else 
 		{
 			float avg_inf = Average(m_last50inf, num_records);
+			
 			if (willCatchDisease(avg_inf, &m_rng_state))
 			{
 				BecomeInfected();
@@ -343,9 +344,7 @@ namespace Biology
 		m_last50pop[m_last50index] = cell_pop;
 		m_last50inf[m_last50index] = cell_inf;
 		
-		++m_last50index %= num_records;
-		std::cout << "rank " << m_comm.GetRank() << ": squirrel: next 50 index is " << m_last50index << std::endl;
-		
+		++m_last50index %= num_records;		
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
