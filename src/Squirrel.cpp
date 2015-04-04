@@ -302,7 +302,7 @@ namespace Biology
 		MPI_Status msg_status;			
 		MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eYouAreInfected, m_comm.GetComm(), &msg_status);
 		
-		std::cout << "rank " << m_comm.GetRank() << ": squirrel: received infect message" << std::endl;
+//		std::cout << "rank " << m_comm.GetRank() << ": squirrel: received infect message" << std::endl;
 
 		BecomeInfected();
 	}

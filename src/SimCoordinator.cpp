@@ -199,29 +199,32 @@ namespace Biology
 			 cell_id < m_config.GetCells(); 
 			 ++cell_id)
 		{
-			SpawnCell(cell_id);
+			SpawnCell();
 		}
 		
-		//  start initial infected squirrels
+		//  start initial squirrels
 		std::cout << "coordinator starting " << m_config.GetIniSqrls() << " infected squirrels" << std::endl;
 		for (int i=0; i<m_config.GetIniSqrls(); ++i)
 		{
 			int pid = SpawnSquirrel(0.0, 0.0);
+			
+			//  first squirrels are infected from the start
 			MPI_Bsend(NULL, 0, MPI_INT, pid, EMpiMsgTag::eYouAreInfected, m_comm.GetComm());			
 		}			
 	}
 
 	
-	void SimCoordinator::SpawnCell(int cell_id)
+	void SimCoordinator::SpawnCell()
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 
 		int pid = startWorkerProcess();
-		std::cout << "coordinator: started process for cell " << cell_id << " on rank " << pid << std::endl;
 		
 		int task = ETask::eCell;
 		MPI_Bsend(&task, 1, MPI_INT, pid, EMpiMsgTag::eAssignTask, m_comm.GetComm());			
-	}
+
+		std::cout << "coordinator: started cell on rank " << pid << std::endl;
+}
 	
 
 	int SimCoordinator::SpawnSquirrel(float x, float y)
@@ -233,6 +236,7 @@ namespace Biology
 		//  tell the worker process to run a squirrel
 		int task = ETask::eSquirrel;
 		MPI_Bsend(&task, 1, MPI_INT, pid, EMpiMsgTag::eAssignTask, m_comm.GetComm());			
+
 		std::cout << "rank " << m_comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
 		
 		return pid;

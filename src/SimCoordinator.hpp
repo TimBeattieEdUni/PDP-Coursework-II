@@ -40,7 +40,6 @@ namespace Biology
 
 			bool Update();                          ///< Driver. 
 			void CreateInitialActors();             ///< Sets up the landscape and initial squirrels.
-			void SpawnCell(int cell_id);            ///< Adds a landscape cell to the simulation.
 
 		private:
 			SimCoordinator(SimCoordinator const& rhs);              ///< Copy constructor.
@@ -51,6 +50,7 @@ namespace Biology
 			void ReceiveSquirrelDeathMsg();        ///< Receives "squirrel has died" message.
 
 			void KillSquirrels();                  ///< Sends poison pill to all squirrel.
+			void SpawnCell();                      ///< Adds a landscape cell to the simulation.
 			int SpawnSquirrel(float x, float y);   ///< Gives birth to a squirreal.
 		
 			Mpi::Communicator const& m_comm;   ///< MPI communcator for the pool.
