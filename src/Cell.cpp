@@ -189,9 +189,13 @@ namespace Biology
 	}	
 
 	
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Retrieves a "squirrel step" message from MPI and applies it
+	///               to the cell's squirrel statistics.
+	///
 	void Cell::ReceiveSquirrelStep()
 	{
-		std::cout << "rank " << m_comm.GetRank() << ": squirrel step: " << m_sq_steps1 << " " << m_inf_steps1 << std::endl;
+		std::cout << "rank " << m_comm.GetRank() << ": cell received a squirrel step: " << m_sq_steps1 << " " << m_inf_steps1 << std::endl;
 				
 		int sq_data[2];
 		MPI_Status msg_status;
