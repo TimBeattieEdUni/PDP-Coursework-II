@@ -181,9 +181,14 @@ namespace Biology
 	///
 	void Cell::SendStatistics(int pid)
 	{	
+		int popInflux = m_sq_steps1  + m_sq_steps2  + m_sq_steps3;
+		int infLevel  = m_inf_steps1 + m_inf_steps2 + m_inf_steps3;
+
+		std::cout << "rank " << m_comm.GetRank() << ": cell: sending stats to rank " << pid << ": " << popInflux << " " << infLevel << std::endl;
+
 		int cell_stats[2];
-		cell_stats[0] = m_sq_steps1  + m_sq_steps2  + m_sq_steps3;
-		cell_stats[1] = m_inf_steps1 + m_inf_steps2 + m_inf_steps3;
+		cell_stats[0] = popInflux;
+		cell_stats[1] = infLevel;
 		
 		MPI_Bsend(cell_stats, 2, MPI_INT, pid, EMpiMsgTag::eCellStats, m_comm.GetComm());
 	}	

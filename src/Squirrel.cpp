@@ -260,7 +260,7 @@ namespace Biology
 	
 	void Squirrel::NotifyCell(int cell, ESquirrelStep::ESquirrelStep step)
 	{
-		std::cout << "rank " << m_comm.GetRank() << ": squirrel sending step to cell " << cell << std::endl;
+//		std::cout << "rank " << m_comm.GetRank() << ": squirrel sending step to cell " << cell << std::endl;
 
 		int sq_data[2];
 		
