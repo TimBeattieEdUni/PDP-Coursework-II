@@ -336,8 +336,7 @@ namespace Biology
 			 pid < m_comm.GetSize();
 			 ++pid)
 		{
-			//  blocking synchronous so we wait for squirrels to stop before stopping cells.
-			MPI_Ssend(NULL, 0, MPI_INT, pid, EMpiMsgTag::ePoisonPill, m_comm.GetComm());
+			MPI_Bsend(NULL, 0, MPI_INT, pid, EMpiMsgTag::ePoisonPill, m_comm.GetComm());
 		}
 	}
 	
