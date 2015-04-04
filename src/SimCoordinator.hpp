@@ -49,7 +49,8 @@ namespace Biology
 			void ReceiveSquirrelBirthMsg();        ///< Receives "squirrel should be born" message.
 			void ReceiveSquirrelDeathMsg();        ///< Receives "squirrel has died" message.
 
-			void KillSquirrels();                  ///< Sends poison pill to all squirrel.
+			void KillCells();                      ///< Sends poison pill to all cells.
+			void KillSquirrels();                  ///< Sends poison pill to all squirrels.
 			void SpawnCell();                      ///< Adds a landscape cell to the simulation.
 			int SpawnSquirrel(float x, float y);   ///< Gives birth to a squirreal.
 		
