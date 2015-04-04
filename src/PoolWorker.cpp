@@ -86,7 +86,7 @@ namespace Mpi
 				case Biology::ETask::eSquirrel:
 				{
 					std::cout << "rank " << m_comm.GetRank() << " running a squirrel" << std::endl;
-					Biology::Squirrel squirrel(m_comm);
+					Biology::Squirrel squirrel(m_comm, m_config);
 					
 					bool squirrel_ok = true;
 					bool pool_ok     = true;

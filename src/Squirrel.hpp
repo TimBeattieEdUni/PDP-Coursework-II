@@ -11,6 +11,7 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //  Local headers.
+#include "Config.hpp"
 #include "MpiCommunicator.hpp"
 #include "PdpEnums.hpp"
 
