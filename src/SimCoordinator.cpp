@@ -100,14 +100,14 @@ namespace Biology
 		{
 //			std::cout << "coordinator: day " << today << std::endl;
 			
-			/// @todo remove this - artificially maintaining the number of squirrels
-			if (m_num_sq < 40)
-			{
-				for (int i = m_num_sq; i < 30; ++i)
-				{
-					SpawnSquirrel(0, 0);
-				}
-			}
+//			/// @todo remove this - artificially maintaining the number of squirrels
+//			if (m_num_sq < 40)
+//			{
+//				for (int i = m_num_sq; i < 30; ++i)
+//				{
+//					SpawnSquirrel(0, 0);
+//				}
+//			}
 
 			//  shut down sim after configured number of days
 			if (today >= m_config.GetSimLen())
