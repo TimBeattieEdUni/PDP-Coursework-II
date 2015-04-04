@@ -43,13 +43,14 @@ namespace Biology
 		, m_ticker(config.GetDayLen())
 		, m_cur_day(0)
 		, m_cur_week(0)
-//		, m_num_sq(0)
 		, m_sq_steps1(0)
 		, m_sq_steps2(0)
 		, m_sq_steps3(0)
 		, m_inf_steps1(0)
 		, m_inf_steps2(0)
 		, m_inf_steps3(0)
+		, m_shutting_down(false)
+		, m_done(false)
 		
 	{
 //		std::cout << __PRETTY_FUNCTION__ <<  std::endl;
@@ -83,6 +84,11 @@ namespace Biology
 	{
 //		std::cout << __PRETTY_FUNCTION__ << std::endl;
 
+		if (m_done)
+		{
+			return false;
+		}
+		
 		//  detect new day
 		unsigned int today = m_ticker.GetDay();
 				
@@ -110,9 +116,9 @@ namespace Biology
 			//  ensure all cells stop on the right day (after printing stats for previous day/week)
 			if (today >= m_config.GetSimLen())
 			{
-				std::cout << "rank " << m_comm.GetRank() << ": cell: max days reached; exiting " << std::endl;
-				shutdownPool();
-				return false;
+				std::cout << "rank " << m_comm.GetRank() << ": cell: max days reached; going dormant and waiting for poison pill " << std::endl;
+				m_shutting_down = true;
+				return true;
 			}
 
 			//  after all the day's work is done, we start a new day
@@ -136,6 +142,14 @@ namespace Biology
 						ReceiveSquirrelStep();
 						break;
 
+					}
+					case EMpiMsgTag::ePoisonPill:
+					{
+						std::cout << "rank " << m_comm.GetRank() << ": cell: poison pill received" << std::endl;
+						MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::ePoisonPill, m_comm.GetComm(), &msg_status);
+						m_done = true;
+						shutdownPool();
+						return false;
 					}
 					case EMpiMsgTag::ePoolPid:
 					case EMpiMsgTag::ePoolCtrl:

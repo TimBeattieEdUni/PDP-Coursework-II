@@ -45,7 +45,6 @@ namespace Biology
 			
 			unsigned int m_cur_day;        ///< The current day.
 			unsigned int m_cur_week;       ///< The current week.
-//			unsigned int m_num_sq;         ///< Number of squirrels in this cell.
 		
 			unsigned int m_sq_steps1;      ///< Steps by squirrels in this cell today...
 			unsigned int m_sq_steps2;      ///< ...and yesterday...
@@ -54,6 +53,9 @@ namespace Biology
 			unsigned int m_inf_steps1;     ///< Steps by infected squirrels in this cell today...
 			unsigned int m_inf_steps2;     ///< ...and yesterday...
 			unsigned int m_inf_steps3;     ///< ...and two days ago.
+		
+			bool m_shutting_down;          ///< Indicates cell should go inactive and wait for poison pill.
+			bool m_done;                   ///< Indicates cell has completely finished.
 	};
 
 }   //  namespace Biology
