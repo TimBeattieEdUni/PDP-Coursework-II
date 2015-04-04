@@ -300,7 +300,7 @@ namespace Biology
 		
 		//MPI_Bsend(sq_data, 2, MPI_INT, cell + 2, EMpiMsgTag::eSquirrelStep, m_comm.GetComm());
 		MPI_Status msg_status;			
-		MPI_Sendrecv(sq_data, 2, MPI_INT, cell + 2, EMpiMsgTag::eSquirrelStep, cell_data, 2, MPI_INT, cell + 2, EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status)
+		MPI_Sendrecv(sq_data, 2, MPI_INT, cell + 2, EMpiMsgTag::eSquirrelStep, cell_data, 2, MPI_INT, cell + 2, EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status);
 
 		//  update records
 		int cell_pop = cell_stats[0];
