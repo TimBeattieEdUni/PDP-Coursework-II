@@ -212,7 +212,7 @@ namespace Biology
 		}
 		
 		//  start initial squirrels
-		std::cout << "coordinator starting " << m_config.GetIniSqrls() << " infected squirrels" << std::endl;
+		std::cout << "coordinator starting " << m_config.GetIniSqrls() << " squirrels, " << m_config.GetIniInf() << " infected" << << std::endl;
 		for (int i=0; i<m_config.GetIniSqrls(); ++i)
 		{
 			int pid = SpawnSquirrel(0.0, 0.0);

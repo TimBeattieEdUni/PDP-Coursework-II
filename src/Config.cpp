@@ -69,7 +69,7 @@ namespace Biology
 	
 	void Config::Print()
 	{
-		std::cout << "configuration:  "
+		std::cout << "configuration:"
 				  << "  cells="     << m_cells
 				  << "  squirrels=" << m_ini_sqrls
 				  << "  infected="  << m_ini_inf
