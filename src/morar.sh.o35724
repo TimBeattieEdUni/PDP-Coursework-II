@@ -1,0 +1,225 @@
+configuration:  cells=16  squirrels=34  infected=4  maxsq=46  simlen=56  daylen=0.01
+rank 1 running a coordinator
+coordinator starting 16 cells
+rank 2 running a cell
+rank 3 running a cell
+rank 4 running a cell
+rank 5 running a cell
+rank 6 running a cell
+rank 7 running a cell
+rank 8 running a cell
+rank 9 running a cell
+rank 10 running a cell
+rank 11 running a cell
+rank 12 running a cell
+rank 13 running a cell
+rank 14 running a cell
+rank 15 running a cell
+rank 16 running a cell
+coordinator starting 34 squirrank 17 running a cell
+rels, 4 infected
+rank 18 running a squirrel
+rank 18: squirrel dying at step 64
+rank 19 running a squirrel
+rank 19: squirrel dying at step 54
+rank 20 running a squirrel
+rank 21 running a squirrel
+rank 20: squirrel dying at step 63
+rank 18 running a squirrel
+rank 21: squirrel dying at step 60
+rank 19 running a squirrel
+rank 18: squirrel dying atrank 20 running a squirrel
+ step 109
+rank 21 running a squirrel
+rank 18 running a squirrel
+rank 22 running a squirrel
+rank 24 running a squirrrank 25 running a squirrel
+rank 23 running a squirrel
+el
+rank 26 running a squirrel
+rank 28 running a squirrel
+rank 29 running a squirrel
+rank 31 running a squirrel
+rank 35 running a squirrel
+rank 45 running a squirrel
+rank 46 running a squirrel
+rank 20: squirrel giving birth at step 100
+rank 46: squirrel giving birth at rank 23: squirrel giving birth at step 100
+rank step 50
+23: squirrel dying at step 100
+rank 44 running a squirrel
+rank 20: squirrel dying at step 117
+rank 24: squirrel dying at step 96
+rank 34 running a squirrel
+rank 45: squirrel dying at step 123
+rank 26: squirrel dying at step 127
+rank 28: squirrel giving birth arank 40 running a squirrel
+rank 18: squirrel giving birth at step 100
+t step 150
+rank 34: squirrel dying at step 94
+rank 30 running a squirrel
+rank 40: squirrel giving birth at step 50
+rank 18: squirrel dying at step 109
+rank 43 running a squirrel
+rank 32 running a squirrel
+rank 22: squirrel dying at step 159
+rank 29: squirrel dying at step 183
+rank 46: squirrel giving birth at step 150
+rank 21: squirrel dying at step 173
+rank 25: squirrel giving birth at step 150
+rank 33 running a squirrel
+rank 37 running a squirrel
+rank 27 running a squirrel
+rank 43: squirrel giving birth at step 100
+rank 33: squirrel giving birth at step 50
+rank 32: squirrel dying at step 105
+rank 46: squirrel dying at step 164
+rank 43: squirrel dying at step 101
+rank 27: squirrel giving birth at step 50
+rank 41 running a squirrel
+rank 37: squirrel dying at step 96
+rank 39 running a squirrel
+rank 41: squirrel giving birth at step 50
+rank 40: squirrel dying at step 149
+rank 41: squirrel dying at step 122
+rank 25: squirrel dying at step 189
+rank 39: squirrel dying at step 109
+rank 38 running a squirrel
+rank 20 running a squirrel
+rank 21 running a squirrel
+rank 33: squirrel dying at step 142
+rank 22 running a squirrel
+rank 23 running a squirrel
+rank 24 running a squirrel
+rank 29 running a squirrel
+rank 42 running a squirrel
+rank 32 running a squirrel
+rank 34 running a squirrel
+rank 30: squirrel dying at step 18rank 47 running a squirrel
+2
+rank 36 running a squirrel
+rank 42: squirrel giving birth at strank 24: squirreep 50
+l giving birth at step 50
+rank 42: squirrel dying at step rank 38: squirrel dying at step 79
+65
+rank 23: squirrel dying at step 90
+rank 36: squirrel giving birth at step 50
+rank 37 running a squirrel
+rank 32: squirrel dying at step 70
+rank 47: squirrel dying at step 96
+rank 36: squirrel dying at step 95
+rank 27: squirrel dying at step 181
+rank 34: squirrel dying at step 84
+rank 26 running a squirrel
+rank 19: squirrel dying at step 293
+rank 37: squirrel dying at step 58
+rank 21: squirrel dying at step 109
+rank 23 running a squirrel
+rank 20: squirrel dying at step 98
+rank 25 running a squirrel
+rank 22: squirrel dying at step 107
+rank 26: squirrel dying at step 104
+rank 30 running a squirrel
+rank 29: squirrel giving birth at step 100
+rank 39 running a squirrel
+rank 25: squirrel dying at step 64
+rank 28: squirrel dying at step 248
+rank 39: squirrel dying at step 62
+rank 24: squirrel dying at step 169
+rank 30: squirrel dying at step 90
+rank 44: squirrel dying at step 145
+rank 18 running a squirrel
+rank 18: squirrel dying at step 80
+rank 23: squirrel dying at step 90
+rank 29: squirrel giving birth at step 150
+rank 29: squirrel dying at step 204
+rank 31: squirrel dying at step 217
+rank 18 running a squirrel
+rank 18: squirrel dying at step 80
+rank 35: squirrel dying at step 249
+coordinator: squirrel population is zero; shutting down on day 3
+run time:	0.054905
+rank 0rank 1 exiting
+ exiting
+rank 2 exiting
+rank 3 exiting
+rank 4 exiting
+rank 9 exiting
+rank 8 exiting
+rank 10 exiting
+rank 11 exiting
+rank 13 exiting
+rank 14 exiting
+rank 15 exiting
+rank 17 exiting
+rank 18 exiting
+rank 19 exiting
+rank 20 exiting
+rank 21 exiting
+rank 22 exiting
+rank 23 exiting
+rank 24 exiting
+rank 25 exiting
+rank 28 exiting
+rank 32 exiting
+rank 34 exiting
+rank 36 exiting
+rank 39 exiting
+rank 43 exiting
+rank 45 exiting
+rank 46 exiting
+rank 47 exiting
+rank 26 exiting
+rank 27 exiting
+rank 30 exiting
+rank 33 exiting
+rank 35 exiting
+rank 37 exiting
+rank 40 exiting
+rank 41 exiting
+rank 42 exiting
+rank 48: process pool says to exit
+rank 48 exiting
+rank 49: process pool says to exit
+rank 49 exiting
+rank 50: process pool says to exit
+rank 50 exiting
+rank 51: process pool says to exit
+rank 51 exiting
+rank 52: process pool says to exit
+rank 52 exiting
+rank 53: process pool says to exit
+rank 53 exiting
+rank 54: process pool says to exit
+rank 54 exiting
+rank 55: process pool says to exit
+rank 55 exiting
+rank 56: process pool says to exit
+rank 56 exiting
+rank 57: process pool says to exit
+rank 57 exiting
+rank 58: process pool says to exit
+rank 58 exiting
+rank 59: process pool says to exit
+rank 59 exiting
+rank 60: process pool says to exit
+rank 60 exiting
+rank 63: process pool says to exit
+rank 63 exiting
+rank 5 exiting
+rank 31 exiting
+rank 38 exiting
+rank 44 exiting
+rank 61: process pool says to exit
+rank 61 exiting
+rank 62: process pool says to exit
+rank 62 exiting
+rank 29 exiting
+rank 6 exiting
+rank 7 exiting
+rank 16 exiting
+rank 12 exiting
+
+real	0m0.296s
+user	0m2.978s
+sys	0m3.117s
