@@ -114,6 +114,7 @@ namespace Biology
 			{
 				std::cout << "coordinator: max days reached; shutting down" << std::endl;
 				KillSquirrels();
+				KillCells();
 				shutdownPool();
 				return false;
 			}
@@ -326,18 +327,28 @@ namespace Biology
 	//////////////////////////////////////////////////////////////////////////////
 	/// @details      Sends poison pill to all squirrels.
 	///
-	/// @note         It's not clear why this is necessary, but the squirrels carry 
-	///               on forever without it.
-	///
 	void SimCoordinator::KillSquirrels()
 	{
 		for (int pid = 2 + m_config.GetCells(); 
 			 pid < m_comm.GetSize();
 			 ++pid)
 		{
-			//  blocking synchronous call so we know the squirrel is inactive
+			//  blocking synchronous so we wait for squirrels to stop before stopping cells.
 			MPI_Ssend(NULL, 0, MPI_INT, pid, EMpiMsgTag::ePoisonPill, m_comm.GetComm());
 		}
 	}
-
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Sends poison pill to all squirrels.
+	///
+	void SimCoordinator::KillCells()
+	{
+		for (int pid = 2; 
+			 pid < m_comm.GetCells();
+			 ++pid)
+		{
+			//  blocking synchronous call as a first try
+			MPI_Ssend(NULL, 0, MPI_INT, pid, EMpiMsgTag::ePoisonPill, m_comm.GetComm());
+		}
+	}
+	
 }   //  namespace Biology
