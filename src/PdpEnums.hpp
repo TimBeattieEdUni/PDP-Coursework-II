@@ -9,7 +9,7 @@
 #define PDP_ENUMS_HPP
 
 
-namespace Pdp 
+namespace Biology 
 {
 	//////////////////////////////////////////////////////////////////////////////
 	/// @brief      Tag values for MPI messages.
@@ -57,7 +57,7 @@ namespace Pdp
 			eWithin   ///< Squirrel moving within a cell.
 		};
 	}
-}   //  namespace Pdp
+}   //  namespace Biology
 
 
 #endif  //  #ndef PDP_ENUMS_HPP

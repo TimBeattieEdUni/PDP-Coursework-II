@@ -125,7 +125,7 @@ namespace Biology
 		sq_data[0] = m_x;
 		sq_data[1] = m_y;
 		
-		MPI_Bsend(sq_data, 2, MPI_FLOAT, 1, Pdp::EMpiMsgTag::eSquirrelBirth, m_comm.GetComm());		
+		MPI_Bsend(sq_data, 2, MPI_FLOAT, 1, EMpiMsgTag::eSquirrelBirth, m_comm.GetComm());		
 	}
 
 	
@@ -136,7 +136,7 @@ namespace Biology
 	{
 		//  start squirrel in a cell
 		m_cur_cell = getCellFromPosition(m_x, m_y);
-		NotifyCell(m_cur_cell, Pdp::ESquirrelStep::eIn);
+		NotifyCell(m_cur_cell, ESquirrelStep::eIn);
 	}
 	
 	
@@ -155,30 +155,27 @@ namespace Biology
 				
 				switch (msg_status.MPI_TAG)
 				{
-					case Pdp::EMpiMsgTag::eInfect:
+					case EMpiMsgTag::eInfect:
 					{
-						MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eInfect, m_comm.GetComm(), &msg_status);
-						std::cout << "rank " << m_comm.GetRank() << ": squirrel: received infect message" << std::endl;
-						m_infected = true;
-						m_inf_step = m_cur_step;
+						ReceiveInfectMsg();
 						break;
 					}
-					case Pdp::EMpiMsgTag::eCellStats:
+					case EMpiMsgTag::eCellStats:
 					{
 						
 						break;
 					}
-					case Pdp::EMpiMsgTag::ePoisonPill:
+					case EMpiMsgTag::ePoisonPill:
 					{
 						
-						MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm(), &msg_status);
+						MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::ePoisonPill, m_comm.GetComm(), &msg_status);
 						std::cout << "rank " << m_comm.GetRank() << ": squirrel: poison pill received" << std::endl;
 						m_dead = true;
 						shutdownPool();
 						break;
 					}
-					case Pdp::EMpiMsgTag::ePoolPid:
-					case Pdp::EMpiMsgTag::ePoolCtrl:
+					case EMpiMsgTag::ePoolPid:
+					case EMpiMsgTag::ePoolCtrl:
 					{
 						//  these will be handled by the pool
 						break;
@@ -222,12 +219,12 @@ namespace Biology
 		//  let interested parties know
 		if (new_cell != m_cur_cell)
 		{
-			NotifyCell(m_cur_cell, Pdp::ESquirrelStep::eOut);
-			NotifyCell(new_cell,   Pdp::ESquirrelStep::eIn);
+			NotifyCell(m_cur_cell, ESquirrelStep::eOut);
+			NotifyCell(new_cell,   ESquirrelStep::eIn);
 		}
 		else
 		{
-			NotifyCell(m_cur_cell, Pdp::ESquirrelStep::eWithin);
+			NotifyCell(m_cur_cell, ESquirrelStep::eWithin);
 		}
 
 		m_cur_cell = new_cell;
@@ -244,58 +241,43 @@ namespace Biology
 
 		//  tell coordinator the sad news
 		int birth = -1;
-		MPI_Bsend(&birth, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm());
+		MPI_Bsend(&birth, 1, MPI_INT, 1, EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm());
 
 		std::cout << "rank " << m_comm.GetRank() << ": informed coordinator of squirrel death" << std::endl;
 	}
 
 	
-	void Squirrel::NotifyCell(int cell, Pdp::ESquirrelStep::ESquirrelStep step)
+	void Squirrel::NotifyCell(int cell, ESquirrelStep::ESquirrelStep step)
 	{
 		int sq_data[2];
 		
 		sq_data[0] = step;
 		sq_data[1] = m_infected ? 1 : 0;
 		
-		MPI_Bsend(sq_data, 2, MPI_INT, cell + 2, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm());
+		MPI_Bsend(sq_data, 2, MPI_INT, cell + 2, EMpiMsgTag::eSquirrelStep, m_comm.GetComm());
 	}
 
 	
-//	//////////////////////////////////////////////////////////////////////////////
-//	/// @details    Describe copy construction here.
-//	///
-//	/// @param      rhs  Object to copy.
-//	///
-//	/// @pre        List what must be true before this function is called.
-//	/// @post       List what is guaranteed to be true after this function returns.
-//	///
-//	/// @exception  List exceptions this function may throw here.
-//	///
-//	Squirrel::Squirrel(Squirrel const& rhs)
-//	{
-//		std::cout << __PRETTY_FUNCTION__ << std::endl;
-//
-//		(void) rhs;
-//	}
-//
-//
-//	//////////////////////////////////////////////////////////////////////////////
-//	/// @details    Describe object assignment here.
-//	///
-//	/// @param      rhs  Object on the right-hand side of the assignment statement.
-//	/// @return     Object which has been assigned.
-//	///
-//	/// @pre        List what must be true before this function is called.
-//	/// @post       List what is guaranteed to be true after this function returns.
-//	///
-//	/// @exception  List exceptions this function may throw here.
-//	///
-//	Squirrel& Squirrel::operator=(Squirrel const& rhs)
-//	{
-//		std::cout << __PRETTY_FUNCTION__ << std::endl;
-//
-//		(void) rhs;
-//		return *this;
-//	}
-
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Retrieves and handles an "infect" message from the 
+	///               coordinator early in the simulation.
+	///
+	/// @post         The squirrel is infected.
+	///
+	/// @note         The coordinator uses this to create the initial infected 
+	///               squirrels.  The squirrel might take several steps at the 
+	///               start of the simulation before this message arrives.  This 
+	///               is considered an acceptable innacuracy.
+	///               
+	///
+	void Squirrel::ReceiveInfectMsg()
+	{
+		MPI_Status msg_status;			
+		MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eInfect, m_comm.GetComm(), &msg_status);
+		
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel: received infect message" << std::endl;
+		
+		m_infected = true;
+		m_inf_step = m_cur_step;		
+	}
 }   //  namespace Biology

@@ -38,7 +38,7 @@ namespace Biology
 		///
 		/// @exception  List exceptions this function may throw here.
 		///
-		SimCoordinator::SimCoordinator(Mpi::Communicator const& comm, Pdp::Config const& config)
+		SimCoordinator::SimCoordinator(Mpi::Communicator const& comm, Config const& config)
 			: m_comm(comm)
 			, m_config(config)
 			, m_ticker(config.GetDayLen())
@@ -138,10 +138,10 @@ namespace Biology
 
 					switch (msg_status.MPI_TAG)
 					{
-						case Pdp::EMpiMsgTag::eCellStats:
+						case EMpiMsgTag::eCellStats:
 						{
 							int sq_data[2];
-							MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status);
+							MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status);
 							
 							int pop_inf   = sq_data[0];
 							int inf_level = sq_data[1];
@@ -149,14 +149,14 @@ namespace Biology
 							break;
 						}
 							
-						case Pdp::EMpiMsgTag::eSquirrelBirth:
+						case EMpiMsgTag::eSquirrelBirth:
 						{
 							ReceiveSquirrelBirthMsg();
 							break;							
 						}
 						
-						case Pdp::EMpiMsgTag::ePoolPid:
-						case Pdp::EMpiMsgTag::ePoolCtrl:
+						case EMpiMsgTag::ePoolPid:
+						case EMpiMsgTag::ePoolCtrl:
 						{
 							//  these will be handled by the pool
 							break;;
@@ -198,7 +198,7 @@ namespace Biology
 			for (int i=0; i<m_config.GetIniSqrls(); ++i)
 			{
 				int pid = SpawnSquirrel(0.0, 0.0);
-				MPI_Bsend(NULL, 0, MPI_INT, pid, Pdp::EMpiMsgTag::eInfect, m_comm.GetComm());			
+				MPI_Bsend(NULL, 0, MPI_INT, pid, EMpiMsgTag::eInfect, m_comm.GetComm());			
 			}			
 		}
 	
@@ -212,8 +212,8 @@ namespace Biology
 			//  store process ID in list using cell ID as index
 			m_cell_pids[cell_id] = startWorkerProcess();
 			std::cout << "coordinator: started process for cell " << cell_id << " on rank " << m_cell_pids[cell_id] << std::endl;
-			int task = Pdp::ETask::eCell;
-			MPI_Bsend(&task, 1, MPI_INT, m_cell_pids[cell_id], Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());			
+			int task = ETask::eCell;
+			MPI_Bsend(&task, 1, MPI_INT, m_cell_pids[cell_id], EMpiMsgTag::eAssignTask, m_comm.GetComm());			
 		}
 		
 	
@@ -226,8 +226,8 @@ namespace Biology
 
 			++m_num_sq;
 
-			int task = Pdp::ETask::eSquirrel;
-			MPI_Bsend(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());			
+			int task = ETask::eSquirrel;
+			MPI_Bsend(&task, 1, MPI_INT, pid, EMpiMsgTag::eAssignTask, m_comm.GetComm());			
 			std::cout << "rank " << m_comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
 			
 			return pid;
@@ -240,7 +240,7 @@ namespace Biology
 
 			MPI_Status msg_status;
 			float sq_data[2];
-			MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelBirth, m_comm.GetComm(), &msg_status);
+			MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eSquirrelBirth, m_comm.GetComm(), &msg_status);
 
 			if (m_num_sq >= m_config.GetMaxSqrls())
 			{
@@ -270,7 +270,7 @@ namespace Biology
 				++pid)
 			{
 				//  
-				MPI_Send(NULL, 0, MPI_INT, pid, Pdp::EMpiMsgTag::ePoisonPill, m_comm.GetComm());
+				MPI_Send(NULL, 0, MPI_INT, pid, EMpiMsgTag::ePoisonPill, m_comm.GetComm());
 			}
 		}
 	

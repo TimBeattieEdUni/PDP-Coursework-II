@@ -25,7 +25,7 @@ namespace Mpi
 	class PoolWorker
 	{
 		public:
-			PoolWorker(Communicator const& comm, Pdp::Config const& config);    ///< Constructor.
+			PoolWorker(Communicator const& comm, Biology::Config const& config);    ///< Constructor.
 			~PoolWorker();   ///< Destructor.
 
 			void Run();   ///< Runs the worker process.
@@ -35,7 +35,7 @@ namespace Mpi
 			PoolWorker& operator=(PoolWorker const& rhs);   ///< Assignment operator.
 
 			Communicator const& m_comm;   ///< MPI communcator for the pool.
-			Pdp::Config const& m_config;   ///< App config.
+			Biology::Config const& m_config;   ///< App config.
 
 	};
 

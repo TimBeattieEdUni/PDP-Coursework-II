@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
 {
 	try
 	{
-		Pdp::Config config(argc, argv);
+		Biology::Config config(argc, argv);
 
 		//  buffer for calls to MPI_Bsend()
 		size_t const buf_size = 256 * 1024;

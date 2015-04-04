@@ -36,7 +36,7 @@ namespace Mpi
 	///
 	/// @exception  List exceptions this function may throw here.
 	///
-	PoolMaster::PoolMaster(Communicator const& comm, Pdp::Config const& config)
+	PoolMaster::PoolMaster(Communicator const& comm, Biology::Config const& config)
 		: m_comm(comm)
 		, m_config(config)
 	{
@@ -69,8 +69,8 @@ namespace Mpi
 
 		int pid = startWorkerProcess();
 		std::cout << "started coordinator on rank " << pid << std::endl;
-		int task = Pdp::ETask::eCoordinator;
-		MPI_Send(&task, 1, MPI_INT, pid, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm());
+		int task = Biology::ETask::eCoordinator;
+		MPI_Send(&task, 1, MPI_INT, pid, Biology::EMpiMsgTag::eAssignTask, m_comm.GetComm());
 		
 		while(masterPoll())
 		{

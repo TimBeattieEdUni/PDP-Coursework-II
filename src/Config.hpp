@@ -14,7 +14,7 @@
 #include <cstddef>
 
 
-namespace Pdp
+namespace Biology
 {
 	//////////////////////////////////////////////////////////////////////////////
 	/// @brief      Command-line configuration.
@@ -23,7 +23,7 @@ namespace Pdp
 	{
 		public:
 			Config(int argc, char* argv[]);   ///< Constructor.
-			~Config();							///< Destructor.
+			~Config();						  ///< Destructor.
 		
 			int GetCells()    const { return m_cells; }       ///< Getter.
 			int GetIniSqrls() const { return m_ini_sqrls; }   ///< Getter.
@@ -46,7 +46,7 @@ namespace Pdp
 			double m_day_len;  ///< Length of a simulated day in seconds of wall time.
 	};
 
-}   //  namespace PDP
+}   //  namespace Biology
 
 
 #endif  //  #ndef PDP_CONFIG_HPP

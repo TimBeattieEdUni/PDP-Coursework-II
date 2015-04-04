@@ -41,7 +41,7 @@ namespace Mpi
 	///
 	/// @exception  List exceptions this function may throw here.
 	///
-	PoolWorker::PoolWorker(Communicator const& comm, Pdp::Config const& config)
+	PoolWorker::PoolWorker(Communicator const& comm, Biology::Config const& config)
 		: m_comm(comm)
 		, m_config(config)
 	{
@@ -79,12 +79,12 @@ namespace Mpi
 		{
 			int task = -1;
 			MPI_Status status;
-			MPI_Recv(&task, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eAssignTask, m_comm.GetComm(), &status);
+			MPI_Recv(&task, 1, MPI_INT, MPI_ANY_SOURCE, Biology::EMpiMsgTag::eAssignTask, m_comm.GetComm(), &status);
 			std::cout << "rank " << m_comm.GetRank() << " received assignment message: " << task << std::endl;
 			
 			switch(task)
 			{
-				case Pdp::ETask::eSquirrel:
+				case Biology::ETask::eSquirrel:
 				{
 					Biology::Squirrel squirrel(m_comm);
 					
@@ -98,7 +98,7 @@ namespace Mpi
 					}
 					break;
 				}
-				case Pdp::ETask::eCell:
+				case Biology::ETask::eCell:
 				{
 					Biology::Cell cell(m_comm, m_config);
 					
@@ -114,7 +114,7 @@ namespace Mpi
 					//  cell workers don't return to the pool
 					return;
 				}
-				case Pdp::ETask::eCoordinator:
+				case Biology::ETask::eCoordinator:
 				{
 					Biology::SimCoordinator sim_coord(m_comm, m_config);
 

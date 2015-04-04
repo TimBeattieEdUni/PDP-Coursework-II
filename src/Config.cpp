@@ -17,7 +17,7 @@
 #include <sstream>
 
 
-namespace Pdp
+namespace Biology
 {
 	//////////////////////////////////////////////////////////////////////////////
 	/// @details    Reads configuration from command-line arguments.
@@ -73,4 +73,4 @@ namespace Pdp
 		<< "  daylen=" << m_day_len
 		<< std::endl;
 	}
-}   //  namespace Pdp
+}   //  namespace Biology

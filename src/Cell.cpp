@@ -37,7 +37,7 @@ namespace Biology
 	///
 	/// @exception  List exceptions this function may throw here.
 	///
-	Cell::Cell(Mpi::Communicator const& comm, Pdp::Config const& config)
+	Cell::Cell(Mpi::Communicator const& comm, Config const& config)
 		: m_comm(comm)
 		, m_config(config)
 		, m_ticker(config.GetDayLen())
@@ -131,14 +131,14 @@ namespace Biology
 			{				
 				switch (msg_status.MPI_TAG)
 				{
-					case Pdp::EMpiMsgTag::eSquirrelStep:
+					case EMpiMsgTag::eSquirrelStep:
 					{
 						ReceiveSquirrelStep();
 						break;
 
 					}
-					case Pdp::EMpiMsgTag::ePoolPid:
-					case Pdp::EMpiMsgTag::ePoolCtrl:
+					case EMpiMsgTag::ePoolPid:
+					case EMpiMsgTag::ePoolCtrl:
 					{
 						//  these will be handled by the pool
 						break;
@@ -185,7 +185,7 @@ namespace Biology
 		sq_data[0] = m_sq_steps1  + m_sq_steps2  + m_sq_steps3;
 		sq_data[1] = m_inf_steps1 + m_inf_steps2 + m_inf_steps3;
 		
-		MPI_Bsend(sq_data, 2, MPI_INT, pid, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm());
+		MPI_Bsend(sq_data, 2, MPI_INT, pid, EMpiMsgTag::eCellStats, m_comm.GetComm());
 	}	
 
 	
@@ -195,14 +195,14 @@ namespace Biology
 				
 		int sq_data[2];
 		MPI_Status msg_status;
-		MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eSquirrelStep, m_comm.GetComm(), &msg_status);
+		MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eSquirrelStep, m_comm.GetComm(), &msg_status);
 
 		int step = sq_data[0];
 		bool infected = (bool)sq_data[1];
 		
 		switch(step)
 		{
-			case Pdp::ESquirrelStep::eIn:
+			case ESquirrelStep::eIn:
 			{
 				++m_sq_steps1;
 
@@ -212,11 +212,11 @@ namespace Biology
 				}
 				break;
 			}
-			case Pdp::ESquirrelStep::eOut:
+			case ESquirrelStep::eOut:
 			{
 				break;
 			}
-			case Pdp::ESquirrelStep::eWithin:
+			case ESquirrelStep::eWithin:
 			{
 				++m_sq_steps1;				
 

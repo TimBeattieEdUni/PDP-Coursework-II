@@ -33,7 +33,7 @@ namespace Biology
 	class SimCoordinator
 	{
 		public:
-			SimCoordinator(Mpi::Communicator const& comm, Pdp::Config const& config);    ///< Constructor.
+			SimCoordinator(Mpi::Communicator const& comm, Config const& config);    ///< Constructor.
 			~SimCoordinator();   ///< Destructor.
 
 			bool Update();                          ///< Driver. 
@@ -49,7 +49,7 @@ namespace Biology
 			int SpawnSquirrel(float x, float y);   ///< Gives birth to a squirreal.
 		
 			Mpi::Communicator const& m_comm;   ///< MPI communcator for the pool.
-			Pdp::Config const& m_config;    ///< App config.
+			Config const& m_config;         ///< App config.
 
 			DayTicker m_ticker;             ///< Keeps track of simulation time.
 			std::vector<int> m_cell_pids;   ///< MPI process IDs for landscape cells.

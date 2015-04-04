@@ -25,7 +25,7 @@ namespace Biology
 	class Cell
 	{
 		public:
-			Cell(Mpi::Communicator const& comm, Pdp::Config const& config);    ///< Constructor.
+			Cell(Mpi::Communicator const& comm, Config const& config);    ///< Constructor.
 			~Cell();   ///< Destructor.
 
 			bool Update();   ///< Updates the cell.
@@ -39,7 +39,7 @@ namespace Biology
 			void SendStatistics(int pid);       ///< Sends population and infection stats.
 			
 			Mpi::Communicator const& m_comm;    ///< MPI communcator for the pool.
-			Pdp::Config const& m_config;        ///< App config.
+			Config const& m_config;             ///< App config.
 
 			DayTicker m_ticker;            ///< Keeps track of simulation time.
 			

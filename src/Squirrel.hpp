@@ -38,8 +38,10 @@ namespace Biology
 			void Spawn();               ///< Gives birth to a squirrel.
 			void Step();                ///< Moves this squirrel one step.	
 
+			void ReceiveInfectMsg();    ///< Retrieves and handles an "infect" message.
+		
 			/// Tells a cell we've stepped.
-			void NotifyCell(int cell, Pdp::ESquirrelStep::ESquirrelStep step);
+			void NotifyCell(int cell, ESquirrelStep::ESquirrelStep step);
 
 			int m_last50pop[50];    ///< Cell population influx values from the last 50 steps.
 			int m_last50inf[50];    ///< Cell infection level values from the last 50 steps.

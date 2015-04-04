@@ -32,8 +32,10 @@ namespace Biology
 	/// @note       Very oddly, and completely at random, MPI_Wtime() started always 
 	///             returning the same value: 1.42809e+09.  No idea why, couldn't 
 	///             fix, so modified this to use gettimeofday().  On both MORAR and
-	///             several CPLabs machines.
+	///             several CPLabs machines.  And then it randomly started working
+	///             again.
 	///
+
 	DayTicker::DayTicker(double day_len)
 		: m_start_time(MPI_Wtime())
 //		: m_start_time(MyWtime())
@@ -75,6 +77,7 @@ namespace Biology
 		double dday  = ptime / m_day_len;
 		unsigned int day = (unsigned int)dday;
 		
+		//  watch for MPI_Wtime() returning a large constant value every time; it comes and goes
 		if (day > 100)
 		{
 			std::cout << "weird timing: " << wtime << " " << ptime << " " << dday << " " << day << " " << m_start_time << " " << m_day_len << std::endl;
