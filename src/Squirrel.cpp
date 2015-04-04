@@ -212,7 +212,7 @@ namespace Biology
 					}
 					case EMpiMsgTag::eCellStats:
 					{
-						ReceiveCellStatsMsg();
+//						ReceiveCellStatsMsg();
 						break;
 					}
 					case EMpiMsgTag::ePoisonPill:
@@ -276,6 +276,15 @@ namespace Biology
 	}
 
 	
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Informs the given cell that this squirrel has stepped 
+	///               in/out/within the cell.
+	///
+	/// @param        cell  Cell index.  Note that cells don't have IDs; we just use their rank - 2 to distinguish them.
+	/// @param        step  The type of step - in, out, or within.
+	///
+	/// @post         The cell's population and infection levels have been recorded.
+	///
 	void Squirrel::NotifyCell(int cell, ESquirrelStep::ESquirrelStep step)
 	{
 //		std::cout << "rank " << m_comm.GetRank() << ": squirrel sending step to cell " << cell << std::endl;
@@ -285,7 +294,22 @@ namespace Biology
 		sq_data[0] = step;
 		sq_data[1] = m_infected ? 1 : 0;
 		
-		MPI_Bsend(sq_data, 2, MPI_INT, cell + 2, EMpiMsgTag::eSquirrelStep, m_comm.GetComm());
+		int cell_data[2];
+		
+		//  blocking send+recv call to ensure statistics are accurate before moving on
+		
+		//MPI_Bsend(sq_data, 2, MPI_INT, cell + 2, EMpiMsgTag::eSquirrelStep, m_comm.GetComm());
+		MPI_Status msg_status;			
+		MPI_Sendrecv(sq_data, 2, MPI_INT, cell + 2, EMpiMsgTag::eSquirrelStep, cell_data, 2, MPI_INT, cell + 2, EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status)
+
+		//  update records
+		int cell_pop =  cell_stats[0];
+		int cell_inf = cell_stats[1];
+		
+		m_last50pop[m_last50index] = cell_pop;
+		m_last50inf[m_last50index] = cell_inf;
+		
+		++m_last50index %= num_records;
 	}
 
 	
