@@ -293,6 +293,7 @@ namespace Biology
 		sq_data[0] = step;
 		sq_data[1] = m_infected ? 1 : 0;
 		
+		
 		MPI_Bsend(sq_data, 2, MPI_INT, cell + 2, EMpiMsgTag::eSquirrelStep, m_comm.GetComm());
 	}
 

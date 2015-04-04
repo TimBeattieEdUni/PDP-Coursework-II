@@ -184,7 +184,7 @@ namespace Biology
 		int popInflux = m_sq_steps1  + m_sq_steps2  + m_sq_steps3;
 		int infLevel  = m_inf_steps1 + m_inf_steps2 + m_inf_steps3;
 
-//		std::cout << "rank " << m_comm.GetRank() << ": cell: sending stats to rank " << pid << ": " << popInflux << " " << infLevel << std::endl;
+		std::cout << "rank " << m_comm.GetRank() << ": cell: sending stats to rank " << pid << ": " << popInflux << " " << infLevel << std::endl;
 
 		int cell_stats[2];
 		cell_stats[0] = popInflux;
