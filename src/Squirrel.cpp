@@ -114,11 +114,11 @@ namespace Biology
 			int avg_pop_inf = 0;
 			for (int i = 0; i < num_records; ++i)
 			{
-				avg_pop_inf += m_last50pop;
+				avg_pop_inf += m_last50pop[i];
 			}
 			avg_pop_inf /= num_records;
 			
-			if (willGiveBirth(avg_pop_inf, m_rng_state))
+			if (willGiveBirth(avg_pop_inf, &m_rng_state))
 			{
 				GiveBirth();
 			}			
