@@ -23,7 +23,7 @@ namespace Biology
 	class Squirrel
 	{
 		public:
-			Squirrel(Mpi::Communicator const& comm);    ///< Constructor.
+			Squirrel(Mpi::Communicator const& comm,  Config const& config);   ///< Constructor.
 			~Squirrel();   ///< Destructor.
 
 			bool Update();   ///< Driver.
@@ -38,8 +38,8 @@ namespace Biology
 			void Spawn();               ///< Gives birth to a squirrel.
 			void Step();                ///< Moves this squirrel one step.	
 
-			void ReceiveCellStatsMsg()   ///< Retrieves and handles a "Cell Statistics" message.
-			void ReceiveInfectMsg();     ///< Retrieves and handles an "infect" message.
+			void ReceiveCellStatsMsg();   ///< Retrieves and handles a "Cell Statistics" message.
+			void ReceiveInfectMsg();      ///< Retrieves and handles an "infect" message.
 		
 			/// Tells a cell we've stepped.
 			void NotifyCell(int cell, ESquirrelStep::ESquirrelStep step);
@@ -52,8 +52,8 @@ namespace Biology
 			int m_last50index;               ///< Index into the "last n-many" arrays.
 		
 			Mpi::Communicator const& m_comm;   ///< MPI communcator for the pool.
-			unsigned int update_count;         ///< Number of updates since last.
-
+			Config const& m_config;            ///< App config.
+		
 			long m_rng_state;   ///< Random number generator state (required by biologists' code).
 			
 			float m_x;          ///< X-coordinate of squirrel.

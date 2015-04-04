@@ -38,11 +38,12 @@ namespace Biology
 	///
 	/// @exception  List exceptions this function may throw here.
 	///
-	Squirrel::Squirrel(Mpi::Communicator const& comm)
+	Squirrel::Squirrel(Mpi::Communicator const& comm, Config const& config)
 		: m_last50pop()
 		, m_last50inf()
 		, m_last50index(0)
 		, m_comm(comm)
+		, m_config(config)
 		, m_rng_state(-1 - comm.GetRank())
 		, m_x(0.0)
 		, m_y(0.0)
@@ -135,12 +136,12 @@ namespace Biology
 	///
 	void Squirrel::HandleFirstUpdate()
 	{
-		std::cout << "rank " << m_comm.GetRank() << ": squirrel: first update: cell was " << m_cur_cel << std::endl;
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel: first update: cell was " << m_cur_cell << std::endl;
 		
 		//  start squirrel in a cell
 		m_cur_cell = getCellFromPosition(m_x, m_y);
 
-		std::cout << "rank " << m_comm.GetRank() << ": squirrel: first update: cell is now " << m_cur_cel << std::endl;
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel: first update: cell is now " << m_cur_cell << std::endl;
 
 		NotifyCell(m_cur_cell, ESquirrelStep::eIn);
 	}
@@ -228,7 +229,7 @@ namespace Biology
 		
 		//  let interested parties know
 
-		std::cout << "rank " << m_comm.GetRank() << ": squirrel: step: cur_cell is " << m_cur_cel << "  new_cell is " << new_cell << std::endl;
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel: step: cur_cell is " << m_cur_cell << "  new_cell is " << new_cell << std::endl;
 
 		if (new_cell != m_cur_cell)
 		{
