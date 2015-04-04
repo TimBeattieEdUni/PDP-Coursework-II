@@ -191,7 +191,7 @@ namespace Biology
 	///
 	void SimCoordinator::CreateInitialActors()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+//		std::cout << __PRETTY_FUNCTION__ << std::endl;
 
 		//  start cells
 		std::cout << "coordinator starting " << m_config.GetCells() << " cells" << std::endl;
@@ -216,8 +216,6 @@ namespace Biology
 	
 	void SimCoordinator::SpawnCell()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
-
 		int pid = startWorkerProcess();
 		
 		int task = ETask::eCell;
@@ -279,7 +277,7 @@ namespace Biology
 	///
 	void SimCoordinator::ReceiveSquirrelDeathMsg()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+//		std::cout << __PRETTY_FUNCTION__ << std::endl;
 		
 		int infected;
 		
@@ -305,7 +303,7 @@ namespace Biology
 	///
 	void SimCoordinator::ReceiveIAmInfectedMsg()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+//		std::cout << __PRETTY_FUNCTION__ << std::endl;
 		
 		MPI_Status msg_status;
 		MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eIAmInfected, m_comm.GetComm(), &msg_status);
