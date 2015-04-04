@@ -22,6 +22,33 @@
 \usepackage{listings}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+language=c++,
+aboveskip=3mm,
+belowskip=3mm,
+showstringspaces=false,
+columns=flexible,
+basicstyle={\small\ttfamily},
+numbers=none,
+numberstyle=\tiny\color{gray},
+keywordstyle=\color{blue},
+commentstyle=\color{dkgreen},
+stringstyle=\color{mauve},
+breaklines=false,
+breakatwhitespace=true,   
+tabsize=3
+}
+
+
 % load .eps files created by GnuPlot for epstopdf to convert to .pdf
 \DeclareGraphicsExtensions{.eps}
 
@@ -29,7 +56,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Components.
 \title{Parallel Design Patterns Coursework Part II}
-\author{B063622}
+\author{Exam no. B063622}
 \date{\today}
 
 
@@ -51,18 +78,107 @@
 \pagenumbering{arabic}  % Body of report numbered in Arabic.
 
 \section{Introduction}
-This section is the introduction.
+
+The following report describes the design and implementation of a parallel program which simulates a population of squirrels and the incidence of squirrel parapoxvirus in that population.
+The squirrel population inhabits a landscape which is involved in the spread of the virus, and individual squirrels move within the landscape and contaminate it with the disease if infected.
+
+The program is implemented in C++ using MPI for parallelisation and can be built on the CPLabs machines and submitted to the SGE batch system on MORAR.
+The program's source code is provided as a zipped tar archive which can be unpacked with the following command:
+
+\begin{lstlisting}
+	tar -xvzf B063622-PDP2.tar.gz
+\end{lstlisting}
+
+For instructions on how to build and run the progam, see the file \textbf{README.md} in the archive's top-level directory.
 
 \newpage
 
-\section{Another Section}
-This is another section.
-
-\subsection{A Subsection}
-This is a sub-section.
+\section{Program Design}
+Squirrel stores stats from cell at time it visits, keeps 50 records.
+Each actor is a class driven by calling Update().
+Pool is polling, so actors are too.
+PoolWorker/Master classes just instantiate an actor and kick it regularly.
+Pool classes take care of calling shouldWorkerStop() and workerSleep()
+Messaging approach is fire and forget.
+Cells don't know or care which one they are; independent of grid arrangement so flexible when biologists change their map format.
 
 \newpage
 
+\section{Implementation}
+Header include order minimises dependencies.
+Ideally a communicator for just the actors, but would've had to modify pool.
+Create worker, worker waits for message telling it what type of actor to be.
+Alternative would've been to pass arguments through pool, but using pool as-is.
+Simple RAII classes to init and shutdown MPI, pool, etc.
+Cells start at different times and are out of sync, but this considered ok.
+All procs assume master=0, coord=1, next are cells, then squirrels.
+So cell pid is cell index + 2.
+Coordinator does all births.
+Squirrels request births from coordinator.
+With just 3 days stored, individual variables bumped was fine.
+For 50, used array as circular buffer.
+Squirrels do their first update without notifying as per the handout.
+Cells track days and print popinf and inflvl each week.
+Coord also tracks days and prints total squirrels.
+Coord watches max time and shuts down everything.
+Coord shuts down if max squirrels, but this never happens.  Tested by adding lots of births.  Squirrels requesting this makes it easy.
+
+
+\subsection{Actor Classes}
+Actor classes - driven by Update(), returns true/false for run me again/don't.
+Actors should be driven until Update() returns false.
+Then squirrels can be reused, but cells and coord just exit.
+
+
+\subsection{Days}
+Coordinator and Cell get days from wall clock.
+No need for global sync, but should be no drift.
+Squirrels dayless. 
+
+\subsection{Configuration}
+Number of landscape cells configurable - hard-coded in biology but main() checks for this.
+
+\subsection{Communication}
+Actor pattern not good for synch comms as no coordination.
+Most receives done with MPI\_Iprobe() as could check for new messages and handle, then do other stuff.
+Squirrels directly tell coordinator birth/death/infected for stats.
+Stats not synched between cells - cells could count a squirrel twice, but coordinator stats good.
+Coordinator is always rank 1 - this is assumed by others.
+Squirrels tell cells when they step in/out/within and expect cell to reply with stats.
+Stats may come in in any order, but keeping 50 expected to smooth this out to acceptable accuracy or realism.
+
+\section{Output}
+Would conclude that sim is inaccurate - squirrels don't reproduce very well.
+But starting with a tiny population which are all infected probably isn't realistic.
+
+\section{Problems}
+Found that calling shutdownPool() from one process didn't cause shouldWorkerStop() to return 0 as expected.
+Not clear why, may have misunderstood.
+Intermittently, calling MPI\_Wtime() returned a large constant value - whenever, by whomever, on cplabs and MORAR.
+Squirrels sometimes very active before cells active, so squirrels die before getting any real stats back from cells.
+Tried to make cells start first, then squirrels, and squirrels die first, then cells, and run sendrecv in between for loose synchronisation between cells and squirrels, but failed.
+Squirrels have less to do and there's more of them, so they can fill a big buffer with calls to MPI\_Bsend().
+Had a large buffer - empirically determined to be enough.
+Debugging difficult - much printout, but of course this affects timing.
+Had to think and try to be correct initially rather than throw in some code and try to figure it out later.
+Max squirrels caused everyone to exit, but then a squirrel could give birth and get the process a cell had run on and not get told to shut down.
+Broke decoupling by explicitly making worker exit after Actor done if Actor was coord or cell. (show code)
+Generally found all squirrels die in first week.  May be because they're infected and cells don't get started soon enough to feed squirrels pop influx stats that would make them reproduce.
+However, an experiment with kicking the population to keep it above 40 still had squirrels fading fast a few weeks in after all cells were up and running.
+MORAR - 64 cores max.
+Would be good to have a sync starting point - but how without modifying pool?
+Experimented with sendrecv to make 
+Sendrecv tried for squirrel-cell step/stats exchange as a form of loose coupling, but couldn't get shutdown correct - squirrels left running because cells had exited.
+Tried to ensure squirrels shut down before cells, but unable to target just those workers which were actually running a squirrel.
+
+\section{Performance}
+Polling technique where simple update done then shouldWorkerStop() called may consume lots of cpu.
+Good decoupling of actors from pool though; once PoolWorker/Master implemented, very rarely needed to touch them and could work on actors in isolation.
+
+
+
+\newpage
+\newpage
 \section{Conclusion}
 This is the conclusion.
 
