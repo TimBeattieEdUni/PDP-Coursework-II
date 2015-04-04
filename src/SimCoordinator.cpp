@@ -343,7 +343,7 @@ namespace Biology
 	void SimCoordinator::KillCells()
 	{
 		for (int pid = 2; 
-			 pid < m_comm.GetCells();
+			 pid < m_config.GetCells();
 			 ++pid)
 		{
 			//  blocking synchronous call as a first try
