@@ -95,7 +95,7 @@ namespace Biology
 		}
 
 		//  reproduce if we're lucky
-		if (49 == m_cur_step % 5)
+		if (49 == m_cur_step % 50)
 		{
 			float avg_pop = Average(m_last50pop, num_records);
 			if (willGiveBirth(avg_pop, &m_rng_state))

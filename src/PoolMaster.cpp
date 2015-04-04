@@ -65,8 +65,6 @@ namespace Mpi
 	///
 	void PoolMaster::Run()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
-
 		int pid = startWorkerProcess();
 //		std::cout << "rank " << m_comm.GetRank() << ": started process for coordinator on rank " << pid << std::endl;
 		
