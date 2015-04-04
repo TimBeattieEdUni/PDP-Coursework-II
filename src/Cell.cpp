@@ -43,7 +43,7 @@ namespace Biology
 		, m_ticker(config.GetDayLen())
 		, m_cur_day(0)
 		, m_cur_week(0)
-		, m_num_sq(0)
+//		, m_num_sq(0)
 		, m_sq_steps1(0)
 		, m_sq_steps2(0)
 		, m_sq_steps3(0)
@@ -88,15 +88,17 @@ namespace Biology
 				
 		if (today > m_cur_day)
 		{
-			//  if more than one day has passed, stats for multiple days will be included, but this is acceptable.
 //			std::cout << "rank " << m_comm.GetRank() << ": cell: day " << today << std::endl;
 
-			MPI_Bsend(&m_num_sq, 1, MPI_INT, 1, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm());
+			//  if more than one day has passed, stats for multiple days will be included, but this is acceptable.
 
 			//  print stats at the end of each week
 			int this_week = today / 7;
 			if (this_week > m_cur_week)
 			{
+				//  update the coordinator
+				SendStatistics(1);
+
 				m_cur_week = this_week;
 				
 				std::cout << "rank " << m_comm.GetRank() << ": cell: week " << this_week 
@@ -173,6 +175,20 @@ namespace Biology
 	}
 	
 	
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Calculates population influx and infection level and sends
+	///               them to the given pid.
+	///
+	void Cell::SendStatistics(int pid)
+	{	
+		int sq_data[2];
+		sq_data[0] = m_sq_steps1  + m_sq_steps2  + m_sq_steps3;
+		sq_data[1] = m_inf_steps1 + m_inf_steps2 + m_inf_steps3;
+		
+		MPI_Bsend(sq_data, 2, MPI_INT, pid, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm());
+	}	
+
+	
 	void Cell::ReceiveSquirrelStep()
 	{
 //		std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -184,11 +200,6 @@ namespace Biology
 		int step = sq_data[0];
 		bool infected = (bool)sq_data[1];
 		
-		if (infected)
-		{
-			std::cout << "rank " << m_comm.GetRank() << ": infected squirrel cell step received" << std::endl;
-		}
-
 		switch(step)
 		{
 			case Pdp::ESquirrelStep::eIn:
@@ -198,15 +209,13 @@ namespace Biology
 
 				if (infected)
 				{
-					++m_sq_steps1;
-					std::cout << "rank " << m_comm.GetRank() << ": inf steps in today: " << m_inf_steps1 << std::endl;
+					++m_inf_steps1;
 				}
 				break;
 			}
 			case Pdp::ESquirrelStep::eOut:
 			{
 				--m_num_sq;
-				std::cout << "rank " << m_comm.GetRank() << ": inf steps out today: " << m_inf_steps1 << std::endl;
 				break;
 			}
 			case Pdp::ESquirrelStep::eWithin:
@@ -216,7 +225,6 @@ namespace Biology
 				if (infected)
 				{
 					++m_inf_steps1;
-					std::cout << "rank " << m_comm.GetRank() << ": inf steps within today: " << m_inf_steps1 << std::endl;
 				}
 				break;
 			}

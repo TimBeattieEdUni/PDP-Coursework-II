@@ -140,9 +140,12 @@ namespace Biology
 					{
 						case Pdp::EMpiMsgTag::eCellStats:
 						{
-							int num_sq = 0;
-							MPI_Recv(&num_sq, 1, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status);
-//							std::cout << "cell stats rxd: " << msg_status.MPI_SOURCE << " has " << num_sq << " squirrels" << std::endl;
+							int sq_data[2];
+							MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, Pdp::EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status);
+							
+							int pop_inf   = sq_data[0];
+							int inf_level = sq_data[1];
+							std::cout << "cell " << msg_status.MPI_SOURCE - 2 << ":  populationInflux: " << pop_inf << "  infectionLevel: " << inf_level << std::endl;
 							break;
 						}
 							

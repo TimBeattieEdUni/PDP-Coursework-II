@@ -36,6 +36,7 @@ namespace Biology
 
 			void BumpStatistics();              ///< Bumps daily influx and infection values.
 			void ReceiveSquirrelStep();         ///< Receives a squirrel step event.
+			void SendStatistics(int pid);       ///< Sends population and infection stats.
 			
 			Mpi::Communicator const& m_comm;    ///< MPI communcator for the pool.
 			Pdp::Config const& m_config;        ///< App config.
@@ -44,7 +45,7 @@ namespace Biology
 			
 			unsigned int m_cur_day;        ///< The current day.
 			unsigned int m_cur_week;       ///< The current week.
-			unsigned int m_num_sq;         ///< Number of squirrels in this cell.
+//			unsigned int m_num_sq;         ///< Number of squirrels in this cell.
 		
 			unsigned int m_sq_steps1;      ///< Steps by squirrels in this cell today...
 			unsigned int m_sq_steps2;      ///< ...and yesterday...

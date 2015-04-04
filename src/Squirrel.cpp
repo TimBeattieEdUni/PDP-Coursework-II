@@ -39,7 +39,9 @@ namespace Biology
 	/// @exception  List exceptions this function may throw here.
 	///
 	Squirrel::Squirrel(Mpi::Communicator const& comm)
-		: m_comm(comm)
+		: m_last50pop()
+		, m_last50inf()
+		, m_comm(comm)
 		, m_rng_state(-1 - comm.GetRank())
 		, m_x(0.0)
 		, m_y(0.0)
@@ -159,6 +161,11 @@ namespace Biology
 						std::cout << "rank " << m_comm.GetRank() << ": squirrel: received infect message" << std::endl;
 						m_infected = true;
 						m_inf_step = m_cur_step;
+						break;
+					}
+					case Pdp::EMpiMsgTag::eCellStats:
+					{
+						
 						break;
 					}
 					case Pdp::EMpiMsgTag::ePoisonPill:
