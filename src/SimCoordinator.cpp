@@ -332,7 +332,8 @@ namespace Biology
 			 pid < m_comm.GetSize();
 			 ++pid)
 		{
-			MPI_Send(NULL, 0, MPI_INT, pid, EMpiMsgTag::ePoisonPill, m_comm.GetComm());
+			//  blocking synchronous call so we know the squirrel is inactive
+			MPI_Ssend(NULL, 0, MPI_INT, pid, EMpiMsgTag::ePoisonPill, m_comm.GetComm());
 		}
 	}
 
