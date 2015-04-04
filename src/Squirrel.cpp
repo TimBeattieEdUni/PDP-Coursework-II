@@ -103,7 +103,6 @@ namespace Biology
 			
 			if (willGiveBirth(avg_pop, &m_rng_state))
 			{
-				std::cout << "rank " << m_comm.GetRank() << ": squirrel giving birth" << std::endl;
 				GiveBirth();
 			}			
 		}
@@ -184,14 +183,8 @@ namespace Biology
 
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// @details      
+	/// @details      Retrieves and handles any messages from MPI.
 	///
-//	void Squirrel::HandleFirstUpdate()
-//	{		
-//		NotifyCell(m_cur_cell, ESquirrelStep::eIn);
-//	}
-	
-	
 	void Squirrel::HandleMessages()
 	{
 		//  handle messages by polling
