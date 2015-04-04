@@ -27,6 +27,7 @@ namespace Biology
 		
 			int GetCells()    const { return m_cells; }       ///< Getter.
 			int GetIniSqrls() const { return m_ini_sqrls; }   ///< Getter.
+			int GetIniInf()   const { return m_ini_inf; }     ///< Getter.
 			int GetMaxSqrls() const { return m_max_sqrls; }   ///< Getter.
 			int GetSimLen()   const { return m_sim_len; }     ///< Getter.
 
@@ -40,6 +41,7 @@ namespace Biology
 			
 			int m_cells;       ///< Number of landscape cells.
 			int m_ini_sqrls;   ///< Initial number of squirrels. 
+			int m_ini_inf;     ///< Initial number of infected squirrels.
 			int m_max_sqrls;   ///< Maximum number of squirrels.
 			int m_sim_len;     ///< Maximum length of sim in days.
 			

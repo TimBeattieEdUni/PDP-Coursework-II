@@ -218,7 +218,7 @@ namespace Biology
 			int pid = SpawnSquirrel(0.0, 0.0);
 			
 			//  infect the configured number of squirrels
-			if (i < 4)
+			if (i < m_config.GetiniInf())
 			{
 				MPI_Bsend(NULL, 0, MPI_INT, pid, EMpiMsgTag::eYouAreInfected, m_comm.GetComm());
 			}
@@ -299,7 +299,7 @@ namespace Biology
 		--m_num_sq;
 		if (0 == m_num_sq)
 		{
-			std::cout << "coordinator: no more squirrels; shutting down on day " << m_cur_day << std::endl;
+			std::cout << "coordinator: squirrel population is zero; shutting down on day " << m_cur_day << std::endl;
 
 			m_shutdown = true;
 			shutdownPool();

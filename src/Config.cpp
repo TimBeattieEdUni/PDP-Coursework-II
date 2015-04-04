@@ -34,9 +34,9 @@ namespace Biology
 		, m_sim_len(0)
 		, m_day_len(0.0)
 	{		
-		if (5 > argc)
+		if (7 > argc)
 		{
-			throw std::runtime_error("usage: squirrels <cells> <squirrels> ");
+			throw std::runtime_error("usage: squirrels <cells> <squirrels> <infected> <maxsq> <simdays> <daylen>");
 		}
 		
 		std::stringstream converter;
@@ -45,13 +45,16 @@ namespace Biology
 		          << " " << argv[2] 
 		          << " " << argv[3]
 		          << " " << argv[4]
-				  << " " << argv[5];
+				  << " " << argv[5]
+				  << " " << argv[6];
 		
 		converter >> m_cells 
 		          >> m_ini_sqrls 
+				  >> m_ini_inf
 				  >> m_max_sqrls 
 				  >> m_sim_len
-				  >> m_day_len;		
+				  >> m_day_len;	
+
  	}
 
 
@@ -66,11 +69,14 @@ namespace Biology
 	
 	void Config::Print()
 	{
-		std::cout << "configuration:  cells=" << m_cells
-		<< "  squirrels=" << m_ini_sqrls
-		<< "  maxsq=" << m_max_sqrls
-		<< "  simlen=" << m_sim_len
-		<< "  daylen=" << m_day_len
-		<< std::endl;
+		std::cout << "configuration:  "
+				  << "  cells="     << m_cells
+				  << "  squirrels=" << m_ini_sqrls
+				  << "  infected="  << m_ini_inf
+				  << "  maxsq="     << m_max_sqrls
+				  << "  simlen="    << m_sim_len
+				  << "  daylen="    << m_day_len
+				  << std::endl;
 	}
+	
 }   //  namespace Biology
