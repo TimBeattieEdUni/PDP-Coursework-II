@@ -88,7 +88,7 @@ namespace Biology
 				
 		if (today > m_cur_day)
 		{
-//			std::cout << "rank " << m_comm.GetRank() << ": cell: day " << today << std::endl;
+			std::cout << "rank " << m_comm.GetRank() << ": cell: day " << today << std::endl;
 
 			//  if more than one day has passed, stats for multiple days will be included, but this is acceptable.
 

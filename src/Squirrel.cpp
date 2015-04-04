@@ -230,7 +230,7 @@ namespace Biology
 		
 		//  let interested parties know
 
-		std::cout << "rank " << m_comm.GetRank() << ": squirrel: step: cur_cell is " << m_cur_cell << "  new_cell is " << new_cell << std::endl;
+//		std::cout << "rank " << m_comm.GetRank() << ": squirrel: step: cur_cell is " << m_cur_cell << "  new_cell is " << new_cell << std::endl;
 
 		if (new_cell != m_cur_cell)
 		{
