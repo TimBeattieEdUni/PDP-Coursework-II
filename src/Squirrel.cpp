@@ -299,10 +299,12 @@ namespace Biology
 		//  blocking send+recv call to ensure statistics are accurate before moving on
 		
 		//MPI_Bsend(sq_data, 2, MPI_INT, cell + 2, EMpiMsgTag::eSquirrelStep, m_comm.GetComm());
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel start sendrecv with cell " << cell << std::endl;
 		MPI_Status msg_status;			
 		MPI_Sendrecv(sq_data,    2, MPI_INT, cell + 2, EMpiMsgTag::eSquirrelStep, 
 					 cell_stats, 2, MPI_INT, cell + 2, EMpiMsgTag::eCellStats, 
 					 m_comm.GetComm(), &msg_status);
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel done  sendrecv with cell " << cell << std::endl;
 
 		//  update records
 		int cell_pop = cell_stats[0];
