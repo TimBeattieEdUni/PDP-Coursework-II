@@ -34,7 +34,6 @@ namespace Biology
 			Squirrel& operator=(Squirrel const& rhs);   ///< Assignment operator.
 
 			void GiveBirth();           ///< Gives birth to a squirrel.
-			void Die();                 ///< Kills the squirrel.
 			void HandleFirstUpdate();   ///< Does the first update.      
 			void HandleMessages();      ///< Handles incoming MPI messages.
 			void Step();                ///< Moves this squirrel one step.	

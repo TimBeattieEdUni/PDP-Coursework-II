@@ -246,20 +246,6 @@ namespace Biology
 	}
 
 	
-	//////////////////////////////////////////////////////////////////////////////
-	/// @details      Informs coordinator and current land cell that the squirrel
-	///               is no more.
-	///
-	void Squirrel::Die()
-	{
-		std::cout << "rank " << m_comm.GetRank() << ": informing coordinator of squirrel death" << std::endl;
-
-		MPI_Bsend(NULL, 0, MPI_INT, 1, EMpiMsgTag::eSquirrelDeath, m_comm.GetComm());
-
-		std::cout << "rank " << m_comm.GetRank() << ": informed coordinator of squirrel death" << std::endl;
-	}
-
-	
 	void Squirrel::NotifyCell(int cell, ESquirrelStep::ESquirrelStep step)
 	{
 //		std::cout << "rank " << m_comm.GetRank() << ": squirrel sending step to cell " << cell << std::endl;
@@ -314,7 +300,7 @@ namespace Biology
 		int cell_pop =  cell_stats[0];
 		int cell_inf = cell_stats[1];
 		
-		std::cout << "rank " << m_comm.GetRank() << ": squirrel: cell stats msg rx from rank " << msg_status.MPI_SOURCE << ": " << cell_pop << " " << cell_inf << std::endl;
+//		std::cout << "rank " << m_comm.GetRank() << ": squirrel: cell stats msg rx from rank " << msg_status.MPI_SOURCE << ": " << cell_pop << " " << cell_inf << std::endl;
 
 		m_last50pop[m_last50index] = cell_pop;
 		m_last50inf[m_last50index] = cell_inf;
