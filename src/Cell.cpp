@@ -86,14 +86,12 @@ namespace Biology
 
 		if (! m_running)
 		{
-			std::cout << "rank " << m_comm.GetRank() << ": cell: not running" << std::endl;
 			return false;
 		}
 		
 		//  when the simulation is over, still talk to any stragglers who haven't realised yet.
 		if (m_shutting_down)
 		{
-			std::cout << "rank " << m_comm.GetRank() << ": cell: shutting down" << std::endl;
 			HandleMessages();
 			return true;
 		}

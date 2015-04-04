@@ -272,6 +272,7 @@ namespace Biology
 			std::cout << "coordinator: max squirrels exceeded; shutting down" << std::endl;
 			m_shutdown = true;
 			KillSquirrels();
+			KillCells();
 			shutdownPool();
 			return;
 		}
@@ -329,6 +330,8 @@ namespace Biology
 	///
 	void SimCoordinator::KillSquirrels()
 	{
+		std::cout << "coordinator: killing squirrels " << std::endl;
+
 		for (int pid = 2 + m_config.GetCells(); 
 			 pid < m_comm.GetSize();
 			 ++pid)
@@ -337,17 +340,21 @@ namespace Biology
 			MPI_Ssend(NULL, 0, MPI_INT, pid, EMpiMsgTag::ePoisonPill, m_comm.GetComm());
 		}
 	}
+	
+	
 	//////////////////////////////////////////////////////////////////////////////
 	/// @details      Sends poison pill to all squirrels.
 	///
 	void SimCoordinator::KillCells()
 	{
-		for (int pid = 2; 
-			 pid < m_config.GetCells();
-			 ++pid)
+		std::cout << "coordinator: killing cells " << std::endl;
+
+		for (int cell = 0; 
+			 cell < m_config.GetCells();
+			 ++cell)
 		{
 			//  blocking synchronous call as a first try
-			MPI_Ssend(NULL, 0, MPI_INT, pid, EMpiMsgTag::ePoisonPill, m_comm.GetComm());
+			MPI_Ssend(NULL, 0, MPI_INT, cell + 2, EMpiMsgTag::ePoisonPill, m_comm.GetComm());
 		}
 	}
 	
