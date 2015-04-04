@@ -338,12 +338,14 @@ namespace Biology
 		int cell_pop = cell_stats[0];
 		int cell_inf = cell_stats[1];
 		
-		std::cout << "rank " << m_comm.GetRank() << ": squirrel: rxd cell stats from rank " << msg_status.MPI_SOURCE << ": " << cell_pop << " " << cell_inf << std::endl;
+//		std::cout << "rank " << m_comm.GetRank() << ": squirrel: rxd cell stats from rank " << msg_status.MPI_SOURCE << ": " << cell_pop << " " << cell_inf << std::endl;
 
 		m_last50pop[m_last50index] = cell_pop;
 		m_last50inf[m_last50index] = cell_inf;
 		
 		++m_last50index %= num_records;
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel: next 50 index is " << m_last50index << std::endl;
+		
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
