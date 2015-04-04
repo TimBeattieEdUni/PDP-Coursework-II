@@ -33,6 +33,10 @@ namespace Biology
 			Squirrel(Squirrel const& rhs);              ///< Copy constructor.
 			Squirrel& operator=(Squirrel const& rhs);   ///< Assignment operator.
 
+			float Average(int* values, int count);      ///< Average calculator.
+		
+			void BecomeInfected();      ///< Marks the squirrel as infected.
+			void Die();                 ///< Kills the squirrel.
 			void GiveBirth();           ///< Gives birth to a squirrel.
 			void HandleFirstUpdate();   ///< Does the first update.      
 			void HandleMessages();      ///< Handles incoming MPI messages.

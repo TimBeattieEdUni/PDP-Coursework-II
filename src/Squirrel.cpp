@@ -97,32 +97,32 @@ namespace Biology
 		//  reproduce if we're lucky
 		if (49 == m_cur_step % 5)
 		{
-			int avg_pop_inf = 0;
-			for (int i = 0; i < num_records; ++i)
-			{
-				avg_pop_inf += m_last50pop[i];
-			}
-			avg_pop_inf /= num_records;
-			
-			if (willGiveBirth(avg_pop_inf, &m_rng_state))
+			float avg_pop = Average(m_last50pop, num_records);
+			if (willGiveBirth(avg_pop, &m_rng_state))
 			{
 				GiveBirth();
 			}			
 		}
 		
-		//  progress the disease		
-		if (m_infected)
+		//  progress the disease if we have it...
+		if (m_infected) 
 		{
 			if (m_cur_step - m_inf_step > 50)
 			{
 				if (willDie(&m_rng_state))
 				{
-					std::cout << "rank " << m_comm.GetRank() << ": squirrel dying at step " << m_cur_step << std::endl;
-					m_dead = true;
-					MPI_Bsend(NULL, 0, MPI_INT, 1, EMpiMsgTag::eSquirrelDeath, m_comm.GetComm());
-					
+					Die();
 					return false;
 				}
+			}
+		}
+		//  ...or catch it if we're unlucky
+		else 
+		{
+			float avg_inf = Average(m_last50inf, num_records);
+			if (willCatchDisease(avg_inf, num_records))
+			{
+				BecomeInfected();
 			}
 		}
 		
@@ -137,9 +137,34 @@ namespace Biology
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// @details      Starts a worker process and tells it to be a squirrel.
+	/// @details      Sets the squirrel's infected status, records the step at 
+	///               at which it happened, and informs the coordinator.
 	///
-	/// @param        comm  MPI communicator.
+	void Squirrel::BecomeInfected()
+	{
+		m_infected = true;
+		m_inf_step = m_cur_step;		
+
+		MPI_Bsend(NULL, 0, MPI_INT, 1, EMpiMsgTag::eIAmInfected, m_comm.GetComm());
+	}
+	
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Sets the squirrel's "dead" flag and informs the coordinator.
+	///               Includes the squirrel's infection status so the coordinator
+	///               can keep track.
+	///
+	void Squirrel::Die()
+	{
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel dying at step " << m_cur_step << std::endl;
+		
+		m_dead = true;
+		
+		MPI_Bsend(&m_infected, 1, MPI_INT, 1, EMpiMsgTag::eSquirrelDeath, m_comm.GetComm());
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Asks the coordinator to create a new squirrel.
 	///
 	void Squirrel::GiveBirth()
 	{		
@@ -177,7 +202,7 @@ namespace Biology
 				
 				switch (msg_status.MPI_TAG)
 				{
-					case EMpiMsgTag::eInfect:
+					case EMpiMsgTag::eYouAreInfected:
 					{
 						ReceiveInfectMsg();
 						break;
@@ -227,7 +252,7 @@ namespace Biology
 		int new_cell = getCellFromPosition(m_x, m_y);
 		if ((0 > new_cell) || (m_config.GetCells() <= new_cell))
 		{
-			std::cout << "rank " << m_comm.GetRank() << ": squirrel: error: getCellFromPosition returned " << new_cell << std::endl;			
+			std::cout << "rank " << m_comm.GetRank() << ": squirrel: error: getCellFromPosition() returned " << new_cell << std::endl;			
 		}
 		
 		//  let interested parties know
@@ -275,12 +300,11 @@ namespace Biology
 	void Squirrel::ReceiveInfectMsg()
 	{
 		MPI_Status msg_status;			
-		MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eInfect, m_comm.GetComm(), &msg_status);
+		MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eYouAreInfected, m_comm.GetComm(), &msg_status);
 		
 		std::cout << "rank " << m_comm.GetRank() << ": squirrel: received infect message" << std::endl;
-		
-		m_infected = true;
-		m_inf_step = m_cur_step;		
+
+		BecomeInfected();
 	}
 	
 	
@@ -308,6 +332,24 @@ namespace Biology
 		m_last50inf[m_last50index] = cell_inf;
 		
 		++m_last50index %= num_records;
+	}
+
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Calculates the average of the values in the given array.
+	///
+	/// @param        values  Array of values to average.
+	/// @param        count   Number of values in the array.
+	/// @return       The average value.
+	///
+	float Squirrel::Average(int* values, int count)
+	{
+		int total = 0; 
+		for (int i = 0; i < num_records; ++i)
+		{
+			total += values[i];
+		}
+		
+		return (float)total / (float)count;
 	}
 	
 }   //  namespace Biology

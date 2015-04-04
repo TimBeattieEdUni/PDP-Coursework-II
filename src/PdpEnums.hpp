@@ -25,7 +25,8 @@ namespace Biology
 			eSquirrelBirth,      ///< A squirrel is born.
 			eSquirrelDeath,      ///< A squirrel has died.			
 			eSquirrelStep,       ///< Squirrel step event.
-			eInfect,             ///< Used by coordinator to infect initial squirrels.
+			eYouAreInfected,     ///< Recipient should become infected.
+			eIAmInfected,        ///< Sender has become infected.
 			ePoisonPill,         ///< Tells an actor to exit.
 
 			/// @todo remove this

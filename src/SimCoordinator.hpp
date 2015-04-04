@@ -46,7 +46,8 @@ namespace Biology
 			SimCoordinator(SimCoordinator const& rhs);              ///< Copy constructor.
 			SimCoordinator& operator=(SimCoordinator const& rhs);   ///< Assignment operator.
 			
-			void ReceiveSquirrelBirthMsg();        ///< Receives "squirrel should be born".
+			void ReceiveIAmInfectedMsg();          ///< Receives "I am infected" message.
+			void ReceiveSquirrelBirthMsg();        ///< Receives "squirrel should be born" message.
 			void ReceiveSquirrelDeathMsg();        ///< Receives "squirrel has died" message.
 
 			void KillSquirrels();                  ///< Sends poison pill to all squirrel.
@@ -59,6 +60,7 @@ namespace Biology
 			unsigned int m_cur_day;         ///< The current day.
 			unsigned int m_cur_week;        ///< The current week.
 			unsigned int m_num_sq;          ///< Total number of squirrels in the simulation.
+			unsigned int m_num_infected;    ///< Total infected squirrels in the simulation.
 
 			bool m_shutdown;                ///< Indicates pool is shutting down.
 		

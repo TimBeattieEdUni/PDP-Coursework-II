@@ -45,10 +45,11 @@ namespace Biology
 		, m_cur_day(0)
 		, m_cur_week(0)
 		, m_num_sq(0)
+		, m_num_infected(0)
 		, m_shutdown(false)
 
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+//		std::cout << __PRETTY_FUNCTION__ << std::endl;
 	}
 
 
@@ -64,7 +65,7 @@ namespace Biology
 	///
 	SimCoordinator::~SimCoordinator()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+//		std::cout << __PRETTY_FUNCTION__ << std::endl;
 	}
 
 
@@ -87,7 +88,7 @@ namespace Biology
 		static bool first_time = true;
 		if (first_time)
 		{
-			std::cout << "coordinator: first update" << std::endl;
+//			std::cout << "coordinator: first update" << std::endl;
 			first_time = false;
 			CreateInitialActors();
 			return true;
@@ -97,7 +98,7 @@ namespace Biology
 		unsigned int today = m_ticker.GetDay();
 		if (today > m_cur_day)
 		{
-			std::cout << "coordinator: day " << today << std::endl;
+//			std::cout << "coordinator: day " << today << std::endl;
 			
 			//  shut down sim after configured number of days
 			if (today >= m_config.GetSimLen())
@@ -114,7 +115,7 @@ namespace Biology
 			{
 				m_cur_week = this_week;
 				
-				std::cout << "coordinator: week " << this_week << ": total squirrels: " << m_num_sq << std::endl;
+				std::cout << "coordinator: week " << this_week << ": total squirrels: " << m_num_sq << "  infected: " << m_num_infected << std::endl;
 			}
 
 			m_cur_day = today;
@@ -157,7 +158,12 @@ namespace Biology
 						ReceiveSquirrelDeathMsg();
 						break;							
 					}
-						
+					
+					case eIAmInfected:
+					{
+						ReceiveIAmInfectedMsg();
+						break;
+					}
 					case EMpiMsgTag::ePoolPid:
 					case EMpiMsgTag::ePoolCtrl:
 					{
@@ -201,7 +207,7 @@ namespace Biology
 		for (int i=0; i<m_config.GetIniSqrls(); ++i)
 		{
 			int pid = SpawnSquirrel(0.0, 0.0);
-			MPI_Bsend(NULL, 0, MPI_INT, pid, EMpiMsgTag::eInfect, m_comm.GetComm());			
+			MPI_Bsend(NULL, 0, MPI_INT, pid, EMpiMsgTag::eYouAreInfected, m_comm.GetComm());			
 		}			
 	}
 
@@ -260,52 +266,61 @@ namespace Biology
 
 		SpawnSquirrel(x, y);
 	}
-		
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// @details      Updates the number of squirrels in the simulation.  Detects
-	///               "no more squirrels" and shuts everything down.
+	/// @details      Updates the total squirrels and the total infected squirrels
+	///               in the system.  Detects "no more squirrels" and shuts down 
+	///               the simulation.
 	///
-	/// @param        
-	/// @return       
+	void SimCoordinator::ReceiveSquirrelDeathMsg()
+	{
+		std::cout << __PRETTY_FUNCTION__ << std::endl;
+		
+		int infected;
+		
+		MPI_Status msg_status;
+		MPI_Recv(&infected, 1, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eSquirrelDeath, m_comm.GetComm(), &msg_status);
+		
+		--m_num_sq;
+		if (0 == m_num_sq)
+		{
+			std::cout << "coordinator: no more squirrels; shutting down on day " << m_cur_day << std::endl;
+
+			m_shutdown = true;
+			shutdownPool();
+		}
+		
+		--m_num_infected;
+	}
+
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Retreives an "I am infected" message from a squirrel. 
+	///               Updates the number of infected squirrels in the simulation.
 	///
-	/// @pre          
-	/// @post         
-	///
-	/// @exception    
-	///
-	void SimCoordinator::ReceiveSquirrelDeathMsg()        ///< Receives "squirrel has died" message.
+	void SimCoordinator::ReceiveIAmInfectedMsg()
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 		
 		MPI_Status msg_status;
-		MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eSquirrelDeath, m_comm.GetComm(), &msg_status);
-		--m_num_sq;
-
-		if (0 == m_num_sq)
-		{
-			std::cout << "coordinator: no more squirrels; shutting down" << std::endl;
-
-			m_shutdown = true;
-			shutdownPool();
-		}			
+		MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eIAmInfected, m_comm.GetComm(), &msg_status);
+		++m_num_infected;		
 	}
 
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// @details      Sends poison pill to all squirrels.
 	///
-	/// @note         It's not clear why this is necessary, butthe squirrels carry 
+	/// @note         It's not clear why this is necessary, but the squirrels carry 
 	///               on forever without it.
 	///
 	void SimCoordinator::KillSquirrels()
 	{
 		for (int pid = 2 + m_config.GetCells(); 
 			 pid < m_comm.GetSize();
-			++pid)
+			 ++pid)
 		{
-			//  
 			MPI_Send(NULL, 0, MPI_INT, pid, EMpiMsgTag::ePoisonPill, m_comm.GetComm());
 		}
 	}
