@@ -194,7 +194,7 @@ namespace Biology
 					{
 						//  unrecognised message; fail hard and fast to help diagnosis
 						std::cout << "rank " << m_comm.GetRank() << ": cell: error: msg from rank " << msg_status.MPI_SOURCE << " with unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
-						return false;
+						m_running = false;
 					}
 				}
 			}					
