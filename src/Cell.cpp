@@ -101,10 +101,10 @@ namespace Biology
 
 				m_cur_week = this_week;
 				
-				std::cout << "rank " << m_comm.GetRank() << ": cell: week " << this_week 
-						  << ": pop influx: " << m_sq_steps1 + m_sq_steps2 + m_sq_steps3 
-				          << "  infection level: " << m_inf_steps1 + m_inf_steps2 + m_inf_steps3 
-				          << std::endl;
+//				std::cout << "rank " << m_comm.GetRank() << ": cell: week " << this_week 
+//						  << ": pop influx: " << m_sq_steps1 + m_sq_steps2 + m_sq_steps3 
+//				          << "  infection level: " << m_inf_steps1 + m_inf_steps2 + m_inf_steps3 
+//				          << std::endl;
 			}
 
 			//  ensure all cells stop on the right day (after printing stats for previous day/week)
