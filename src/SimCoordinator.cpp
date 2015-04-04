@@ -168,7 +168,7 @@ namespace Biology
 					default:
 					{
 						//  unrecognised message; fail hard and fast to help diagnosis
-						std::cout << "coordinator: unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
+						std::cout << "coordinator: error: msg from rank " << msg_status.MPI_SOURCE << " with unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
 						return false;
 					}
 				}					
@@ -198,7 +198,7 @@ namespace Biology
 		}
 		
 		//  start initial infected squirrels
-		std::cout << "coordinator starting " << m_config.GetIniSqrls() << " squirrels" << std::endl;
+		std::cout << "coordinator starting " << m_config.GetIniSqrls() << " infected squirrels" << std::endl;
 		for (int i=0; i<m_config.GetIniSqrls(); ++i)
 		{
 			int pid = SpawnSquirrel(0.0, 0.0);

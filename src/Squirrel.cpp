@@ -183,7 +183,7 @@ namespace Biology
 					default:
 					{
 						//  unrecognised message; fail hard and fast to help diagnosis
-						std::cout << "squirrel " << m_comm.GetRank() << ": error: unrecognised message tag: " << msg_status.MPI_TAG << std::endl;
+						std::cout << "rank " << m_comm.GetRank() << ": squirrel: error: msg from rank " << msg_status.MPI_SOURCE << " with unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
 						break;
 					}
 				}					
@@ -215,6 +215,10 @@ namespace Biology
 		
 		//  where are we, and have we moved?
 		int new_cell = getCellFromPosition(m_x, m_y);		
+		if ((0 > new_cell) || (m_config.GetCells() <= new_cell))
+		{
+			std::cout << "rank " << m_comm.GetRank() << ": squirrel: error: getCellFromPosition returned " << new_cell << std::endl;			
+		}
 		
 		//  let interested parties know
 		if (new_cell != m_cur_cell)
@@ -236,7 +240,7 @@ namespace Biology
 	///               is no more.
 	///
 	void Squirrel::Die()
-	{		
+	{
 		std::cout << "rank " << m_comm.GetRank() << ": informing coordinator of squirrel death" << std::endl;
 
 		MPI_Bsend(NULL, 0, MPI_INT, 1, EMpiMsgTag::eSquirrelDeath, m_comm.GetComm());
@@ -247,6 +251,8 @@ namespace Biology
 	
 	void Squirrel::NotifyCell(int cell, ESquirrelStep::ESquirrelStep step)
 	{
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel sending step to cell " << cell << std::endl;
+
 		int sq_data[2];
 		
 		sq_data[0] = step;

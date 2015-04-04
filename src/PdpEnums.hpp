@@ -33,6 +33,7 @@ namespace Biology
 		};
 	}
 	
+	
 	//////////////////////////////////////////////////////////////////////////////
 	/// @brief      Tasks for worker processes.
 	///
@@ -45,6 +46,7 @@ namespace Biology
 			eCell           ///< Worker should be a landscape cell.
 		};
 	}
+	
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// @brief      Squirrels steps relative to landscape cells.

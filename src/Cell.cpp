@@ -110,7 +110,7 @@ namespace Biology
 			//  ensure all cells stop on the right day (after printing stats for previous day/week)
 			if (today >= m_config.GetSimLen())
 			{
-				std::cout << "rank " << m_comm.GetRank() << ": cell: max days reached; exiting " << today << std::endl;
+				std::cout << "rank " << m_comm.GetRank() << ": cell: max days reached; exiting " << std::endl;
 				shutdownPool();
 				return false;
 			}
@@ -146,7 +146,7 @@ namespace Biology
 					default:
 					{
 						//  unrecognised message; fail hard and fast to help diagnosis
-						std::cout << "rank " << m_comm.GetRank() << ": cell: error: unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
+						std::cout << "rank " << m_comm.GetRank() << ": cell: error: msg from rank " << msg_status.MPI_SOURCE << " with unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
 						return false;
 					}
 				}					
