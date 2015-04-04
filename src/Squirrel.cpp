@@ -134,8 +134,13 @@ namespace Biology
 	///
 	void Squirrel::HandleFirstUpdate()
 	{
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel: first update: cell was " << m_cur_cel << std::endl;
+		
 		//  start squirrel in a cell
 		m_cur_cell = getCellFromPosition(m_x, m_y);
+
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel: first update: cell is now " << m_cur_cel << std::endl;
+
 		NotifyCell(m_cur_cell, ESquirrelStep::eIn);
 	}
 	
@@ -221,6 +226,9 @@ namespace Biology
 		}
 		
 		//  let interested parties know
+
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel: step: cur_cell is " << m_cur_cel << "  new_cell is " << new_cell << std::endl;
+
 		if (new_cell != m_cur_cell)
 		{
 			NotifyCell(m_cur_cell, ESquirrelStep::eOut);
