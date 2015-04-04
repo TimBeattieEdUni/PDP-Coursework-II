@@ -47,8 +47,8 @@ namespace Biology
 		, m_rng_state(-1 - comm.GetRank())
 		, m_x(0.0)
 		, m_y(0.0)
-		, m_cur_cell(-1)
-		, m_cur_step(-1)
+		, m_cur_cell(getCellFromPosition(m_x, m_y))
+		, m_cur_step(0)
 		, m_infected(false)
 		, m_inf_step(-1)
 		, m_dead(false)
@@ -86,11 +86,13 @@ namespace Biology
 			HandleFirstUpdate();
 		}
 
+		//  do not rise from the dead (just in case higher-level logic gets it wrong)
 		if (m_dead)
 		{
 			return false;
 		}
 
+		//  progress the disease		
 		if (m_infected)
 		{
 			if (m_cur_step - m_inf_step > 50)
@@ -99,17 +101,35 @@ namespace Biology
 				{
 					std::cout << "rank " << m_comm.GetRank() << ": squirrel dying at step " << m_cur_step << std::endl;
 					m_dead = true;
+					MPI_Bsend(NULL, 0, MPI_INT, 1, EMpiMsgTag::eSquirrelDeath, m_comm.GetComm();
+
 					return false;
 				}
 			}
 		}
 
+		//  reproduce
+		if (49 == m_cur_step % 5)
+		{
+			int avg_pop_inf = 0;
+			for (int i = 0; i < num_records; ++i)
+			{
+				avg_pop_inf += m_last50pop;
+			}
+			avg_pop_inf /= num_records;
+			
+			if (willGiveBirth(avg_pop_inf, m_rng_state))
+			{
+				GiveBirth();
+			}			
+		}
+		
+		//  take a step
 		Step();
 		
+		//  do comms
 		HandleMessages();
 		
-		/// @todo implement dying 
-
 		return true;
 	}
 	
@@ -119,9 +139,9 @@ namespace Biology
 	///
 	/// @param        comm  MPI communicator.
 	///
-	void Squirrel::Spawn()
+	void Squirrel::GiveBirth()
 	{		
-		std::cout << "rank " << m_comm.GetRank() << ": squirrel reproducing at step " << m_cur_step << std::endl;
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel giving birth at step " << m_cur_step << std::endl;
 
 		float sq_data[2];
 		sq_data[0] = m_x;
@@ -132,17 +152,10 @@ namespace Biology
 
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// @details      Informs coordinator of this squirrel's birth.
+	/// @details      
 	///
 	void Squirrel::HandleFirstUpdate()
-	{
-		std::cout << "rank " << m_comm.GetRank() << ": squirrel: first update: cell was " << m_cur_cell << std::endl;
-		
-		//  start squirrel in a cell
-		m_cur_cell = getCellFromPosition(m_x, m_y);
-
-		std::cout << "rank " << m_comm.GetRank() << ": squirrel: first update: cell is now " << m_cur_cell << std::endl;
-
+	{		
 		NotifyCell(m_cur_cell, ESquirrelStep::eIn);
 	}
 	
@@ -207,18 +220,6 @@ namespace Biology
 		//  take a step
 		squirrelStep(m_x, m_y, &m_x, &m_y, &m_rng_state);
 		++m_cur_step;
-
-		//  chance of reproduction every 50 steps
-		if (49 == m_cur_step % 50)
-		{
-			/// @todo implement reproduction probability
-			if (4999 == m_cur_step % 5000)
-			{
-				std::cout << "rank " << m_comm.GetRank() << ": squirrel giving birth at step " << m_cur_step << std::endl;
-				//Spawn();
-			}
-			
-		}
 		
 		//  where are we, and have we moved?
 		int new_cell = getCellFromPosition(m_x, m_y);

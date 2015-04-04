@@ -33,10 +33,10 @@ namespace Biology
 			Squirrel(Squirrel const& rhs);              ///< Copy constructor.
 			Squirrel& operator=(Squirrel const& rhs);   ///< Assignment operator.
 
+			void GiveBirth();           ///< Gives birth to a squirrel.
 			void Die();                 ///< Kills the squirrel.
 			void HandleFirstUpdate();   ///< Does the first update.      
 			void HandleMessages();      ///< Handles incoming MPI messages.
-			void Spawn();               ///< Gives birth to a squirrel.
 			void Step();                ///< Moves this squirrel one step.	
 
 			void ReceiveCellStatsMsg();   ///< Retrieves and handles a "Cell Statistics" message.
