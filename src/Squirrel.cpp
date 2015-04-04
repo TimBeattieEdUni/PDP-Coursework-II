@@ -84,8 +84,8 @@ namespace Biology
 		{
 			first_time = false;
 			squirrelStep(m_x, m_y, &m_x, &m_y, &m_rng_state);
+			++m_cur_step;
 			return true;
-//			HandleFirstUpdate();
 		}
 
 		//  do not rise from the dead (just in case higher-level logic gets it wrong)
@@ -95,9 +95,16 @@ namespace Biology
 		}
 
 		//  reproduce if we're lucky
-		if (49 == m_cur_step % 50)
+		if (0 == m_cur_step % 50)
 		{
 			float avg_pop = Average(m_last50pop, num_records);
+			std::cout << "rank " << m_comm.GetRank() << ": squirrel repro calc at step " << m_cur_step << ":";
+			for (int i=0; i<num_records; ++i)
+			{
+				std::cout << " " << m_last50pop[i];
+			}
+			std::cout << std::endl;
+			
 			if (willGiveBirth(avg_pop, &m_rng_state))
 			{
 				GiveBirth();

@@ -248,7 +248,7 @@ namespace Biology
 	///
 	void SimCoordinator::ReceiveSquirrelBirthMsg()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+//		std::cout << __PRETTY_FUNCTION__ << std::endl;
 
 		MPI_Status msg_status;
 		float sq_data[2];
