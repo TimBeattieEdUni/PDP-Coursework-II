@@ -73,19 +73,19 @@ namespace Mpi
 	///
 	void PoolWorker::Run()
 	{
-		std::cout << "rank " << m_comm.GetRank() << " waiting for assignment message" << std::endl;
+//		std::cout << "rank " << m_comm.GetRank() << " waiting for assignment message" << std::endl;
 		
 		do
 		{
 			int task = -1;
 			MPI_Status status;
 			MPI_Recv(&task, 1, MPI_INT, MPI_ANY_SOURCE, Biology::EMpiMsgTag::eAssignTask, m_comm.GetComm(), &status);
-			std::cout << "rank " << m_comm.GetRank() << " received assignment message: " << task << std::endl;
 			
 			switch(task)
 			{
 				case Biology::ETask::eSquirrel:
 				{
+					std::cout << "rank " << m_comm.GetRank() << " running a squirrel" << std::endl;
 					Biology::Squirrel squirrel(m_comm);
 					
 					bool squirrel_ok = true;
@@ -100,6 +100,8 @@ namespace Mpi
 				}
 				case Biology::ETask::eCell:
 				{
+					std::cout << "rank " << m_comm.GetRank() << " running a cell" << std::endl;
+
 					Biology::Cell cell(m_comm, m_config);
 					
 					bool cell_ok = true;
@@ -116,6 +118,8 @@ namespace Mpi
 				}
 				case Biology::ETask::eCoordinator:
 				{
+					std::cout << "rank " << m_comm.GetRank() << " running a coordinator" << std::endl;
+					
 					Biology::SimCoordinator sim_coord(m_comm, m_config);
 
 					bool coord_ok = true;

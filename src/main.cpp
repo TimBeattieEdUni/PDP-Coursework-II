@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
 			config.Print();
 		}
 
-		std::cout << "rank " << comm.GetRank() << " of " << comm.GetSize() << " started" << std::endl;
+//		std::cout << "rank " << comm.GetRank() << " of " << comm.GetSize() << " started" << std::endl;
 		
 		double start_time = MPI_Wtime();
 

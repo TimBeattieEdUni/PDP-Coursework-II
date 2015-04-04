@@ -163,7 +163,7 @@ namespace Biology
 	///
 	void Cell::BumpStatistics()
 	{
-//		std::cout << "rank " << m_comm.GetRank() << ": bump: " << m_inf_steps1 << " " << m_inf_steps2 << " " << m_inf_steps3 << std::endl;
+		std::cout << "rank " << m_comm.GetRank() << ": bump: " << m_inf_steps1 << " " << m_inf_steps2 << " " << m_inf_steps3 << std::endl;
 
 		m_sq_steps3 = m_sq_steps2;
 		m_sq_steps2 = m_sq_steps1;
@@ -191,7 +191,7 @@ namespace Biology
 	
 	void Cell::ReceiveSquirrelStep()
 	{
-//		std::cout << __PRETTY_FUNCTION__ << std::endl;
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel step: " << m_sq_steps1 << " " << m_inf_steps1 << std::endl;
 				
 		int sq_data[2];
 		MPI_Status msg_status;

@@ -29,327 +29,290 @@ extern "C"
 
 namespace Biology
 {
-		//////////////////////////////////////////////////////////////////////////////
-		/// @details    Describe object initialisation here.
-		///
-		/// @param      config  Simulation configuration.
-		///
-		/// @post       List what is guaranteed to be true after this function returns.
-		///
-		/// @exception  List exceptions this function may throw here.
-		///
-		SimCoordinator::SimCoordinator(Mpi::Communicator const& comm, Config const& config)
-			: m_comm(comm)
-			, m_config(config)
-			, m_ticker(config.GetDayLen())
-			, m_cell_pids(config.GetCells())
-			, m_cur_day(0)
-			, m_cur_week(0)
-			, m_num_sq(0)
-			, m_shutdown(false)
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details    Describe object initialisation here.
+	///
+	/// @param      config  Simulation configuration.
+	///
+	/// @post       List what is guaranteed to be true after this function returns.
+	///
+	/// @exception  List exceptions this function may throw here.
+	///
+	SimCoordinator::SimCoordinator(Mpi::Communicator const& comm, Config const& config)
+		: m_comm(comm)
+		, m_config(config)
+		, m_ticker(config.GetDayLen())
+		, m_cell_pids(config.GetCells())
+		, m_cur_day(0)
+		, m_cur_week(0)
+		, m_num_sq(0)
+		, m_shutdown(false)
 
-		{
-			std::cout << __PRETTY_FUNCTION__ << std::endl;
-		}
-
-
-		//////////////////////////////////////////////////////////////////////////////
-		/// @details    Describe object destruction here.
-		///
-		/// @param      Describe parameters here, one line each.
-		///
-		/// @pre        List what must be true before this function is called.
-		/// @post       List what is guaranteed to be true after this function returns.
-		///
-		/// @exception  None; this is a destructor.
-		///
-		SimCoordinator::~SimCoordinator()
-		{
-			std::cout << __PRETTY_FUNCTION__ << std::endl;
-		}
+	{
+		std::cout << __PRETTY_FUNCTION__ << std::endl;
+	}
 
 
-		//////////////////////////////////////////////////////////////////////////////
-		/// @details    Handles any new messages.  Sends out day ticks. In charge of 
-		///             ending the simulation when appropriate.
-		///
-		/// @return     True if the coordinator wants to keep running; false otherwise.
-		///
-		bool SimCoordinator::Update()
-		{
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details    Describe object destruction here.
+	///
+	/// @param      Describe parameters here, one line each.
+	///
+	/// @pre        List what must be true before this function is called.
+	/// @post       List what is guaranteed to be true after this function returns.
+	///
+	/// @exception  None; this is a destructor.
+	///
+	SimCoordinator::~SimCoordinator()
+	{
+		std::cout << __PRETTY_FUNCTION__ << std::endl;
+	}
+
+
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details    Handles any new messages.  Sends out day ticks. In charge of 
+	///             ending the simulation when appropriate.
+	///
+	/// @return     True if the coordinator wants to keep running; false otherwise.
+	///
+	bool SimCoordinator::Update()
+	{
 //			std::cout << __PRETTY_FUNCTION__ << std::endl;
 
-			if (m_shutdown)
+		if (m_shutdown)
+		{
+			return false;
+		}
+
+		//  do initial setup first time we're called
+		static bool first_time = true;
+		if (first_time)
+		{
+			std::cout << "cordinator: first update" << std::endl;
+			first_time = false;
+			CreateInitialActors();
+			return true;
+		}
+		
+		//  do "new day" events
+		unsigned int today = m_ticker.GetDay();
+		if (today > m_cur_day)
+		{
+			std::cout << "coordinator: day " << today << std::endl;
+			
+			//  shut down sim after configured number of days
+			if (today >= m_config.GetSimLen())
 			{
+				std::cout << "coordinator: sim days complete; shutting down" << std::endl;
+				KillSquirrels();
+				shutdownPool();
 				return false;
 			}
-
-			//  do initial setup first time we're called
-			static bool first_time = true;
-			if (first_time)
-			{
-				std::cout << "cordinator: first update" << std::endl;
-				first_time = false;
-				CreateInitialActors();
-				return true;
-			}
 			
-			//  do "new day" events
-			unsigned int today = m_ticker.GetDay();
-			if (today > m_cur_day)
+			//  print stats at the end of each week
+			int this_week = today / 7;
+			if (this_week > m_cur_week)
 			{
-				std::cout << "coordinator: day " << today << std::endl;
+				m_cur_week = this_week;
 				
-				//  shut down sim after configured number of days
-				if (today >= m_config.GetSimLen())
-				{
-					std::cout << "coordinator: sim days complete; shutting down" << std::endl;
-					KillSquirrels();
-					shutdownPool();
-					return false;
-				}
-				
-				//  print stats at the end of each week
-				int this_week = today / 7;
-				if (this_week > m_cur_week)
-				{
-					m_cur_week = this_week;
-					
-					std::cout << "coordinator: week " << this_week << ": total squirrels: " << m_num_sq << std::endl;
-				}
-
-				m_cur_day = today;
-				return true;
+				std::cout << "coordinator: week " << this_week << ": total squirrels: " << m_num_sq << std::endl;
 			}
 
-
-			//  handle messages by polling
-			int msg_waiting = 0;
-			do
-			{
-				MPI_Status msg_status;			
-				MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, m_comm.GetComm(), &msg_waiting, &msg_status);
-				
-				if(msg_waiting)
-				{
-//					std::cout << "coordinator: message waiting" << std::endl;
-
-					switch (msg_status.MPI_TAG)
-					{
-						case EMpiMsgTag::eCellStats:
-						{
-							int sq_data[2];
-							MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status);
-							
-							int pop_inf   = sq_data[0];
-							int inf_level = sq_data[1];
-							std::cout << "cell " << msg_status.MPI_SOURCE - 2 << ":  populationInflux: " << pop_inf << "  infectionLevel: " << inf_level << std::endl;
-							break;
-						}
-							
-						case EMpiMsgTag::eSquirrelBirth:
-						{
-							ReceiveSquirrelBirthMsg();
-							break;							
-						}
-						
-						case EMpiMsgTag::eSquirrelDeath:
-						{
-							ReceiveSquirrelDeathMsg();
-							break;							
-						}
-							
-						case EMpiMsgTag::ePoolPid:
-						case EMpiMsgTag::ePoolCtrl:
-						{
-							//  these will be handled by the pool
-							break;;
-						}
-						default:
-						{
-							//  unrecognised message; fail hard and fast to help diagnosis
-							std::cout << "coordinator: unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
-							return false;
-						}
-					}					
-				}
-				
-			} while(msg_waiting);
-				
+			m_cur_day = today;
 			return true;
 		}
 
-	
-		//////////////////////////////////////////////////////////////////////////////
-		/// @details    Starts the number of landscape cells and initial squirrels
-		///             given in the config.
-		///
-		void SimCoordinator::CreateInitialActors()
-		{
-			std::cout << __PRETTY_FUNCTION__ << std::endl;
 
-			//  start cells
-			std::cout << "coordinator starting " << m_config.GetCells() << " cells" << std::endl;
-			for (int cell_id = 0; 
-				 cell_id < m_config.GetCells(); 
-				 ++cell_id)
+		//  handle messages by polling
+		int msg_waiting = 0;
+		do
+		{
+			MPI_Status msg_status;			
+			MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, m_comm.GetComm(), &msg_waiting, &msg_status);
+			
+			if(msg_waiting)
 			{
-				SpawnCell(cell_id);
+//					std::cout << "coordinator: message waiting" << std::endl;
+
+				switch (msg_status.MPI_TAG)
+				{
+					case EMpiMsgTag::eCellStats:
+					{
+						int sq_data[2];
+						MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status);
+						
+						int pop_inf   = sq_data[0];
+						int inf_level = sq_data[1];
+						std::cout << "cell " << msg_status.MPI_SOURCE - 2 << ":  populationInflux: " << pop_inf << "  infectionLevel: " << inf_level << std::endl;
+						break;
+					}
+						
+					case EMpiMsgTag::eSquirrelBirth:
+					{
+						ReceiveSquirrelBirthMsg();
+						break;							
+					}
+					
+					case EMpiMsgTag::eSquirrelDeath:
+					{
+						ReceiveSquirrelDeathMsg();
+						break;							
+					}
+						
+					case EMpiMsgTag::ePoolPid:
+					case EMpiMsgTag::ePoolCtrl:
+					{
+						//  these will be handled by the pool
+						break;;
+					}
+					default:
+					{
+						//  unrecognised message; fail hard and fast to help diagnosis
+						std::cout << "coordinator: unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
+						return false;
+					}
+				}					
 			}
 			
-			//  start initial infected squirrels
-			std::cout << "coordinator starting " << m_config.GetIniSqrls() << " squirrels" << std::endl;
-			for (int i=0; i<m_config.GetIniSqrls(); ++i)
-			{
-				int pid = SpawnSquirrel(0.0, 0.0);
-				MPI_Bsend(NULL, 0, MPI_INT, pid, EMpiMsgTag::eInfect, m_comm.GetComm());			
-			}			
-		}
-	
-		
-		void SimCoordinator::SpawnCell(int cell_id)
-		{
-			std::cout << __PRETTY_FUNCTION__ << std::endl;
-
-			/// @todo cell ids aren't needed any more
+		} while(msg_waiting);
 			
-			//  store process ID in list using cell ID as index
-			m_cell_pids[cell_id] = startWorkerProcess();
-			std::cout << "coordinator: started process for cell " << cell_id << " on rank " << m_cell_pids[cell_id] << std::endl;
-			int task = ETask::eCell;
-			MPI_Bsend(&task, 1, MPI_INT, m_cell_pids[cell_id], EMpiMsgTag::eAssignTask, m_comm.GetComm());			
+		return true;
+	}
+
+
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details    Starts the number of landscape cells and initial squirrels
+	///             given in the config.
+	///
+	void SimCoordinator::CreateInitialActors()
+	{
+		std::cout << __PRETTY_FUNCTION__ << std::endl;
+
+		//  start cells
+		std::cout << "coordinator starting " << m_config.GetCells() << " cells" << std::endl;
+		for (int cell_id = 0; 
+			 cell_id < m_config.GetCells(); 
+			 ++cell_id)
+		{
+			SpawnCell(cell_id);
 		}
 		
-	
-		int SimCoordinator::SpawnSquirrel(float x, float y)
+		//  start initial infected squirrels
+		std::cout << "coordinator starting " << m_config.GetIniSqrls() << " squirrels" << std::endl;
+		for (int i=0; i<m_config.GetIniSqrls(); ++i)
 		{
-			std::cout << __PRETTY_FUNCTION__ << std::endl;
+			int pid = SpawnSquirrel(0.0, 0.0);
+			MPI_Bsend(NULL, 0, MPI_INT, pid, EMpiMsgTag::eInfect, m_comm.GetComm());			
+		}			
+	}
 
-			int pid = startWorkerProcess();
-			std::cout << "coordinator: started process for squirrel on rank " << pid << std::endl;
-
-			++m_num_sq;
-
-			int task = ETask::eSquirrel;
-			MPI_Bsend(&task, 1, MPI_INT, pid, EMpiMsgTag::eAssignTask, m_comm.GetComm());			
-			std::cout << "rank " << m_comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
-			
-			return pid;
-		}
 	
+	void SimCoordinator::SpawnCell(int cell_id)
+	{
+		std::cout << __PRETTY_FUNCTION__ << std::endl;
 
-		//////////////////////////////////////////////////////////////////////////////
-		/// @details      Retrieves and handles an "I'm giving birth" message from a
-		///               squirrel.  Coordinator does all births so it can know if 
-		///               max squirrels is exceeded and end the simulation.
-		///
-		void SimCoordinator::ReceiveSquirrelBirthMsg()
-		{
-			std::cout << __PRETTY_FUNCTION__ << std::endl;
-
-			MPI_Status msg_status;
-			float sq_data[2];
-			MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eSquirrelBirth, m_comm.GetComm(), &msg_status);
-
-			if (m_num_sq >= m_config.GetMaxSqrls())
-			{
-				std::cout << "coordinator: max squirrels exceeded; shutting down" << std::endl;
-				m_shutdown = true;
-				KillSquirrels();
-				shutdownPool();
-				return;
-			}
-				
-			float x = sq_data[0];
-			float y = sq_data[1];
-
-			SpawnSquirrel(x, y);
-		}
-			
+		/// @todo cell ids aren't needed any more
 		
+		//  store process ID in list using cell ID as index
+		m_cell_pids[cell_id] = startWorkerProcess();
+		std::cout << "coordinator: started process for cell " << cell_id << " on rank " << m_cell_pids[cell_id] << std::endl;
+		int task = ETask::eCell;
+		MPI_Bsend(&task, 1, MPI_INT, m_cell_pids[cell_id], EMpiMsgTag::eAssignTask, m_comm.GetComm());			
+	}
+	
+
+	int SimCoordinator::SpawnSquirrel(float x, float y)
+	{
+		std::cout << __PRETTY_FUNCTION__ << std::endl;
+
+		int pid = startWorkerProcess();
+		std::cout << "coordinator: started process for squirrel on rank " << pid << std::endl;
+
+		++m_num_sq;
+
+		int task = ETask::eSquirrel;
+		MPI_Bsend(&task, 1, MPI_INT, pid, EMpiMsgTag::eAssignTask, m_comm.GetComm());			
+		std::cout << "rank " << m_comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
 		
-		//////////////////////////////////////////////////////////////////////////////
-		/// @details      Updates the number of squirrels in the simulation.  Detects
-		///               "no more squirrels" and shuts everything down.
-		///
-		/// @param        
-		/// @return       
-		///
-		/// @pre          
-		/// @post         
-		///
-		/// @exception    
-		///
-		void SimCoordinator::ReceiveSquirrelDeathMsg()        ///< Receives "squirrel has died" message.
+		return pid;
+	}
+
+
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Retrieves and handles an "I'm giving birth" message from a
+	///               squirrel.  Coordinator does all births so it can know if 
+	///               max squirrels is exceeded and end the simulation.
+	///
+	void SimCoordinator::ReceiveSquirrelBirthMsg()
+	{
+		std::cout << __PRETTY_FUNCTION__ << std::endl;
+
+		MPI_Status msg_status;
+		float sq_data[2];
+		MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eSquirrelBirth, m_comm.GetComm(), &msg_status);
+
+		if (m_num_sq >= m_config.GetMaxSqrls())
 		{
-			std::cout << __PRETTY_FUNCTION__ << std::endl;
+			std::cout << "coordinator: max squirrels exceeded; shutting down" << std::endl;
+			m_shutdown = true;
+			KillSquirrels();
+			shutdownPool();
+			return;
+		}
 			
-			MPI_Status msg_status;
-			MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eSquirrelDeath, m_comm.GetComm(), &msg_status);
-			--m_num_sq;
+		float x = sq_data[0];
+		float y = sq_data[1];
 
-			if (0 == m_num_sq)
-			{
-				std::cout << "coordinator: no more squirrels; shutting down" << std::endl;
+		SpawnSquirrel(x, y);
+	}
+		
+	
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Updates the number of squirrels in the simulation.  Detects
+	///               "no more squirrels" and shuts everything down.
+	///
+	/// @param        
+	/// @return       
+	///
+	/// @pre          
+	/// @post         
+	///
+	/// @exception    
+	///
+	void SimCoordinator::ReceiveSquirrelDeathMsg()        ///< Receives "squirrel has died" message.
+	{
+		std::cout << __PRETTY_FUNCTION__ << std::endl;
+		
+		MPI_Status msg_status;
+		MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eSquirrelDeath, m_comm.GetComm(), &msg_status);
+		--m_num_sq;
 
-				m_shutdown = true;
-				shutdownPool();
-			}			
-		}
-
-		//////////////////////////////////////////////////////////////////////////////
-		/// @details      Sends poison pill to all squirrels.
-		///
-		/// @note         It's not clear why this is necessary, butthe squirrels carry 
-		///               on forever without it.
-		///
-		void SimCoordinator::KillSquirrels()
+		if (0 == m_num_sq)
 		{
-			for (int pid = 2 + m_config.GetCells(); 
-				 pid < m_comm.GetSize();
-				++pid)
-			{
-				//  
-				MPI_Send(NULL, 0, MPI_INT, pid, EMpiMsgTag::ePoisonPill, m_comm.GetComm());
-			}
+			std::cout << "coordinator: no more squirrels; shutting down" << std::endl;
+
+			m_shutdown = true;
+			shutdownPool();
+		}			
+	}
+
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Sends poison pill to all squirrels.
+	///
+	/// @note         It's not clear why this is necessary, butthe squirrels carry 
+	///               on forever without it.
+	///
+	void SimCoordinator::KillSquirrels()
+	{
+		for (int pid = 2 + m_config.GetCells(); 
+			 pid < m_comm.GetSize();
+			++pid)
+		{
+			//  
+			MPI_Send(NULL, 0, MPI_INT, pid, EMpiMsgTag::ePoisonPill, m_comm.GetComm());
 		}
-	
-	
-//		//////////////////////////////////////////////////////////////////////////////
-//		/// @details    Describe copy construction here.
-//		///
-//		/// @param      rhs  Object to copy.
-//		///
-//		/// @pre        List what must be true before this function is called.
-//		/// @post       List what is guaranteed to be true after this function returns.
-//		///
-//		/// @exception  List exceptions this function may throw here.
-//		///
-//		SimCoordinator::SimCoordinator(SimCoordinator const& rhs)
-//		{
-//			std::cout << __PRETTY_FUNCTION__ << std::endl;
-//
-//			(void) rhs;
-//		}
-//
-//
-//		//////////////////////////////////////////////////////////////////////////////
-//		/// @details    Describe object assignment here.
-//		///
-//		/// @param      rhs  Object on the right-hand side of the assignment statement.
-//		/// @return     Object which has been assigned.
-//		///
-//		/// @pre        List what must be true before this function is called.
-//		/// @post       List what is guaranteed to be true after this function returns.
-//		///
-//		/// @exception  List exceptions this function may throw here.
-//		///
-//		SimCoordinator& SimCoordinator::operator=(SimCoordinator const& rhs)
-//		{
-//			std::cout << __PRETTY_FUNCTION__ << std::endl;
-//
-//			(void) rhs;
-//			return *this;
-//		}
+	}
 
 }   //  namespace Biology
