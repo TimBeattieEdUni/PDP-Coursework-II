@@ -243,6 +243,7 @@ namespace Biology
 		} while(msg_waiting);
 	}
 	
+	
 	//////////////////////////////////////////////////////////////////////////////
 	/// @details      Moves the squirrel one step and updates any cells affected.
 	///
