@@ -50,7 +50,7 @@ namespace Biology
 		, m_inf_steps2(0)
 		, m_inf_steps3(0)
 		, m_shutting_down(false)
-		, m_done(false)
+		, m_running(true)
 		
 	{
 //		std::cout << __PRETTY_FUNCTION__ <<  std::endl;
@@ -84,9 +84,16 @@ namespace Biology
 	{
 //		std::cout << __PRETTY_FUNCTION__ << std::endl;
 
-		if (m_done)
+		if (! m_running)
 		{
 			return false;
+		}
+		
+		//  when the simulation is over, still talk to any stragglers who haven't realised yet.
+		if (m_shutting_down)
+		{
+			HandleMessages();
+			return true;
 		}
 		
 		//  detect new day
@@ -126,49 +133,9 @@ namespace Biology
 			BumpStatistics();
 		}
 		
-		//  handle messages by polling
-		int msg_waiting = 0;
-		do
-		{
-			MPI_Status msg_status;			
-			MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, m_comm.GetComm(), &msg_waiting, &msg_status);
-			
-			if(msg_waiting)
-			{				
-				switch (msg_status.MPI_TAG)
-				{
-					case EMpiMsgTag::eSquirrelStep:
-					{
-						ReceiveSquirrelStep();
-						break;
-
-					}
-					case EMpiMsgTag::ePoisonPill:
-					{
-						std::cout << "rank " << m_comm.GetRank() << ": cell: poison pill received" << std::endl;
-						MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::ePoisonPill, m_comm.GetComm(), &msg_status);
-						m_done = true;
-						shutdownPool();
-						return false;
-					}
-					case EMpiMsgTag::ePoolPid:
-					case EMpiMsgTag::ePoolCtrl:
-					{
-						//  these will be handled by the pool
-						break;
-					}
-					default:
-					{
-						//  unrecognised message; fail hard and fast to help diagnosis
-						std::cout << "rank " << m_comm.GetRank() << ": cell: error: msg from rank " << msg_status.MPI_SOURCE << " with unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
-						return false;
-					}
-				}					
-			}
-			
-		} while(msg_waiting);
-	
-		return true;
+		HandleMessages();
+				
+		return m_running;
 	}
 
 	
@@ -189,6 +156,52 @@ namespace Biology
 	}
 	
 	
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Polls for new MPI messages and passes them to handlers.
+	///
+	void Cell::HandleMessages()
+	{
+		int msg_waiting = 0;
+		do
+		{
+			MPI_Status msg_status;			
+			MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, m_comm.GetComm(), &msg_waiting, &msg_status);
+
+			if(msg_waiting)
+			{				
+				switch (msg_status.MPI_TAG)
+				{
+					case EMpiMsgTag::eSquirrelStep:
+					{
+						ReceiveSquirrelStep();
+						break;
+					}
+					case EMpiMsgTag::ePoisonPill:
+					{
+						std::cout << "rank " << m_comm.GetRank() << ": cell: poison pill received" << std::endl;
+						MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::ePoisonPill, m_comm.GetComm(), &msg_status);
+						m_running = false;
+						shutdownPool();
+						break;
+					}
+					case EMpiMsgTag::ePoolPid:
+					case EMpiMsgTag::ePoolCtrl:
+					{
+						//  these will be handled by the pool
+						break;
+					}
+					default:
+					{
+						//  unrecognised message; fail hard and fast to help diagnosis
+						std::cout << "rank " << m_comm.GetRank() << ": cell: error: msg from rank " << msg_status.MPI_SOURCE << " with unrecognised message tag: " << msg_status.MPI_TAG << "; exiting" << std::endl;
+						return false;
+					}
+				}
+			}					
+		} while(msg_waiting);
+	}
+					
+					
 	//////////////////////////////////////////////////////////////////////////////
 	/// @details      Calculates population influx and infection level and sends
 	///               them to the given pid.

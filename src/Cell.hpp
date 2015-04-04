@@ -35,6 +35,7 @@ namespace Biology
 			Cell& operator=(Cell const& rhs);   ///< Assignment operator.
 
 			void BumpStatistics();              ///< Bumps daily influx and infection values.
+			void HandleMessages();              ///< Handles incoming MPI messages.
 			void ReceiveSquirrelStep();         ///< Receives a squirrel step event.
 			void SendStatistics(int pid);       ///< Sends population and infection stats.
 			
@@ -55,7 +56,7 @@ namespace Biology
 			unsigned int m_inf_steps3;     ///< ...and two days ago.
 		
 			bool m_shutting_down;          ///< Indicates cell should go inactive and wait for poison pill.
-			bool m_done;                   ///< Indicates cell has completely finished.
+			bool m_running;                ///< Used to shut down the cell cleanly.
 	};
 
 }   //  namespace Biology
