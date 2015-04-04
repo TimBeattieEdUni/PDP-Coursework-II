@@ -53,7 +53,7 @@ namespace Biology
 		, m_inf_step(-1)
 		, m_dead(false)
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+//		std::cout << __PRETTY_FUNCTION__ << std::endl;
 
 		//  init random seed as required by biologists' code
 		initialiseRNG(&m_rng_state);
@@ -72,18 +72,20 @@ namespace Biology
 	///
 	Squirrel::~Squirrel()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+//		std::cout << __PRETTY_FUNCTION__ << std::endl;
 	}
 
 
 	bool Squirrel::Update()
 	{
-		//  do initial setup first time we're called
+		//  a squirrel's first step doesn't affect the landscape; take the step and be done
 		static bool first_time = true;
 		if (first_time)
 		{
 			first_time = false;
-			HandleFirstUpdate();
+			squirrelStep(m_x, m_y, &m_x, &m_y, &m_rng_state);
+			return true;
+//			HandleFirstUpdate();
 		}
 
 		//  do not rise from the dead (just in case higher-level logic gets it wrong)
@@ -154,10 +156,10 @@ namespace Biology
 	//////////////////////////////////////////////////////////////////////////////
 	/// @details      
 	///
-	void Squirrel::HandleFirstUpdate()
-	{		
-		NotifyCell(m_cur_cell, ESquirrelStep::eIn);
-	}
+//	void Squirrel::HandleFirstUpdate()
+//	{		
+//		NotifyCell(m_cur_cell, ESquirrelStep::eIn);
+//	}
 	
 	
 	void Squirrel::HandleMessages()
