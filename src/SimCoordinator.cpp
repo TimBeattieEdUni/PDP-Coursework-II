@@ -244,7 +244,7 @@ namespace Biology
 		int task = ETask::eSquirrel;
 		MPI_Bsend(&task, 1, MPI_INT, pid, EMpiMsgTag::eAssignTask, m_comm.GetComm());			
 
-		std::cout << "rank " << m_comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
+//		std::cout << "rank " << m_comm.GetRank() << ": gave birth to squirrel on rank " << pid << std::endl;
 		
 		return pid;
 	}

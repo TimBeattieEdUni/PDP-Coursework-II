@@ -111,7 +111,7 @@ namespace Biology
 		//  progress the disease if we have it...
 		if (m_infected) 
 		{
-			if (m_cur_step - m_inf_step > 50)
+			if (m_cur_step - m_inf_step > 1000)
 			{
 				if (willDie(&m_rng_state))
 				{
