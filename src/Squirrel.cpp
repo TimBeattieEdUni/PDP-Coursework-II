@@ -294,7 +294,7 @@ namespace Biology
 		sq_data[0] = step;
 		sq_data[1] = m_infected ? 1 : 0;
 		
-		int cell_data[2];
+		int cell_stats[2];
 		
 		//  blocking send+recv call to ensure statistics are accurate before moving on
 		
@@ -303,7 +303,7 @@ namespace Biology
 		MPI_Sendrecv(sq_data, 2, MPI_INT, cell + 2, EMpiMsgTag::eSquirrelStep, cell_data, 2, MPI_INT, cell + 2, EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status)
 
 		//  update records
-		int cell_pop =  cell_stats[0];
+		int cell_pop = cell_stats[0];
 		int cell_inf = cell_stats[1];
 		
 		m_last50pop[m_last50index] = cell_pop;
