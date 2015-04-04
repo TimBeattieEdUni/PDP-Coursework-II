@@ -335,10 +335,10 @@ namespace Biology
 		MPI_Status msg_status;			
 		MPI_Recv(cell_stats, 2, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status);
 		
-		int cell_pop =  cell_stats[0];
+		int cell_pop = cell_stats[0];
 		int cell_inf = cell_stats[1];
 		
-//		std::cout << "rank " << m_comm.GetRank() << ": squirrel: cell stats msg rx from rank " << msg_status.MPI_SOURCE << ": " << cell_pop << " " << cell_inf << std::endl;
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel: rxd cell stats from rank " << msg_status.MPI_SOURCE << ": " << cell_pop << " " << cell_inf << std::endl;
 
 		m_last50pop[m_last50index] = cell_pop;
 		m_last50inf[m_last50index] = cell_inf;
