@@ -103,7 +103,7 @@ namespace Biology
 			//  shut down sim after configured number of days
 			if (today >= m_config.GetSimLen())
 			{
-				std::cout << "coordinator: sim days complete; shutting down" << std::endl;
+				std::cout << "coordinator: max days reached; shutting down" << std::endl;
 				KillSquirrels();
 				shutdownPool();
 				return false;

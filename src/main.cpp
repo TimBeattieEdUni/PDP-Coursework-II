@@ -55,6 +55,41 @@ void PrintCmdLine(int argc, char* argv[])
 
 
 //////////////////////////////////////////////////////////////////////////////
+/// @brief      Checks configuration for obvious problems.
+///
+bool IsConfigOk(Biology::Config const& config, Mpi::Communicator const& comm)
+{
+	bool result = true;
+	
+	//  check we have enough PEs
+	int pool_master = 1;
+	int sim_coordinator = 1;
+
+	int pes_required = pool_master + sim_coordinator + config.GetCells() + config.GetMaxSqrls();
+	if (comm.GetSize() < pes_required)
+	{
+		std::cout << "error: not enough PEs for simulation" << std::endl;
+		result = false;
+	}
+
+	//  check squirrels and max squirrels are sane
+	if (config.GetMaxSqrls() < config.GetIniSqrls())
+	{
+		std::cout << "error: not enough PEs for simulation" << std::endl;
+		result = false;
+	}
+
+	if (config.GetCells() != 16)
+	{
+		std::cout << "error: cells must be 16 as this is hard-coded in provided pool code" << std::endl;
+		result = false;
+	}
+	
+	return status;
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
 /// @brief      Program entry point.
 ///
 int main(int argc, char* argv[])
@@ -76,8 +111,13 @@ int main(int argc, char* argv[])
 		if (0 == comm.GetRank())
 		{
 			config.Print();
+			
+			if (! IsConfigOk(config, comm))
+			{
+				std::cout << "bad configuration; exiting" << std::endl;
+			}
 		}
-
+		
 //		std::cout << "rank " << comm.GetRank() << " of " << comm.GetSize() << " started" << std::endl;
 		
 		double start_time = MPI_Wtime();

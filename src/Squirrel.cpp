@@ -95,9 +95,9 @@ namespace Biology
 			{
 				if (willDie(&m_rng_state))
 				{
-//					std::cout << "rank " << m_comm.GetRank() << ": squirrel dying" << std::endl;
-//					m_dead = true;
-//					return false;
+					std::cout << "rank " << m_comm.GetRank() << ": squirrel dying" << std::endl;
+					m_dead = true;
+					return false;
 				}
 			}
 		}
