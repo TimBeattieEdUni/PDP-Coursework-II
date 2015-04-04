@@ -95,7 +95,7 @@ namespace Biology
 			{
 				if (willDie(&m_rng_state))
 				{
-					std::cout << "rank " << m_comm.GetRank() << ": squirrel dying" << std::endl;
+					std::cout << "rank " << m_comm.GetRank() << ": squirrel dying at step " << m_cur_step << std::endl;
 					m_dead = true;
 					return false;
 				}
@@ -119,7 +119,7 @@ namespace Biology
 	///
 	void Squirrel::Spawn()
 	{		
-		std::cout << "rank " << m_comm.GetRank() << ": squirrel reproducing" << std::endl;
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel reproducing at step " << m_cur_step << std::endl;
 
 		float sq_data[2];
 		sq_data[0] = m_x;
@@ -212,14 +212,14 @@ namespace Biology
 			/// @todo implement reproduction probability
 			if (0 == m_cur_step % 5000)
 			{
-				std::cout << "rank " << m_comm.GetRank() << ": squirrel giving birth" << std::endl;
+				std::cout << "rank " << m_comm.GetRank() << ": squirrel giving birth a step " << m_cur_step << std::endl;
 				//Spawn();
 			}
 			
 		}
 		
 		//  where are we, and have we moved?
-		int new_cell = getCellFromPosition(m_x, m_y);		
+		int new_cell = getCellFromPosition(m_x, m_y);
 		if ((0 > new_cell) || (m_config.GetCells() <= new_cell))
 		{
 			std::cout << "rank " << m_comm.GetRank() << ": squirrel: error: getCellFromPosition returned " << new_cell << std::endl;			
