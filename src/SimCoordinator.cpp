@@ -228,7 +228,10 @@ namespace Biology
 		int pid = startWorkerProcess();
 		
 		int task = ETask::eCell;
-		MPI_Bsend(&task, 1, MPI_INT, pid, EMpiMsgTag::eAssignTask, m_comm.GetComm());			
+
+		//  blocking async send to make sure cells are all started first
+		MPI_Ssend(&task, 1, MPI_INT, pid, EMpiMsgTag::eAssignTask, m_comm.GetComm());
+//		MPI_Bsend(&task, 1, MPI_INT, pid, EMpiMsgTag::eAssignTask, m_comm.GetComm());			
 
 //		std::cout << "coordinator: started cell on rank " << pid << std::endl;
 }
