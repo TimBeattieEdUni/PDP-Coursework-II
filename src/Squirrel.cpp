@@ -92,23 +92,7 @@ namespace Biology
 			return false;
 		}
 
-		//  progress the disease		
-		if (m_infected)
-		{
-			if (m_cur_step - m_inf_step > 50)
-			{
-				if (willDie(&m_rng_state))
-				{
-					std::cout << "rank " << m_comm.GetRank() << ": squirrel dying at step " << m_cur_step << std::endl;
-					m_dead = true;
-					MPI_Bsend(NULL, 0, MPI_INT, 1, EMpiMsgTag::eSquirrelDeath, m_comm.GetComm());
-
-					return false;
-				}
-			}
-		}
-
-		//  reproduce
+		//  reproduce if we're lucky
 		if (49 == m_cur_step % 5)
 		{
 			int avg_pop_inf = 0;
@@ -122,6 +106,22 @@ namespace Biology
 			{
 				GiveBirth();
 			}			
+		}
+		
+		//  progress the disease		
+		if (m_infected)
+		{
+			if (m_cur_step - m_inf_step > 50)
+			{
+				if (willDie(&m_rng_state))
+				{
+					std::cout << "rank " << m_comm.GetRank() << ": squirrel dying at step " << m_cur_step << std::endl;
+					m_dead = true;
+					MPI_Bsend(NULL, 0, MPI_INT, 1, EMpiMsgTag::eSquirrelDeath, m_comm.GetComm());
+					
+					return false;
+				}
+			}
 		}
 		
 		//  take a step

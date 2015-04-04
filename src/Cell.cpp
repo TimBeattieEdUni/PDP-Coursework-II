@@ -52,7 +52,7 @@ namespace Biology
 		, m_inf_steps3(0)
 		
 	{
-		std::cout << __PRETTY_FUNCTION__ <<  std::endl;
+//		std::cout << __PRETTY_FUNCTION__ <<  std::endl;
 	}
 
 
@@ -68,7 +68,7 @@ namespace Biology
 	///
 	Cell::~Cell()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+//		std::cout << __PRETTY_FUNCTION__ << std::endl;
 	}
 
 

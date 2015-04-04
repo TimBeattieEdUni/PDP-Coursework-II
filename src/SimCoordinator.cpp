@@ -42,7 +42,6 @@ namespace Biology
 		: m_comm(comm)
 		, m_config(config)
 		, m_ticker(config.GetDayLen())
-		, m_cell_pids(config.GetCells())
 		, m_cur_day(0)
 		, m_cur_week(0)
 		, m_num_sq(0)
@@ -211,22 +210,17 @@ namespace Biology
 	{
 		std::cout << __PRETTY_FUNCTION__ << std::endl;
 
-		/// @todo cell ids aren't needed any more
+		int pid = startWorkerProcess();
+		std::cout << "coordinator: started process for cell " << cell_id << " on rank " << pid << std::endl;
 		
-		//  store process ID in list using cell ID as index
-		m_cell_pids[cell_id] = startWorkerProcess();
-		std::cout << "coordinator: started process for cell " << cell_id << " on rank " << m_cell_pids[cell_id] << std::endl;
 		int task = ETask::eCell;
-		MPI_Bsend(&task, 1, MPI_INT, m_cell_pids[cell_id], EMpiMsgTag::eAssignTask, m_comm.GetComm());			
+		MPI_Bsend(&task, 1, MPI_INT, pid, EMpiMsgTag::eAssignTask, m_comm.GetComm());			
 	}
 	
 
 	int SimCoordinator::SpawnSquirrel(float x, float y)
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
-
 		int pid = startWorkerProcess();
-		std::cout << "coordinator: started process for squirrel on rank " << pid << std::endl;
 
 		++m_num_sq;
 

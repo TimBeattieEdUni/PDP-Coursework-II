@@ -56,7 +56,6 @@ namespace Biology
 			Config const& m_config;            ///< App config.
 
 			DayTicker m_ticker;             ///< Keeps track of simulation time.
-			std::vector<int> m_cell_pids;   ///< MPI process IDs for landscape cells.
 			unsigned int m_cur_day;         ///< The current day.
 			unsigned int m_cur_week;        ///< The current week.
 			unsigned int m_num_sq;          ///< Total number of squirrels in the simulation.
