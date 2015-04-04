@@ -82,7 +82,7 @@ tabsize=3
 The following report describes the design and implementation of a parallel program which simulates a population of squirrels and the incidence of squirrel parapoxvirus in that population.
 The squirrel population inhabits a landscape which is involved in the spread of the virus, and individual squirrels move within the landscape and contaminate it with the disease if infected.
 
-The program is implemented in C++ using MPI for parallelisation and can be built on the CPLabs machines and submitted to the SGE batch system on MORAR.
+The program is implemented in C++ using MPI for parallelisation and can be built on the CPLabs machines and via the SGE batch system on MORAR.
 The program's source code is provided as a zipped tar archive which can be unpacked with the following command:
 
 \begin{lstlisting}
@@ -105,6 +105,32 @@ Cells don't know or care which one they are; independent of grid arrangement so 
 \newpage
 
 \section{Implementation}
+The program was implemented as a set of C++ classes which fell roughly into three categories: those which handled with the process pool, those which implemented the actors, and those which handled miscellaneous tasks like reading the program's configuration options from the command line (class {\em Config}) and calculating the simulation's current day and week from wall clock times obtained from the system (class {\em DayTicker}).
+
+The classes were organised in two namespaces: namespace {\em Mpi} and namespace {\em Biology}.
+The former included all classes which dealt with the MPI-based process pool, and the latter contained classes which were specific to the squirrel simulation.
+Code which was provided to the developer in C source files was used without modification.
+
+Class Mpi::Mpi was a simple Resource Acquisition is Initialisation (RAII) \cite{ref:Stroustrup} class which initialised the MPI environment in its constructor and terminated the environment in its destructor.
+This ensured that the required call to MPI\_Finalize() would take place even in the case of an exception being thrown.  
+
+Class {\em MPI::Communicator} was a simple class which retrieved the MPI communicator size and rank of the process and made them available to user code without having to make a separate function call to write the values to a variable.  
+
+\subsection{Actor Classes}
+Classes {\em Biology::Squirrel}, {\em Biology::Cell}, and {\em Biology::Coordinator} represented the pattern's actors.
+Each had a simple interface: client code could run an actor by instantiating an object of the desired type and then calling the actor's {\em Update()} function until that function returned false to indicate the actor's work was done.  
+This method of driving the actors was prompted by the polling interface in the provided process pool code; the decision was made to work in the same manner as the provided code rather than mix approaches.
+
+In between calls to {\em Update()} the client code could perform any other tasks necessary to manage the program.
+In the case of class {\em PoolWorker} this work consisted of calling {\em shouldWorkerStop()} to poll the process pool to see if the pool was shutting down.
+
+\subsection{Actor Classes}
+Actor classes - driven by Update(), returns true/false for run me again/don't.
+Actors should be driven until Update() returns false.
+Then squirrels can be reused, but cells and coord just exit.
+
+
+
 Header include order minimises dependencies.
 Ideally a communicator for just the actors, but would've had to modify pool.
 Create worker, worker waits for message telling it what type of actor to be.
@@ -122,13 +148,6 @@ Cells track days and print popinf and inflvl each week.
 Coord also tracks days and prints total squirrels.
 Coord watches max time and shuts down everything.
 Coord shuts down if max squirrels, but this never happens.  Tested by adding lots of births.  Squirrels requesting this makes it easy.
-
-
-\subsection{Actor Classes}
-Actor classes - driven by Update(), returns true/false for run me again/don't.
-Actors should be driven until Update() returns false.
-Then squirrels can be reused, but cells and coord just exit.
-
 
 \subsection{Days}
 Coordinator and Cell get days from wall clock.
@@ -181,5 +200,13 @@ Good decoupling of actors from pool though; once PoolWorker/Master implemented, 
 \newpage
 \section{Conclusion}
 This is the conclusion.
+
+\newpage
+
+\begin{thebibliography}{10}
+
+\bibitem{ref:Stroustrup} B.Stroustrup [Online] Available: http://www.stroustrup.com/bs\_faq2.html\#finally. [Accessed 02-04-2015]
+
+\end{thebibliography}
 
 \end{document}
