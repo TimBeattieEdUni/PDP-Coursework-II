@@ -32,7 +32,7 @@ MF    := Makefile
 
 
 ##############################################################################
-# C++ compiler and flags.
+# Compilers and flags.
 CC     := mpicc
 CXX    := mpicxx
 
