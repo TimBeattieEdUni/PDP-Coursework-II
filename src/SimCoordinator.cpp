@@ -101,7 +101,7 @@ namespace Biology
 //			std::cout << "coordinator: day " << today << std::endl;
 			
 			/// @todo remove this - artificially maintaining the number of squirrels
-			if (m_num_sq < 30)
+			if (m_num_sq < 40)
 			{
 				for (int i = m_num_sq; i < 30; ++i)
 				{

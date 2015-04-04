@@ -98,12 +98,6 @@ namespace Biology
 		if (0 == m_cur_step % 50)
 		{
 			float avg_pop = Average(m_last50pop, num_records);
-			std::cout << "rank " << m_comm.GetRank() << ": squirrel repro calc at step " << m_cur_step << ":";
-			for (int i=0; i<num_records; ++i)
-			{
-				std::cout << " " << m_last50pop[i];
-			}
-			std::cout << std::endl;
 			
 			if (willGiveBirth(avg_pop, &m_rng_state))
 			{
