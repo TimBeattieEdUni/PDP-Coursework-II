@@ -78,6 +78,8 @@ namespace Biology
 
 	bool Squirrel::Update()
 	{
+		usleep(10000);
+		
 		//  a squirrel's first step doesn't affect the landscape; take the step and be done
 		static bool first_time = true;
 		if (first_time)
