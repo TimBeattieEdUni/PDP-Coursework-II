@@ -204,7 +204,6 @@ namespace Biology
 		{
 			case Pdp::ESquirrelStep::eIn:
 			{
-				++m_num_sq;
 				++m_sq_steps1;
 
 				if (infected)
@@ -215,7 +214,6 @@ namespace Biology
 			}
 			case Pdp::ESquirrelStep::eOut:
 			{
-				--m_num_sq;
 				break;
 			}
 			case Pdp::ESquirrelStep::eWithin:
