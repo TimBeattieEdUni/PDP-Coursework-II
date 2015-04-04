@@ -41,6 +41,7 @@ namespace Biology
 	Squirrel::Squirrel(Mpi::Communicator const& comm)
 		: m_last50pop()
 		, m_last50inf()
+		, m_last50index(0)
 		, m_comm(comm)
 		, m_rng_state(-1 - comm.GetRank())
 		, m_x(0.0)
@@ -167,7 +168,7 @@ namespace Biology
 					}
 					case EMpiMsgTag::eCellStats:
 					{
-						
+						ReceiveCellStatsMsg();
 						break;
 					}
 					case EMpiMsgTag::ePoisonPill:
@@ -207,12 +208,12 @@ namespace Biology
 		++m_cur_step;
 
 		//  chance of reproduction every 50 steps
-		if (0 == m_cur_step % 50)
+		if (49 == m_cur_step % 50)
 		{
 			/// @todo implement reproduction probability
-			if (0 == m_cur_step % 5000)
+			if (4999 == m_cur_step % 5000)
 			{
-				std::cout << "rank " << m_comm.GetRank() << ": squirrel giving birth a step " << m_cur_step << std::endl;
+				std::cout << "rank " << m_comm.GetRank() << ": squirrel giving birth at step " << m_cur_step << std::endl;
 				//Spawn();
 			}
 			
@@ -280,7 +281,6 @@ namespace Biology
 	///               squirrels.  The squirrel might take several steps at the 
 	///               start of the simulation before this message arrives.  This 
 	///               is considered an acceptable innacuracy.
-	///               
 	///
 	void Squirrel::ReceiveInfectMsg()
 	{
@@ -292,4 +292,32 @@ namespace Biology
 		m_infected = true;
 		m_inf_step = m_cur_step;		
 	}
+	
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// @details      Retrieves and handles a "Cell Statitics" message from a 
+	///               cell.  Squirrels keep stats on the last 50 cells they visit 
+	///               in circular buffers.
+	///
+	/// @note         These messages may come in in any order; it's assumed that 
+	///               having 50 of them will smooth this out to an acceptable
+	///               accuracy.
+	///
+	void Squirrel::ReceiveCellStatsMsg()
+	{
+		int cell_stats[2];
+		MPI_Status msg_status;			
+		MPI_Recv(cell_stats, 2, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eCellStats, m_comm.GetComm(), &msg_status);
+		
+		int cell_pop =  cell_stats[0];
+		int cell_inf = cell_stats[1];
+		
+		std::cout << "rank " << m_comm.GetRank() << ": squirrel: cell stats msg rx from rank " << msg_status.MPI_SOURCE << ": " << cell_pop << " " << cell_inf << std::endl;
+
+		m_last50pop[m_last50index] = cell_pop;
+		m_last50inf[m_last50index] = cell_inf;
+		
+		++m_last50index %= num_records;
+	}
+	
 }   //  namespace Biology

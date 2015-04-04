@@ -181,11 +181,11 @@ namespace Biology
 	///
 	void Cell::SendStatistics(int pid)
 	{	
-		int sq_data[2];
-		sq_data[0] = m_sq_steps1  + m_sq_steps2  + m_sq_steps3;
-		sq_data[1] = m_inf_steps1 + m_inf_steps2 + m_inf_steps3;
+		int cell_stats[2];
+		cell_stats[0] = m_sq_steps1  + m_sq_steps2  + m_sq_steps3;
+		cell_stats[1] = m_inf_steps1 + m_inf_steps2 + m_inf_steps3;
 		
-		MPI_Bsend(sq_data, 2, MPI_INT, pid, EMpiMsgTag::eCellStats, m_comm.GetComm());
+		MPI_Bsend(cell_stats, 2, MPI_INT, pid, EMpiMsgTag::eCellStats, m_comm.GetComm());
 	}	
 
 	
@@ -201,6 +201,10 @@ namespace Biology
 		MPI_Status msg_status;
 		MPI_Recv(sq_data, 2, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eSquirrelStep, m_comm.GetComm(), &msg_status);
 
+		//  send current state of cell stats back to squirrel
+		SendStatistics(msg_status.MPI_SOURCE);
+		
+		//  update cell stats
 		int step = sq_data[0];
 		bool infected = (bool)sq_data[1];
 		

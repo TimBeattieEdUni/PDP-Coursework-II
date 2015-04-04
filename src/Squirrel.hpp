@@ -38,16 +38,21 @@ namespace Biology
 			void Spawn();               ///< Gives birth to a squirrel.
 			void Step();                ///< Moves this squirrel one step.	
 
-			void ReceiveInfectMsg();    ///< Retrieves and handles an "infect" message.
+			void ReceiveCellStatsMsg()   ///< Retrieves and handles a "Cell Statistics" message.
+			void ReceiveInfectMsg();     ///< Retrieves and handles an "infect" message.
 		
 			/// Tells a cell we've stepped.
 			void NotifyCell(int cell, ESquirrelStep::ESquirrelStep step);
 
-			int m_last50pop[50];    ///< Cell population influx values from the last 50 steps.
-			int m_last50inf[50];    ///< Cell infection level values from the last 50 steps.
-			
-			Mpi::Communicator const& m_comm;    ///< MPI communcator for the pool.
-			unsigned int update_count;          ///< Number of updates since last.
+			/// Squrrel biths and deaths are affected by this many recently-visited cells.
+			static int const num_records = 50;
+		
+			int m_last50pop[num_records];    ///< Cell population influx values from the last 50 steps.
+			int m_last50inf[num_records];    ///< Cell infection level values from the last 50 steps.
+			int m_last50index;               ///< Index into the "last n-many" arrays.
+		
+			Mpi::Communicator const& m_comm;   ///< MPI communcator for the pool.
+			unsigned int update_count;         ///< Number of updates since last.
 
 			long m_rng_state;   ///< Random number generator state (required by biologists' code).
 			

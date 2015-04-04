@@ -88,7 +88,7 @@ namespace Biology
 		static bool first_time = true;
 		if (first_time)
 		{
-			std::cout << "cordinator: first update" << std::endl;
+			std::cout << "coordinator: first update" << std::endl;
 			first_time = false;
 			CreateInitialActors();
 			return true;
