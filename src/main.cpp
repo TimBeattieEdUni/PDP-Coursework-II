@@ -85,7 +85,7 @@ bool IsConfigOk(Biology::Config const& config, Mpi::Communicator const& comm)
 		result = false;
 	}
 	
-	return status;
+	return result;
 }
 
 
