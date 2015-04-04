@@ -120,7 +120,7 @@ namespace Biology
 		else 
 		{
 			float avg_inf = Average(m_last50inf, num_records);
-			if (willCatchDisease(avg_inf, num_records))
+			if (willCatchDisease(avg_inf, &m_rng_state))
 			{
 				BecomeInfected();
 			}

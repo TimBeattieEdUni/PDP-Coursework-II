@@ -159,7 +159,7 @@ namespace Biology
 						break;							
 					}
 					
-					case eIAmInfected:
+					case EMpiMsgTag::eIAmInfected:
 					{
 						ReceiveIAmInfectedMsg();
 						break;
