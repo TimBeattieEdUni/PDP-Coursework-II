@@ -101,7 +101,7 @@ namespace Biology
 				{
 					std::cout << "rank " << m_comm.GetRank() << ": squirrel dying at step " << m_cur_step << std::endl;
 					m_dead = true;
-					MPI_Bsend(NULL, 0, MPI_INT, 1, EMpiMsgTag::eSquirrelDeath, m_comm.GetComm();
+					MPI_Bsend(NULL, 0, MPI_INT, 1, EMpiMsgTag::eSquirrelDeath, m_comm.GetComm());
 
 					return false;
 				}
