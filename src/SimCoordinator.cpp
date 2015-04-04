@@ -84,8 +84,6 @@ namespace Biology
 				return false;
 			}
 
-//			usleep(250000);
-
 			//  do initial setup first time we're called
 			static bool first_time = true;
 			if (first_time)
@@ -155,6 +153,12 @@ namespace Biology
 							break;							
 						}
 						
+						case EMpiMsgTag::eSquirrelDeath:
+						{
+							ReceiveSquirrelDeathMsg();
+							break;							
+						}
+							
 						case EMpiMsgTag::ePoolPid:
 						case EMpiMsgTag::ePoolCtrl:
 						{
@@ -234,6 +238,11 @@ namespace Biology
 		}
 	
 
+		//////////////////////////////////////////////////////////////////////////////
+		/// @details      Retrieves and handles an "I'm giving birth" message from a
+		///               squirrel.  Coordinator does all births so it can know if 
+		///               max squirrels is exceeded and end the simulation.
+		///
 		void SimCoordinator::ReceiveSquirrelBirthMsg()
 		{
 			std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -256,7 +265,38 @@ namespace Biology
 
 			SpawnSquirrel(x, y);
 		}
-				
+			
+		
+		
+		//////////////////////////////////////////////////////////////////////////////
+		/// @details      Updates the number of squirrels in the simulation.  Detects
+		///               "no more squirrels" and shuts everything down.
+		///
+		/// @param        
+		/// @return       
+		///
+		/// @pre          
+		/// @post         
+		///
+		/// @exception    
+		///
+		void SimCoordinator::ReceiveSquirrelDeathMsg()        ///< Receives "squirrel has died" message.
+		{
+			std::cout << __PRETTY_FUNCTION__ << std::endl;
+			
+			MPI_Status msg_status;
+			MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, EMpiMsgTag::eSquirrelDeath, m_comm.GetComm(), &msg_status);
+			--m_num_sq;
+
+			if (0 == m_num_sq)
+			{
+				std::cout << "coordinator: no more squirrels; shutting down" << std::endl;
+
+				m_shutdown = true;
+				shutdownPool();
+			}			
+		}
+
 		//////////////////////////////////////////////////////////////////////////////
 		/// @details      Sends poison pill to all squirrels.
 		///

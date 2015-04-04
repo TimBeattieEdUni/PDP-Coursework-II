@@ -239,9 +239,7 @@ namespace Biology
 	{		
 		std::cout << "rank " << m_comm.GetRank() << ": informing coordinator of squirrel death" << std::endl;
 
-		//  tell coordinator the sad news
-		int birth = -1;
-		MPI_Bsend(&birth, 1, MPI_INT, 1, EMpiMsgTag::eSquirrelLifetime, m_comm.GetComm());
+		MPI_Bsend(NULL, 0, MPI_INT, 1, EMpiMsgTag::eSquirrelDeath, m_comm.GetComm());
 
 		std::cout << "rank " << m_comm.GetRank() << ": informed coordinator of squirrel death" << std::endl;
 	}

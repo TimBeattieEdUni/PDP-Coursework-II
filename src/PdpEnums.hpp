@@ -22,7 +22,8 @@ namespace Biology
 			ePoolCtrl = 16384,   ///< Ensures our code won't use the same value.
 			eAssignTask,         ///< Tells a worker process what type of actor to be.
 			eCellStats,          ///< Squirrel statistics for coordinator.
-			eSquirrelBirth,      ///< A squirrel is born
+			eSquirrelBirth,      ///< A squirrel is born.
+			eSquirrelDeath,      ///< A squirrel has died.			
 			eSquirrelStep,       ///< Squirrel step event.
 			eInfect,             ///< Used by coordinator to infect initial squirrels.
 			ePoisonPill,         ///< Tells an actor to exit.

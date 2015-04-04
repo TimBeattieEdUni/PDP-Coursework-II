@@ -45,7 +45,7 @@ namespace Mpi
 		: m_comm(comm)
 		, m_config(config)
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+//		std::cout << __PRETTY_FUNCTION__ << std::endl;
 	}
 
 
@@ -61,7 +61,7 @@ namespace Mpi
 	///
 	PoolWorker::~PoolWorker()
 	{
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
+//		std::cout << __PRETTY_FUNCTION__ << std::endl;
 	}
 
 

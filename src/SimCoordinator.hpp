@@ -24,11 +24,13 @@
 namespace Biology
 {
 	//////////////////////////////////////////////////////////////////////////////
-	/// @brief      Manages the simulation.  Provides a day ticker to landscape cells.
+	/// @brief      Coordinates the simulation.
 	///
-	/// @details
+	/// @details    Creates the cells and initial infected squirrels.  Creates new
+	///             squirrels on request.  Tracks statistics.  Shuts the 
+	///             simulation down if maximum days or maximum squirrels reached.
 	///
-	/// @note       You should probably only create one of these.
+	/// @note       Only create one of these.
 	///
 	class SimCoordinator
 	{
@@ -38,18 +40,20 @@ namespace Biology
 
 			bool Update();                          ///< Driver. 
 			void CreateInitialActors();             ///< Sets up the landscape and initial squirrels.
-			void ReceiveSquirrelBirthMsg();         ///< Receives message indicating a squirrel should be born.
 			void SpawnCell(int cell_id);            ///< Adds a landscape cell to the simulation.
 
 		private:
 			SimCoordinator(SimCoordinator const& rhs);              ///< Copy constructor.
 			SimCoordinator& operator=(SimCoordinator const& rhs);   ///< Assignment operator.
 			
+			void ReceiveSquirrelBirthMsg();        ///< Receives "squirrel should be born".
+			void ReceiveSquirrelDeathMsg();        ///< Receives "squirrel has died" message.
+
 			void KillSquirrels();                  ///< Sends poison pill to all squirrel.
 			int SpawnSquirrel(float x, float y);   ///< Gives birth to a squirreal.
 		
 			Mpi::Communicator const& m_comm;   ///< MPI communcator for the pool.
-			Config const& m_config;         ///< App config.
+			Config const& m_config;            ///< App config.
 
 			DayTicker m_ticker;             ///< Keeps track of simulation time.
 			std::vector<int> m_cell_pids;   ///< MPI process IDs for landscape cells.
