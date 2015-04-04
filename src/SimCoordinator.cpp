@@ -217,8 +217,11 @@ namespace Biology
 		{
 			int pid = SpawnSquirrel(0.0, 0.0);
 			
-			//  first squirrels are infected from the start
-			MPI_Bsend(NULL, 0, MPI_INT, pid, EMpiMsgTag::eYouAreInfected, m_comm.GetComm());			
+			//  infect the configured number of squirrels
+			if (i < 4)
+			{
+				MPI_Bsend(NULL, 0, MPI_INT, pid, EMpiMsgTag::eYouAreInfected, m_comm.GetComm());
+			}
 		}			
 	}
 
