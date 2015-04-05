@@ -85,7 +85,7 @@ namespace Mpi
 			{
 				case Biology::ETask::eSquirrel:
 				{
-					std::cout << "rank " << m_comm.GetRank() << " running a squirrel" << std::endl;
+//					std::cout << "rank " << m_comm.GetRank() << " running a squirrel" << std::endl;
 					Biology::Squirrel squirrel(m_comm, m_config);
 					
 					bool squirrel_ok = true;
@@ -100,7 +100,7 @@ namespace Mpi
 				}
 				case Biology::ETask::eCell:
 				{
-					std::cout << "rank " << m_comm.GetRank() << " running a cell" << std::endl;
+//					std::cout << "rank " << m_comm.GetRank() << " running a cell" << std::endl;
 
 					Biology::Cell cell(m_comm, m_config);
 					
@@ -118,7 +118,7 @@ namespace Mpi
 				}
 				case Biology::ETask::eCoordinator:
 				{
-					std::cout << "rank " << m_comm.GetRank() << " running a coordinator" << std::endl;
+//					std::cout << "rank " << m_comm.GetRank() << " running a coordinator" << std::endl;
 					
 					Biology::SimCoordinator sim_coord(m_comm, m_config);
 
@@ -134,6 +134,7 @@ namespace Mpi
 					//  sim coordinator doesn't return to the pool
 					return;
 				}
+
 			}
 
 		} while (workerSleep());
