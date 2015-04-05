@@ -86,91 +86,138 @@ The program is implemented in C++ using MPI for parallelisation and can be built
 The program's source code is provided as a zipped tar archive which can be unpacked with the following command:
 
 \begin{lstlisting}
-	tar -xvzf B063622-PDP2.tar.gz
+	tar -xvzf B063622-PDP-2.tar.gz
 \end{lstlisting}
 
-For instructions on how to build and run the progam, see the file \textbf{README.md} in the archive's top-level directory.
+This will create a directory called \textbf{src/} in the current directory.  
+For instructions on how to build and run the progam, see the file \textbf{README.md}.
 
 \newpage
 
 \section{Program Design}
-Squirrel stores stats from cell at time it visits, keeps 50 records.
-Each actor is a class driven by calling Update().
-Pool is polling, so actors are too.
-PoolWorker/Master classes just instantiate an actor and kick it regularly.
-Pool classes take care of calling shouldWorkerStop() and workerSleep()
-Messaging approach is fire and forget.
-Cells don't know or care which one they are; independent of grid arrangement so flexible when biologists change their map format.
+
+The Actor pattern was applied by making each squirrel or cell an actor running in a separate process.
+A coordinator for the simulation ran as an additional actor, also in its own process.
+
+Each actor was run within a loop which alternately advanced the state of the actor and interacted with the process pool to see if the program was shutting down, in which case the loop would terminate.
+An actor could indicate that its lifetime was over, which would also cause the loop to terminate.
+An outer loop waited for work from the process pool and exited when there was no more work to do.  
+
+All work to do with running a squirrel, cell, or coordinator was implemented within the actor classes.
+
+As is common with the Actor pattern, there was no global synchronisation, and most communication was aysnchronous.
+An exception to this was at program startup where cell actors were started with synchronous messages to ensure that all cells were started before all squirrels.
+
+Each squirrel sent a "fire and forget" message to a cell when it had stepped into, out of, or within that cell, and each cell replied with its own "fire and forget" message with the cell's current population influx and infection level.
+Each cell maintained a three-day history of its own population influx and infection level, and each squirrel maintained a record of these values for the previous 50 steps it had taken.
+Each cell also sent these values to the coordinator at the end of each week.
+
+Each squirrel also sent "fire and forget" messages to the coordinator to inform it of the squirrel's birth and death events.
+The latter included the infected status of the squirrel.
+The coordinator actor updated the total number of squirrels and the number infected when these messages were received.
 
 \newpage
 
 \section{Implementation}
-The program was implemented as a set of C++ classes which fell roughly into three categories: those which handled with the process pool, those which implemented the actors, and those which handled miscellaneous tasks like reading the program's configuration options from the command line (class {\em Config}) and calculating the simulation's current day and week from wall clock times obtained from the system (class {\em DayTicker}).
 
+The program was implemented as a set of C++ classes which fell into three categories: those which managed the process pool, those which implemented the actors, and those which handled miscellaneous tasks like reading the program's configuration options from the command line (class {\em Config}) and calculating the simulation's current day and week from wall clock times obtained from the system (class {\em DayTicker}).
 The classes were organised in two namespaces: namespace {\em Mpi} and namespace {\em Biology}.
 The former included all classes which dealt with the MPI-based process pool, and the latter contained classes which were specific to the squirrel simulation.
-Code which was provided to the developer in C source files was used without modification.
+Code which implemented the process pool and functions related to squirrels was provided to the developer as C source and used without modification.
+
+\subsection{Actor Classes}
+
+Classes {\em Biology::Squirrel}, {\em Biology::Cell}, and {\em Biology::Coordinator} represented the pattern's actors.
+Each actor class had a simple interface: once instantiated, code using the class could advance the state of the actor by calling the class's {\em Update()} function.
+This function returned true unless the actor's "life" was over, in which case it returned false.
+This made it simple for other code to run an actor while still performing other tasks regularly.
+This was done in order to facilitate working with the provided pool code, which required that function {\em shouldWorkerStop()} be called regularly to determine whether the process pool was shutting down.
+
+Class {\em Squirrel} did not keep track of time; a squirrel took a step to a new location each time {\em Squirrel::Update()} was called and informed the cell it had stepped into of its arrival.
+Similarly class {\em Cell} had no concept of location and would simply respond to a squirrel stepping into that cell by sending the squirrel its current values for population influx and infection level.
+This class did however keep track of time, sending its statistics to the coordinator at the end of each simulated week.
+Each cell had an instance of class {\em DayTicker}, and each call to {Cell::Update()} used this to determine whether a day or week had completed since the last update.
+
+Class {\em Coordinator} was responsible for starting the simulation's actors, tracking the births and deaths of squirrels, reporting cell population and infection statistics, and shutting down the simulation.
+It also used a {\em DayTicker} was used for timing.
+The simulation was halted by class {\em Coordinator} if the maximum number of days was completed, or if the number of squirrels reached the maximum allowed, or if the squirrel population dropped to zero.
+Additionally all squirrel births were initiated by the coordinator in response to a message from the squirrel giving birth. 
+This enabled the coordinator to track the total number of squirrels in the system and prevent the program from requesting more worker processes than were available.
+
+\subsection{Pool Classes}
+
+Classes {\em Mpi::PoolMaster} and {\em Mpi::PoolWorker} worked with both the pool and the actor classes to run actors using the pool.
+Class {\em PoolMaster} started a worker process and sent it a message telling that process to run the simulation's coordinator, then polled the pool repeatedly by calling function {\em masterPoll()} until this function returned false to indicate that the pool was shutting down.
+Class {\em PoolWorker} waited for a message indicating which type of actor it should run, then instantiated the actor and ran it by calling its {\em Update()} function followed by the pool function {\em shouldWorkerStop()} in a loop. 
+The loop repeated until either {\em Update()} returned false or {\em shouldWorkerStop()} returned true.
+
+If Class {\em PoolWorker} was running a squrrel actor, it then determined whether it should run another actor or exit by calling {\em workerSleep()}.
+In the case of landscape cells and the coordinator, class {\em PoolWorker} then exited in order to prevent the worker process from being used by a squirrel.
+This represented at least some coupling between the process pool classes and the actor classes; a future improvement might separate these better.
 
 Class Mpi::Mpi was a simple Resource Acquisition is Initialisation (RAII) \cite{ref:Stroustrup} class which initialised the MPI environment in its constructor and terminated the environment in its destructor.
 This ensured that the required call to MPI\_Finalize() would take place even in the case of an exception being thrown.  
 
-Class {\em MPI::Communicator} was a simple class which retrieved the MPI communicator size and rank of the process and made them available to user code without having to make a separate function call to write the values to a variable.  
-
-\subsection{Actor Classes}
-Classes {\em Biology::Squirrel}, {\em Biology::Cell}, and {\em Biology::Coordinator} represented the pattern's actors.
-Each had a simple interface: client code could run an actor by instantiating an object of the desired type and then calling the actor's {\em Update()} function until that function returned false to indicate the actor's work was done.  
-This method of driving the actors was prompted by the polling interface in the provided process pool code; the decision was made to work in the same manner as the provided code rather than mix approaches.
-
-In between calls to {\em Update()} the client code could perform any other tasks necessary to manage the program.
-In the case of class {\em PoolWorker} this work consisted of calling {\em shouldWorkerStop()} to poll the process pool to see if the pool was shutting down.
-
-\subsection{Actor Classes}
-Actor classes - driven by Update(), returns true/false for run me again/don't.
-Actors should be driven until Update() returns false.
-Then squirrels can be reused, but cells and coord just exit.
-
-
-
-Header include order minimises dependencies.
-Ideally a communicator for just the actors, but would've had to modify pool.
-Create worker, worker waits for message telling it what type of actor to be.
-Alternative would've been to pass arguments through pool, but using pool as-is.
-Simple RAII classes to init and shutdown MPI, pool, etc.
-Cells start at different times and are out of sync, but this considered ok.
-All procs assume master=0, coord=1, next are cells, then squirrels.
-So cell pid is cell index + 2.
-Coordinator does all births.
-Squirrels request births from coordinator.
-With just 3 days stored, individual variables bumped was fine.
-For 50, used array as circular buffer.
-Squirrels do their first update without notifying as per the handout.
-Cells track days and print popinf and inflvl each week.
-Coord also tracks days and prints total squirrels.
-Coord watches max time and shuts down everything.
-Coord shuts down if max squirrels, but this never happens.  Tested by adding lots of births.  Squirrels requesting this makes it easy.
-
-\subsection{Days}
-Coordinator and Cell get days from wall clock.
-No need for global sync, but should be no drift.
-Squirrels dayless. 
-
-\subsection{Configuration}
-Number of landscape cells configurable - hard-coded in biology but main() checks for this.
+Class {\em MPI::Communicator} was a simple class which retrieved the size and rank of the MPI communicator and made them available to user code without having to make a separate function call to write the values to a variable.
+This class also made the MPI communicator value it was given available.
+While the class did not implement creating additional MPI communicators, this could be added in the future, and classes using {Mpi::Communicator} would then be able to use any communicator without being modified.
 
 \subsection{Communication}
-Actor pattern not good for synch comms as no coordination.
-Most receives done with MPI\_Iprobe() as could check for new messages and handle, then do other stuff.
-Squirrels directly tell coordinator birth/death/infected for stats.
-Stats not synched between cells - cells could count a squirrel twice, but coordinator stats good.
-Coordinator is always rank 1 - this is assumed by others.
-Squirrels tell cells when they step in/out/within and expect cell to reply with stats.
-Stats may come in in any order, but keeping 50 expected to smooth this out to acceptable accuracy or realism.
+
+Most communication in the system was between squirrels and landscape cells.  
+For maximum flexibility this communication needed to be "fire and forget" in nature so actors would not have to wait for each other to respond.
+For this reason the communication between cells and squirrels was implemented with buffered sends using {\em Mpi\_Bsend()}.
+A large message buffer was allocated on startup in main() by each process for this purpose.
+
+Messages between actors were generally received by polling with {\em MPI\_Iprobe} to check for new messages and then performing a blocking receive with {\em MPI\_Recv()} for each message waiting.
+This worked well with the design of the actor classes; they each had other work to do which implied they should not block waiting for messages.
+
+The exception to this approach was in the startup of the actors.
+Since a worker had to find out which type of actor to run before doing anything else, class {\em PoolWorker} performed a blocking receive for this using {\em MPI\_Recv()}.
+Additionally class {\em SimCoordinator} used a blocking synchronous send to start each cell in order to ensure all cells were running before squirrels were started.
+
+Using "fire and forget" messages in this way, without synchronisation, meant that statistics were not synchronised between cells.
+In other words, a cell's weekly report might include a squirrel which was also included by another cell.
+This was considered an acceptable innacuracy as it enabled squirrels and cells to work without synchronisation.
+
+The coordinator maintained accurate statistics becase all squirrel births and deaths were reported to it directly by the squirrels.
+This represents a potential bottleneck in the system as there was only one coordinator and many squirrels. 
+Although a squirrel only sends one birth and one death event to the coordinator in its lifetime, it is concievable that a large enough squirrel population (running on a machine with enough cores) could saturate the coordinator's ability to handle statistics from all of them.
+For the purpose of this exercise, however, the program was run on MORAR which limited the simulatino to 64 processes and the bottleneck was not a problem.
+
+As the process pool's master process always had rank 0, and the first worker started was the coordinator, all actors could know that the coordinator had rank 1.
+Additionally as the coordinator started all cells first, actors knew that the cells had ranks starting at 2 and ending at 2 greater than the number of cells.
+Cells did not have explicit identification nubers; the rank used when communicating with a cell was simply the cell's index as returned by function {\em getCellFromPosition()} and increased by 2.
+
+Each squirrel expected a reply to each message it sent to a cell, but squirrels did not explicitly rely on these messages arriving or being in order.
+The population influx and infection level carried by each message from a cell were stored as the latest in the squirrel's set of 50 records.
+This meant that the concept of "the last 50 cells" a squirrel had stepped into would not be accurately represented by the set of 50 records.
+However, it was assumed that having 50 records would mitigate this; the set of records would be likely to contain 50 recent statistics, all of which would be from cells the squirrel had visited.
+
+\subsection{Days}
+
+To avoid the need for synchronisation between the landscape cells and the coordinator, each actor had its own independent mechanism for determining when a day ended.
+Class {\em Biology::DayTicker} provided this mechanism by enabling calling code to find out the current day.
+This class stored the current wall time using function {\em MPI\_Wtime()} when it was instantiated and used this value to calculate the elapsed time when function {\em DayTicker::GetDay()} was called.
+
+Actors using class {\em DayTicker} and started at different times had slightly different measurements of elapsed program time, but this method resulted in very little "drift" or increase in discrepancy as time progressed.
+
+\subsection{Configuration}
+
+Class {\em Biology::Config} handled program configuration as given on the command line.
+This class was given the program's command line as the standard arguments to function {\em main()}: {\em argc} and {\em argv[]}.
+The class provided simple getter functions which enabled access to the program's configuration options.
+A single instance of this class was declared, and a reference to this instance was passed in to each actor.
+This made the program's configuration simple to pass from class to class, and it also enabled the configuration to be modified easily without modifying the code which passed the configuration around.  
+Number of landscape cells configurable - hard-coded in biology but main() checks for this.
 
 \section{Output}
+
 Would conclude that sim is inaccurate - squirrels don't reproduce very well.
 But starting with a tiny population which are all infected probably isn't realistic.
 
 \section{Problems}
+
 Found that calling shutdownPool() from one process didn't cause shouldWorkerStop() to return 0 as expected.
 Not clear why, may have misunderstood.
 Intermittently, calling MPI\_Wtime() returned a large constant value - whenever, by whomever, on cplabs and MORAR.
@@ -191,15 +238,22 @@ Sendrecv tried for squirrel-cell step/stats exchange as a form of loose coupling
 Tried to ensure squirrels shut down before cells, but unable to target just those workers which were actually running a squirrel.
 
 \section{Performance}
-Polling technique where simple update done then shouldWorkerStop() called may consume lots of cpu.
-Good decoupling of actors from pool though; once PoolWorker/Master implemented, very rarely needed to touch them and could work on actors in isolation.
 
+The polling technique used was probably not the most efficient possible as each squirrel step involved two function calls: {\em Update()} and {\em shouldWorkerStop()}
+This could have been mitigated by performing several updates within each update, but this would probably be a case of treating the symptoms rather than solving the fundamental problem.
+However, this approach did allow good separation between the process pool code and the actor code, and this was seen during the development process as once classes {\em PoolMaster} and {\em PoolWorker} were implemented they only rarely needed to be revisited during the development of the actor classes.
 
+As the program runs in a fixed maximum amount of time given by the product of the maximum length of time and the day length, performance does not affect run time.
+However, it does affect the number of steps a squirrel takes in a typical day. 
+As the population often either dies out or reaches the maximum before the simulation time is complete, performance may not be a significant problem.
+Even if the population remains stable, this is a meaningful result which is still obtained in a fixed time.
 
-\newpage
-\newpage
 \section{Conclusion}
-This is the conclusion.
+
+More time was spent debugging the code than on any other tasks.
+Debugging parallel applications is a difficult task - many things are happening at once, and program runs are not reproducible.
+For this reason it is concluded that it is far better to understand the problem well and write code carefully in order to avoid mistakes.
+Time spent in advance in this way is likely to save much more time which would be spent debugging.
 
 \newpage
 
